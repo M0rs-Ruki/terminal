@@ -16,6 +16,29 @@ interface FullPost extends PostMeta {
 
 type LoadState = "loading" | "ready" | "error";
 
+function rankRecommendations(
+  current: PostMeta,
+  pool: PostMeta[],
+  limit = 3
+): PostMeta[] {
+  const currentTags = new Set(current.tags ?? []);
+  return pool
+    .filter((p) => p.slug !== current.slug)
+    .map((p) => {
+      const overlap = (p.tags ?? []).reduce(
+        (acc, t) => acc + (currentTags.has(t) ? 1 : 0),
+        0
+      );
+      return { post: p, overlap };
+    })
+    .sort((a, b) => {
+      if (b.overlap !== a.overlap) return b.overlap - a.overlap;
+      return a.post.date < b.post.date ? 1 : -1;
+    })
+    .slice(0, limit)
+    .map((x) => x.post);
+}
+
 function applyWordReveal(root: HTMLElement): void {
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   const textNodes: Text[] = [];
@@ -59,6 +82,98 @@ function applyWordReveal(root: HTMLElement): void {
   });
 }
 
+interface RecommendationsProps {
+  items: PostMeta[];
+  onSelect: (slug: string) => void;
+}
+
+const Recommendations: React.FC<RecommendationsProps> = ({ items, onSelect }) => {
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      const id = window.setTimeout(() => setVisible(true), 0);
+      return () => window.clearTimeout(id);
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            setVisible(true);
+            obs.disconnect();
+            break;
+          }
+        }
+      },
+      { threshold: 0.1 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  if (items.length === 0) return null;
+
+  return (
+    <section
+      ref={sectionRef}
+      aria-label="Recommended posts"
+      className={`mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-green-800/40 transition-all duration-700 ${
+        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
+      }`}
+    >
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-green-400 font-mono text-sm">$ ls ./read-next/</span>
+        <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+      </div>
+      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+        {items.map((p) => (
+          <li key={p.slug}>
+            <button
+              type="button"
+              onClick={() => onSelect(p.slug)}
+              className="w-full h-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 cursor-pointer group"
+            >
+              <div className="flex items-start justify-between gap-2 mb-1">
+                <h4 className="text-sm text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors break-words">
+                  {p.title}
+                </h4>
+                {p.date && (
+                  <time
+                    dateTime={p.date}
+                    className="shrink-0 text-[11px] text-gray-500 font-mono"
+                  >
+                    {p.date}
+                  </time>
+                )}
+              </div>
+              {p.excerpt && (
+                <p className="text-gray-400 text-xs leading-relaxed line-clamp-2">
+                  {p.excerpt}
+                </p>
+              )}
+              {p.tags && p.tags.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {p.tags.slice(0, 3).map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-1.5 py-0.5 bg-green-900/30 border border-green-800/50 rounded-full text-green-400 text-[10px] font-mono"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+};
+
 const Blog: React.FC = () => {
   const [posts, setPosts] = useState<PostMeta[]>([]);
   const [listState, setListState] = useState<LoadState>("loading");
@@ -67,6 +182,7 @@ const Blog: React.FC = () => {
   const [postState, setPostState] = useState<LoadState>("ready");
   const [errorMsg, setErrorMsg] = useState<string>("");
   const contentRef = useRef<HTMLDivElement | null>(null);
+  const articleRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -122,11 +238,12 @@ const Blog: React.FC = () => {
   useEffect(() => {
     if (postState !== "ready" || !post || !contentRef.current) return;
     applyWordReveal(contentRef.current);
+    articleRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [postState, post]);
 
   if (selectedSlug) {
     return (
-      <div className="terminal-blog">
+      <div className="terminal-blog" ref={articleRef}>
         <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
           <button
             type="button"
@@ -177,6 +294,11 @@ const Blog: React.FC = () => {
               ref={contentRef}
               className="terminal-blog-content text-gray-300"
               dangerouslySetInnerHTML={{ __html: post.html }}
+            />
+
+            <Recommendations
+              items={rankRecommendations(post, posts)}
+              onSelect={(slug) => setSelectedSlug(slug)}
             />
           </article>
         )}
