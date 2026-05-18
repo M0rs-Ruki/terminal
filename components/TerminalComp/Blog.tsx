@@ -241,6 +241,25 @@ const Blog: React.FC = () => {
     articleRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [postState, post]);
 
+  useEffect(() => {
+    if (!selectedSlug) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      const target = e.target as HTMLElement | null;
+      // Don't hijack Esc when typing in a multi-line editor / contenteditable
+      if (
+        target &&
+        (target.tagName === "TEXTAREA" || target.isContentEditable)
+      ) {
+        return;
+      }
+      e.preventDefault();
+      setSelectedSlug(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selectedSlug]);
+
   if (selectedSlug) {
     return (
       <div className="terminal-blog" ref={articleRef}>
@@ -248,9 +267,13 @@ const Blog: React.FC = () => {
           <button
             type="button"
             onClick={() => setSelectedSlug(null)}
+            title="Press Esc to go back"
             className="text-xs sm:text-sm text-green-400/80 font-mono hover:text-green-300 transition-colors cursor-pointer py-1"
           >
-            ← back to posts
+            ← back to posts{" "}
+            <kbd className="hidden sm:inline ml-1 px-1.5 py-0.5 text-[10px] border border-green-800/60 rounded bg-black/40 text-green-400/70">
+              Esc
+            </kbd>
           </button>
           {post && (
             <span className="text-xs sm:text-sm text-gray-500 font-mono truncate min-w-0">
