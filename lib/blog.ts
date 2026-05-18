@@ -45,12 +45,16 @@ export function getAllPostSlugs(): string[] {
 
 export function getAllPosts(): BlogPostMeta[] {
   return getAllPostSlugs()
-    .map((slug) => {
+    .map((slug): BlogPostMeta | null => {
       const post = readPostFile(slug);
       if (!post) return null;
-      const { content: _content, ...meta } = post;
-      void _content;
-      return meta;
+      return {
+        slug: post.slug,
+        title: post.title,
+        date: post.date,
+        excerpt: post.excerpt,
+        tags: post.tags,
+      };
     })
     .filter((p): p is BlogPostMeta => p !== null)
     .sort((a, b) => (a.date < b.date ? 1 : -1));

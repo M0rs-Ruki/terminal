@@ -40,6 +40,10 @@ function rankRecommendations(
 }
 
 function applyWordReveal(root: HTMLElement): void {
+  // Guard against double-walk (e.g. React Strict Mode re-runs effects)
+  if (root.dataset.wordsWalked === "1") return;
+  root.dataset.wordsWalked = "1";
+
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   const textNodes: Text[] = [];
   let n: Node | null;
@@ -181,6 +185,7 @@ const Blog: React.FC = () => {
   const [post, setPost] = useState<FullPost | null>(null);
   const [postState, setPostState] = useState<LoadState>("ready");
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const [notFound, setNotFound] = useState<boolean>(false);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const articleRef = useRef<HTMLDivElement | null>(null);
 
@@ -214,9 +219,17 @@ const Blog: React.FC = () => {
     }
     let cancelled = false;
     setPostState("loading");
+    setNotFound(false);
     (async () => {
       try {
         const res = await fetch(`/api/blog/${selectedSlug}`);
+        if (res.status === 404) {
+          if (!cancelled) {
+            setNotFound(true);
+            setPostState("error");
+          }
+          return;
+        }
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: FullPost = await res.json();
         if (!cancelled) {
@@ -285,7 +298,12 @@ const Blog: React.FC = () => {
         {postState === "loading" && (
           <p className="text-green-400/70 font-mono text-sm">Loading post…</p>
         )}
-        {postState === "error" && (
+        {postState === "error" && notFound && (
+          <p className="text-red-400 font-mono text-sm break-words">
+            cat: {selectedSlug}.mdx: No such file or directory
+          </p>
+        )}
+        {postState === "error" && !notFound && (
           <p className="text-red-400 font-mono text-sm break-words">
             Failed to load post: {errorMsg}
           </p>
