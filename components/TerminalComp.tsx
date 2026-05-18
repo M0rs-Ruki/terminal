@@ -8,6 +8,7 @@ import Projects from "./TerminalComp/Projects";
 import Skills from "./TerminalComp/Skills";
 import Contact from "./TerminalComp/Contact";
 import Experience from "./TerminalComp/Experience";
+import Blog from "./TerminalComp/Blog";
 import {
   HOME_DIR,
   FILE_CONTENTS,
@@ -826,7 +827,8 @@ export default function Terminal({ onFirstCommand }: TerminalProps) {
       return;
     }
     if (commandName === "blog") {
-      window.location.href = "/blog";
+      newHist.push({ type: "output", content: <Blog /> });
+      setHistory(newHist);
       return;
     }
     if (commandName === "exit") {

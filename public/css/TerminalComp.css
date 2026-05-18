@@ -454,3 +454,90 @@
   border-radius: 0.5rem;
   margin: 0.5rem 0;
 }
+/* === Terminal blog (in-terminal post rendering) === */
+.terminal-blog-content h1,
+.terminal-blog-content h2,
+.terminal-blog-content h3,
+.terminal-blog-content h4 {
+  color: #4ade80;
+  font-weight: 700;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.terminal-blog-content h1 { font-size: 1.25rem; }
+.terminal-blog-content h2 { font-size: 1.125rem; }
+.terminal-blog-content h3 { font-size: 1rem; }
+
+.terminal-blog-content p {
+  margin: 0.75rem 0;
+  line-height: 1.65;
+}
+
+.terminal-blog-content a {
+  color: #4ade80;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(22, 101, 52, 0.6);
+  transition: color 0.15s, text-decoration-color 0.15s;
+}
+
+.terminal-blog-content a:hover {
+  color: #86efac;
+  text-decoration-color: rgba(74, 222, 128, 0.8);
+}
+
+.terminal-blog-content ul,
+.terminal-blog-content ol {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+}
+
+.terminal-blog-content ul { list-style: disc; }
+.terminal-blog-content ol { list-style: decimal; }
+
+.terminal-blog-content li {
+  margin: 0.25rem 0;
+}
+
+.terminal-blog-content code {
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.25rem;
+  background: rgba(20, 83, 45, 0.3);
+  border: 1px solid rgba(22, 101, 52, 0.5);
+  color: #86efac;
+  font-size: 0.85em;
+}
+
+.terminal-blog-content pre {
+  background: rgba(17, 24, 39, 0.6);
+  border: 1px solid rgba(22, 101, 52, 0.4);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+  font-size: 0.85rem;
+}
+
+.terminal-blog-content pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.terminal-blog-content blockquote {
+  border-left: 3px solid rgba(21, 128, 61, 0.6);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.terminal-blog-content hr {
+  border: 0;
+  border-top: 1px solid rgba(22, 101, 52, 0.4);
+  margin: 1.5rem 0;
+}
+
+.terminal-blog-content strong { color: #d1fae5; }
+.terminal-blog-content em { color: #d1d5db; }
