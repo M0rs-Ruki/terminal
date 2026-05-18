@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Standalone Node sub-project with its own package.json
+    "curl/**",
   ]),
 ]);
 

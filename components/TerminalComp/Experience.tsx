@@ -138,7 +138,7 @@ const Experience: React.FC = () => {
                   </div>
                 </div>
 
-                <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-xs sm:text-sm ml-4 sm:ml-6">
+                <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-6">
                   <li>
                     Developed an AI-powered meeting assistant that joins calls,
                     records conversations, and generates structured
@@ -206,7 +206,7 @@ const Experience: React.FC = () => {
                   </div>
                 </div>
 
-                <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-xs sm:text-sm ml-4 sm:ml-6">
+                <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-6">
                   <li>
                     Architected and shipped a scalable SaaS showroom visitor
                     management system for automotive dealerships.

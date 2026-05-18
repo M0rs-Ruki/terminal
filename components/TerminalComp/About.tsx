@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React, { useState, useEffect } from "react";
 
 // Enhanced SVG Icons with hover animations - Mobile responsive
@@ -149,7 +148,7 @@ const About: React.FC = () => {
             </div>
 
             <div className="ml-3 sm:ml-6 border-l-2 border-green-800/30 pl-3 sm:pl-6">
-              <p className="text-gray-300 leading-relaxed text-sm sm:text-lg font-light">
+              <p className="text-gray-300 leading-relaxed text-sm sm:text-base font-light">
                 I&apos;m a{" "}
                 <span className="text-green-400 font-semibold">
                   Software Developer

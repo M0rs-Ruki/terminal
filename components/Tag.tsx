@@ -3,6 +3,7 @@
 import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
 import { Canvas, extend, useThree, useFrame } from "@react-three/fiber";
+import type { ThreeEvent } from "@react-three/fiber";
 import {
   useGLTF,
   useTexture,
@@ -14,6 +15,7 @@ import {
   CuboidCollider,
   Physics,
   RigidBody,
+  type RapierRigidBody,
   useRopeJoint,
   useSphericalJoint,
 } from "@react-three/rapier";
@@ -24,24 +26,14 @@ extend({ MeshLineGeometry, MeshLineMaterial });
 useGLTF.preload("/models/card.glb");
 useTexture.preload("/images/lanyard.jpg");
 
-function BlackBackground() {
-  const { scene } = useThree();
-  useEffect(() => {
-    scene.background = new THREE.Color(0x000000);
-    scene.environment = null;
-  }, [scene]);
-  return null;
+type LerpedBody = RapierRigidBody & { lerped?: THREE.Vector3 };
+
+interface GLTFCardResult {
+  nodes: Record<string, THREE.Mesh>;
+  materials: Record<string, THREE.MeshStandardMaterial>;
 }
 
 export default function Tag() {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
   return (
     <div
       className="identity-container"
@@ -51,11 +43,12 @@ export default function Tag() {
         camera={{ position: [0, 0, 13], fov: 25 }}
         style={{ touchAction: "none", background: "#000" }}
         gl={{ alpha: false }}
-        onCreated={({ gl }) => {
+        onCreated={({ gl, scene }) => {
           gl.setClearColor(0x000000, 1);
+          scene.background = new THREE.Color(0x000000);
+          scene.environment = null;
         }}
       >
-        <BlackBackground />
         <ambientLight intensity={5} />
         <Physics interpolate gravity={[0, -40, 0]} timeStep={1 / 60}>
           <Band />
@@ -110,12 +103,12 @@ export default function Tag() {
 }
 
 function Band({ maxSpeed = 50, minSpeed = 10 }) {
-  const band = useRef<any>(null);
-  const fixed = useRef<any>(null);
-  const j1 = useRef<any>(null);
-  const j2 = useRef<any>(null);
-  const j3 = useRef<any>(null);
-  const card = useRef<any>(null);
+  const band = useRef<THREE.Mesh>(null!);
+  const fixed = useRef<RapierRigidBody>(null!);
+  const j1 = useRef<LerpedBody>(null!);
+  const j2 = useRef<LerpedBody>(null!);
+  const j3 = useRef<RapierRigidBody>(null!);
+  const card = useRef<RapierRigidBody>(null!);
   const vec = new THREE.Vector3();
   const ang = new THREE.Vector3();
   const rot = new THREE.Vector3();
@@ -129,8 +122,9 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     linearDamping: 2,
   };
   
-  const { nodes, materials } = useGLTF("/models/card.glb") as any;
+  const { nodes, materials } = useGLTF("/models/card.glb") as unknown as GLTFCardResult;
   const texture = useTexture("/images/lanyard.jpg");
+
   const { width, height } = useThree((state) => state.size);
   const [curve] = useState(() => {
     const c = new THREE.CatmullRomCurve3([
@@ -159,7 +153,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 
   useEffect(() => {
     if (band.current?.geometry) {
-      band.current.geometry.setPoints(curve.getPoints(32));
+      (band.current.geometry as MeshLineGeometry).setPoints(curve.getPoints(32));
     }
   }, [curve]);
 
@@ -175,35 +169,40 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
         z: vec.z - dragged.z,
       });
     }
-    if (fixed.current && band.current?.geometry) {
+    if (
+      fixed.current &&
+      j1.current &&
+      j2.current &&
+      j3.current &&
+      band.current?.geometry
+    ) {
       [j1, j2].forEach((ref) => {
-        if (!ref.current.lerped)
-          ref.current.lerped = new THREE.Vector3().copy(
-            ref.current.translation()
-          );
+        const body = ref.current;
+        if (!body) return;
+        if (!body.lerped) {
+          body.lerped = new THREE.Vector3().copy(body.translation());
+        }
         const clampedDistance = Math.max(
           0.1,
-          Math.min(1, ref.current.lerped.distanceTo(ref.current.translation()))
+          Math.min(1, body.lerped.distanceTo(body.translation()))
         );
-        ref.current.lerped.lerp(
-          ref.current.translation(),
+        body.lerped.lerp(
+          body.translation(),
           delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
         );
       });
       curve.points[0].copy(j3.current.translation());
-      curve.points[1].copy(j2.current.lerped);
-      curve.points[2].copy(j1.current.lerped);
+      curve.points[1].copy(j2.current.lerped!);
+      curve.points[2].copy(j1.current.lerped!);
       curve.points[3].copy(fixed.current.translation());
-      band.current.geometry.setPoints(curve.getPoints(32));
+      (band.current.geometry as MeshLineGeometry).setPoints(curve.getPoints(32));
       if (card.current) {
         ang.copy(card.current.angvel());
         rot.copy(card.current.rotation());
-        card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
+        card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z }, true);
       }
     }
   });
-
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
   return (
     <>
@@ -230,12 +229,13 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             position={[0, -1.2, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
-            onPointerUp={(e: any) => {
-              e.target.releasePointerCapture(e.pointerId);
+            onPointerUp={(e: ThreeEvent<PointerEvent>) => {
+              (e.target as Element).releasePointerCapture(e.pointerId);
               drag(false);
             }}
-            onPointerDown={(e: any) => {
-              e.target.setPointerCapture(e.pointerId);
+            onPointerDown={(e: ThreeEvent<PointerEvent>) => {
+              (e.target as Element).setPointerCapture(e.pointerId);
+              if (!card.current) return;
               drag(
                 new THREE.Vector3()
                   .copy(e.point)
@@ -271,6 +271,8 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
           resolution={[width, height]}
           useMap
           map={texture}
+          map-wrapS={THREE.RepeatWrapping}
+          map-wrapT={THREE.RepeatWrapping}
           repeat={[-3, 1]}
           lineWidth={1.2}
         />
