@@ -88,6 +88,7 @@ export default function Home() {
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": "https://www.anuppradhan.in/#website",
     name: "Anup Pradhan",
     alternateName: "Anup Pradhan Portfolio",
     url: "https://www.anuppradhan.in",
