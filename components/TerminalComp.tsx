@@ -925,7 +925,7 @@ export default function Terminal({ onFirstCommand }: TerminalProps) {
     }
     if (e.key === "Tab") {
       e.preventDefault();
-      const { matches, setLine, isPartial } = getTabCompletion(input);
+      const { matches, setLine } = getTabCompletion(input);
       if (matches.length === 1) {
         setInput(setLine);
         setTabSuggestions(null);

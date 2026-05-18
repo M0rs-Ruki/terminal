@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React, { useState, useEffect } from "react";
 
 // Enhanced SVG Icons with hover animations - Mobile responsive
@@ -13,14 +12,14 @@ const CodeIcon: React.FC = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="w-8 h-8 sm:w-10 sm:h-10 mb-2 sm:mb-3 text-green-400 group-hover:text-green-300 transition-all duration-300 group-hover:scale-110"
+    className="w-6 h-6 sm:w-8 sm:h-8 mb-1.5 sm:mb-2 text-green-400 group-hover:text-green-300 transition-all duration-300 group-hover:scale-110"
   >
     <polyline points="16 18 22 12 16 6"></polyline>
     <polyline points="8 6 2 12 8 18"></polyline>
   </svg>
 );
 
-const YoutubeIcon: React.FC = () => (
+const SystemIcon: React.FC = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -31,10 +30,10 @@ const YoutubeIcon: React.FC = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="w-8 h-8 sm:w-10 sm:h-10 mb-2 sm:mb-3 text-green-400 group-hover:text-green-300 transition-all duration-300 group-hover:scale-110"
+    className="w-6 h-6 sm:w-8 sm:h-8 mb-1.5 sm:mb-2 text-green-400 group-hover:text-green-300 transition-all duration-300 group-hover:scale-110"
   >
-    <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-    <path d="m10 15 5-3-5-3z" />
+    <circle cx="12" cy="12" r="3" />
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
   </svg>
 );
 
@@ -149,7 +148,7 @@ const About: React.FC = () => {
             </div>
 
             <div className="ml-3 sm:ml-6 border-l-2 border-green-800/30 pl-3 sm:pl-6">
-              <p className="text-gray-300 leading-relaxed text-sm sm:text-lg font-light">
+              <p className="text-gray-300 leading-relaxed text-sm sm:text-base font-light">
                 I&apos;m a{" "}
                 <span className="text-green-400 font-semibold">
                   Software Developer
@@ -253,57 +252,60 @@ const About: React.FC = () => {
           </section>
 
 
-          {/* Skills Section - Mobile responsive grid */}
+          {/* Current focus - Mobile responsive grid */}
           <section>
             <div className="flex items-center mb-6 sm:mb-8">
               <span className="text-green-400 font-mono mr-2 sm:mr-4"></span>
               <h2 className="text-lg sm:text-2xl text-green-400 font-bold font-mono tracking-wider">
-                What i&apos;m doing
+                CURRENT_FOCUS.log
               </h2>
+              <div className="ml-auto">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              </div>
             </div>
 
             {/* Responsive grid: 1 column on mobile, 2 on tablet+ */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              {/* Software Developer Card - Mobile optimized */}
-              <div className="group border border-green-800/40 bg-gradient-to-br from-green-900/20 to-black/80 backdrop-blur-sm p-4 sm:p-6 rounded-xl hover:border-green-400/60 transition-all duration-500 hover:scale-[1.02] sm:hover:scale-105 hover:shadow-2xl hover:shadow-green-900/30 relative overflow-hidden">
+              {/* Chati - Junior Software Developer card */}
+              <div className="group border border-green-800/40 bg-gradient-to-br from-green-900/20 to-black/80 backdrop-blur-sm p-3 sm:p-5 rounded-xl hover:border-green-400/60 transition-all duration-500 hover:scale-[1.02] sm:hover:scale-105 hover:shadow-2xl hover:shadow-green-900/30 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-green-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <div className="flex items-center justify-between mb-2 sm:mb-3">
                     <CodeIcon />
                   </div>
-                  <h3 className="font-bold text-green-400 text-lg sm:text-xl mb-2 sm:mb-3 font-mono">
-                    Lerning Machine Learning
+                  <h3 className="font-bold text-green-400 text-base sm:text-lg mb-2 font-mono">
+                    Junior Software Developer @ CHATI
                   </h3>
                   <p className="text-gray-400 text-sm sm:text-base leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
-                    Driven by a deep passion for technology&apos;s potential, I am on
-                    an exciting and immersive journey into the field of machine
-                    learning. My current focus is on building hands-on projects
-                    to deepen my understanding of the entire ML pipeline, from
-                    data preprocessing to model deployment. I am mastering
-                    essential tools like scikit-learn and TensorFlow to build
-                    and refine models, with the ultimate goal of creating
-                    elegant and effective solutions to real-world challenges.
+                    Working on AI-powered calling software, building real-time
+                    voice flows on top of{" "}
+                    <span className="text-green-400 font-semibold">WebRTC</span>{" "}
+                    and{" "}
+                    <span className="text-green-400 font-semibold">SIP</span>{" "}
+                    protocols. Hands-on with media negotiation, signaling, and
+                    integrating the AI agent into the live call pipeline.
                   </p>
                 </div>
               </div>
 
-              {/* YouTube Card - Mobile optimized */}
-              <div className="group border border-green-800/40 bg-gradient-to-br from-green-900/20 to-black/80 backdrop-blur-sm p-4 sm:p-6 rounded-xl hover:border-green-400/60 transition-all duration-500 hover:scale-[1.02] sm:hover:scale-105 hover:shadow-2xl hover:shadow-green-900/30 relative overflow-hidden">
+              {/* System design + automation card */}
+              <div className="group border border-green-800/40 bg-gradient-to-br from-green-900/20 to-black/80 backdrop-blur-sm p-3 sm:p-5 rounded-xl hover:border-green-400/60 transition-all duration-500 hover:scale-[1.02] sm:hover:scale-105 hover:shadow-2xl hover:shadow-green-900/30 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-green-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-3 sm:mb-4">
-                    <YoutubeIcon />
+                  <div className="flex items-center justify-between mb-2 sm:mb-3">
+                    <SystemIcon />
                   </div>
-                  <h3 className="font-bold text-green-400 text-lg sm:text-xl mb-2 sm:mb-3 font-mono">
-                    Content Creation
+                  <h3 className="font-bold text-green-400 text-base sm:text-lg mb-2 font-mono">
+                    System Design & Automation
                   </h3>
                   <p className="text-gray-400 text-sm sm:text-base leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
-                    Beyond coding, I am passionate about sharing my experiences.
-                    Once a month, I create and upload a video that offers a look
-                    into my life as a developer—from the technical challenges of
-                    a new project to the personal lessons learned along the way.
-                    My goal is to build in public and share my process with the
-                    community.
+                    Studying{" "}
+                    <span className="text-green-400 font-semibold">
+                      system design
+                    </span>{" "}
+                    and architecture patterns, refactoring old projects to apply
+                    what I learn, and building small automation tools to remove
+                    repetitive work from my day-to-day flow.
                   </p>
                 </div>
               </div>

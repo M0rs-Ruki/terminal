@@ -10,15 +10,24 @@ import {
   CuboidCollider,
   Physics,
   RigidBody,
+  type RapierRigidBody,
   useRopeJoint,
   useSphericalJoint,
 } from "@react-three/rapier";
+import type { ThreeEvent } from "@react-three/fiber";
 import { MeshLineGeometry, MeshLineMaterial } from "meshline";
 import "@/public/css/IdentityComp.css";
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 useGLTF.preload("/models/card.glb");
 useTexture.preload("/images/lanyard.jpg");
+
+type LerpedBody = RapierRigidBody & { lerped?: THREE.Vector3 };
+
+interface GLTFCardResult {
+  nodes: Record<string, THREE.Mesh>;
+  materials: Record<string, THREE.Material>;
+}
 
 interface IdentityCompProps {
   name?: string;
@@ -47,12 +56,12 @@ function Band({
   id: string;
   isMobile: boolean;
 }) {
-  const band = useRef<any>(null);
-  const fixed = useRef<any>(null);
-  const j1 = useRef<any>(null);
-  const j2 = useRef<any>(null);
-  const j3 = useRef<any>(null);
-  const card = useRef<any>(null);
+  const band = useRef<THREE.Mesh>(null!);
+  const fixed = useRef<RapierRigidBody>(null!);
+  const j1 = useRef<LerpedBody>(null!);
+  const j2 = useRef<LerpedBody>(null!);
+  const j3 = useRef<RapierRigidBody>(null!);
+  const card = useRef<RapierRigidBody>(null!);
   const vec = new THREE.Vector3();
   const ang = new THREE.Vector3();
   const rot = new THREE.Vector3();
@@ -67,21 +76,21 @@ function Band({
   };
 
   const { width, height } = useThree((state) => state.size);
-  const { nodes, materials } = useGLTF("/models/card.glb") as any;
+  const { nodes, materials } = useGLTF("/models/card.glb") as unknown as GLTFCardResult;
   const texture = useTexture("/images/lanyard.jpg");
-  const [curve] = useState(
-    () =>
-      new THREE.CatmullRomCurve3([
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-      ])
-  );
+  const [curve] = useState(() => {
+    const c = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+    ]);
+    c.curveType = "chordal";
+    return c;
+  });
   const [dragged, drag] = useState<false | THREE.Vector3>(false);
   const [hovered, hover] = useState(false);
 
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
@@ -107,33 +116,39 @@ function Band({
         z: vec.z - dragged.z,
       });
     }
-    if (fixed.current) {
+    if (
+      fixed.current &&
+      j1.current &&
+      j2.current &&
+      j3.current &&
+      card.current &&
+      band.current
+    ) {
       [j1, j2].forEach((ref) => {
-        if (!ref.current.lerped)
-          ref.current.lerped = new THREE.Vector3().copy(
-            ref.current.translation()
-          );
+        const body = ref.current;
+        if (!body) return;
+        if (!body.lerped) {
+          body.lerped = new THREE.Vector3().copy(body.translation());
+        }
         const clampedDistance = Math.max(
           0.1,
-          Math.min(1, ref.current.lerped.distanceTo(ref.current.translation()))
+          Math.min(1, body.lerped.distanceTo(body.translation()))
         );
-        ref.current.lerped.lerp(
-          ref.current.translation(),
+        body.lerped.lerp(
+          body.translation(),
           delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
         );
       });
       curve.points[0].copy(j3.current.translation());
-      curve.points[1].copy(j2.current.lerped);
-      curve.points[2].copy(j1.current.lerped);
+      curve.points[1].copy(j2.current.lerped!);
+      curve.points[2].copy(j1.current.lerped!);
       curve.points[3].copy(fixed.current.translation());
-      band.current.geometry.setPoints(curve.getPoints(32));
+      (band.current.geometry as MeshLineGeometry).setPoints(curve.getPoints(32));
       ang.copy(card.current.angvel());
       rot.copy(card.current.rotation());
-      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
+      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z }, true);
     }
   });
-
-  curve.curveType = "chordal";
 
   return (
     <>
@@ -161,15 +176,16 @@ function Band({
             position={[0, -1.2, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
-            onPointerUp={(e) => {
-              (e as any).target.releasePointerCapture((e as any).pointerId);
+            onPointerUp={(e: ThreeEvent<PointerEvent>) => {
+              (e.target as Element).releasePointerCapture(e.pointerId);
               drag(false);
             }}
-            onPointerDown={(e) => {
-              (e as any).target.setPointerCapture((e as any).pointerId);
+            onPointerDown={(e: ThreeEvent<PointerEvent>) => {
+              (e.target as Element).setPointerCapture(e.pointerId);
+              if (!card.current) return;
               drag(
                 new THREE.Vector3()
-                  .copy((e as any).point)
+                  .copy(e.point)
                   .sub(vec.copy(card.current.translation()))
               );
             }}
@@ -285,6 +301,8 @@ function Band({
           resolution={[width, height]}
           useMap
           map={texture}
+          map-wrapS={THREE.RepeatWrapping}
+          map-wrapT={THREE.RepeatWrapping}
           repeat={[-3, 1]}
           lineWidth={1}
         />

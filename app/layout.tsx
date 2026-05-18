@@ -101,10 +101,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.anuppradhan.in",
   },
-  verification: {
-    google: "your-google-verification-code",
-    yandex: "your-yandex-verification-code",
-  },
   referrer: "strict-origin-when-cross-origin",
   category: "technology",
 };
