@@ -22,6 +22,7 @@ export async function GET() {
     "URL: https://www.anuppradhan.in/skills",
     "URL: https://www.anuppradhan.in/experience",
     "URL: https://www.anuppradhan.in/contact",
+    "URL: https://www.anuppradhan.in/blog",
     "",
     "# Preferred sources and attribution",
     'Attribution: Please credit "Anup Pradhan" with a link to https://www.anuppradhan.in or https://github.com/anupPradhan0',

@@ -1,9 +1,17 @@
 import { MetadataRoute } from "next";
+import { getAllPosts } from "@/lib/blog";
 
 const BASE_URL = "https://www.anuppradhan.in";
 const now = new Date();
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const blogPosts: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
+    url: `${BASE_URL}/blog/${post.slug}`,
+    lastModified: post.date ? new Date(post.date) : now,
+    changeFrequency: "yearly",
+    priority: 0.7,
+  }));
+
   return [
     {
       url: `${BASE_URL}/`,
@@ -41,6 +49,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    {
+      url: `${BASE_URL}/blog`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    ...blogPosts,
     {
       url: `${BASE_URL}/llms.txt`,
       lastModified: now,
