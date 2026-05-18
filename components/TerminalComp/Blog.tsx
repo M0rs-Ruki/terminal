@@ -102,12 +102,12 @@ const Blog: React.FC = () => {
           </p>
         )}
         {postState === "ready" && post && (
-          <article className="space-y-3">
-            <header className="border-b border-green-800/40 pb-3">
-              <h2 className="text-lg sm:text-xl text-green-400 font-bold font-mono">
+          <article className="space-y-4">
+            <header className="border-b border-green-800/40 pb-4">
+              <h2 className="text-xl sm:text-2xl text-green-400 font-bold font-mono">
                 {post.title}
               </h2>
-              <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-gray-500 font-mono mt-1">
+              <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-gray-500 font-mono mt-2">
                 {post.date && <time dateTime={post.date}>{post.date}</time>}
                 {post.tags && post.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2">
@@ -125,7 +125,7 @@ const Blog: React.FC = () => {
             </header>
 
             <div
-              className="terminal-blog-content text-sm sm:text-base text-gray-300 leading-relaxed"
+              className="terminal-blog-content text-gray-300"
               dangerouslySetInnerHTML={{ __html: post.html }}
             />
           </article>
@@ -161,10 +161,10 @@ const Blog: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSelectedSlug(p.slug)}
-                className="w-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 sm:p-4 cursor-pointer group"
+                className="w-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-4 sm:p-5 cursor-pointer group"
               >
-                <div className="flex items-center justify-between gap-3 mb-1">
-                  <h3 className="text-base sm:text-lg text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors">
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <h3 className="text-lg sm:text-xl text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors">
                     {p.title}
                   </h3>
                   {p.date && (
@@ -177,7 +177,7 @@ const Blog: React.FC = () => {
                   )}
                 </div>
                 {p.excerpt && (
-                  <p className="text-gray-300 text-sm leading-relaxed">
+                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
                     {p.excerpt}
                   </p>
                 )}

@@ -455,23 +455,32 @@
   margin: 0.5rem 0;
 }
 /* === Terminal blog (in-terminal post rendering) === */
+.terminal-blog {
+  max-width: 56rem;
+}
+
+.terminal-blog-content {
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
 .terminal-blog-content h1,
 .terminal-blog-content h2,
 .terminal-blog-content h3,
 .terminal-blog-content h4 {
   color: #4ade80;
   font-weight: 700;
-  margin-top: 1.25rem;
-  margin-bottom: 0.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
 }
 
-.terminal-blog-content h1 { font-size: 1.25rem; }
-.terminal-blog-content h2 { font-size: 1.125rem; }
-.terminal-blog-content h3 { font-size: 1rem; }
+.terminal-blog-content h1 { font-size: 1.625rem; }
+.terminal-blog-content h2 { font-size: 1.375rem; }
+.terminal-blog-content h3 { font-size: 1.15rem; }
 
 .terminal-blog-content p {
-  margin: 0.75rem 0;
-  line-height: 1.65;
+  margin: 0.9rem 0;
+  line-height: 1.75;
 }
 
 .terminal-blog-content a {
