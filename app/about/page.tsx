@@ -103,7 +103,7 @@ const CodeIcon = () => (
   </svg>
 );
 
-const YoutubeIcon = () => (
+const SystemIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -114,10 +114,10 @@ const YoutubeIcon = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    aria-label="YouTube icon"
+    aria-label="System design icon"
   >
-    <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-    <path d="m10 15 5-3-5-3z" />
+    <circle cx="12" cy="12" r="3" />
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
   </svg>
 );
 
@@ -125,23 +125,42 @@ const YoutubeIcon = () => (
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": "https://www.anuppradhan.in/#person",
   name: "Anup Pradhan",
+  givenName: "Anup",
+  familyName: "Pradhan",
   url: "https://www.anuppradhan.in",
+  mainEntityOfPage: "https://www.anuppradhan.in/about",
   image: "https://www.anuppradhan.in/images/logo.jpg",
-  jobTitle: "Software Developer",
+  email: "mailto:anuppradhan929@gmail.com",
+  jobTitle: "Junior Software Developer",
   description:
-    "Software Developer from Bhubaneswar, India specializing in backend development, RESTful APIs, and machine learning. Currently pursuing BCA at Amity University.",
+    "Junior Software Developer at CHATI working on AI-powered calling software with WebRTC and SIP. Backend-focused full-stack engineer from Bhubaneswar, India; also a part-time Full Stack / WordPress developer at Prominds Digital. Currently pursuing BCA at Amity University.",
+  worksFor: [
+    { "@type": "Organization", name: "CHATI" },
+    { "@type": "Organization", name: "Prominds Digital" },
+  ],
   address: {
     "@type": "PostalAddress",
     addressLocality: "Bhubaneswar",
     addressRegion: "Odisha",
     addressCountry: "IN",
   },
+  nationality: { "@type": "Country", name: "India" },
+  knowsLanguage: ["English", "Hindi", "Odia"],
   knowsAbout: [
+    "Software Development",
+    "Backend Development",
+    "Full Stack Development",
+    "AI Calling",
+    "WebRTC",
+    "SIP",
+    "Real-time Voice",
     "MongoDB",
     "Express.js",
     "React",
     "Node.js",
+    "Next.js",
     "TypeScript",
     "JavaScript",
     "Machine Learning",
@@ -154,20 +173,17 @@ const structuredData = {
     "Cloudinary",
     "Vercel",
     "Render",
-    "Next.js",
     "Python",
     "scikit-learn",
     "NumPy",
     "pandas",
+    "System Design",
   ],
   alumniOf: [
     {
       "@type": "EducationalOrganization",
       name: "Amity University",
-      address: {
-        "@type": "PostalAddress",
-        addressCountry: "IN",
-      },
+      address: { "@type": "PostalAddress", addressCountry: "IN" },
     },
   ],
   hasCredential: [
@@ -183,14 +199,45 @@ const structuredData = {
     },
   ],
   skills:
-    "Software Development, Backend Development, API Development, Machine Learning, MongoDB, Express.js, React, Node.js, TypeScript, Python, TensorFlow",
-  sameAs: ["https://twitter.com/AnupPradhan0"],
+    "Software Development, Backend Development, AI Calling, WebRTC, SIP, API Development, Machine Learning, MongoDB, Express.js, React, Node.js, Next.js, TypeScript, Python",
+  sameAs: [
+    "https://github.com/anupPradhan0",
+    "https://www.linkedin.com/in/anup-pradhan77",
+    "https://x.com/AnupPradhan0",
+    "https://twitter.com/AnupPradhan0",
+    "https://www.instagram.com/anup.pradhan_",
+    "https://www.youtube.com/@morscode7",
+    "https://leetcode.com/u/Anuppradhan/",
+  ],
+};
+
+// AboutPage Structured Data — wraps the Person and is the page's primary entity
+const aboutPageStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "@id": "https://www.anuppradhan.in/about#aboutpage",
+  url: "https://www.anuppradhan.in/about",
+  name: "About Anup Pradhan",
+  description:
+    "About Anup Pradhan — Junior Software Developer at CHATI working on AI calling (WebRTC + SIP), part-time at Prominds Digital, and currently learning system design and automation.",
+  inLanguage: "en-IN",
+  mainEntity: { "@id": "https://www.anuppradhan.in/#person" },
+  author: { "@id": "https://www.anuppradhan.in/#person" },
+  about: { "@id": "https://www.anuppradhan.in/#person" },
+  primaryImageOfPage: "https://www.anuppradhan.in/images/logo.jpg",
+  isPartOf: { "@id": "https://www.anuppradhan.in/#website" },
+  breadcrumb: {
+    "@id": "https://www.anuppradhan.in/about#breadcrumb",
+  },
+  datePublished: "2025-03-01",
+  dateModified: new Date().toISOString().slice(0, 10),
 };
 
 // Breadcrumb Structured Data
 const breadcrumbStructuredData = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  "@id": "https://www.anuppradhan.in/about#breadcrumb",
   itemListElement: [
     {
       "@type": "ListItem",
@@ -214,6 +261,12 @@ export default function About() {
       {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(aboutPageStructuredData),
+        }}
+      />
+      <script
+        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <script
@@ -229,6 +282,25 @@ export default function About() {
           {/* Header */}
           <header>
             <h1 itemProp="name">About Me</h1>
+            <p>
+              By{" "}
+              <a
+                href="https://www.anuppradhan.in"
+                rel="author"
+                itemProp="author"
+                itemScope
+                itemType="https://schema.org/Person"
+              >
+                <span itemProp="name">Anup Pradhan</span>
+              </a>
+              {" · "}
+              <span itemProp="jobTitle">Junior Software Developer</span> @{" "}
+              <span itemProp="worksFor">CHATI</span>
+              {" · "}
+              <a href="mailto:anuppradhan929@gmail.com" rel="me">
+                anuppradhan929@gmail.com
+              </a>
+            </p>
           </header>
 
           <div>
@@ -241,28 +313,32 @@ export default function About() {
 
               <div>
                 <p>
-                  I&apos;m a <strong>Software Developer</strong> with a
-                  backend focus, building reliable RESTful APIs and full‑stack
-                  applications using MongoDB, Express.js, React, Node.js, and
-                  TypeScript, with JWT‑based authentication and responsive
-                  interfaces in React, Tailwind, HTML/CSS, and EJS. Strong in
-                  data modeling with Mongoose, media handling via Cloudinary
-                  integration (storage/CDN), and pragmatic tooling across
-                  Git/GitHub, Docker, Postman, and API testing for robust
-                  delivery. Comfortable augmenting products with AI/ML libraries
-                  (TensorFlow, NumPy, pandas) and shipping to Vercel/Render,
-                  guided by a build‑to‑learn mindset and ongoing BCA studies
-                  (CGPA 8.93).
+                  I&apos;m a <strong>Junior Software Developer</strong> at
+                  CHATI, working on AI-powered calling software built on{" "}
+                  <strong>WebRTC</strong> and the <strong>SIP</strong> protocol
+                  — real-time voice flows, media negotiation, signaling, and
+                  integrating the AI agent into live calls. Backend-focused
+                  full-stack engineer: reliable RESTful APIs and full‑stack
+                  applications on MongoDB, Express.js, React, Node.js, Next.js,
+                  and TypeScript, with JWT auth and responsive UIs in Tailwind.
+                  Strong on data modeling (Mongoose), media handling
+                  (Cloudinary), and pragmatic tooling (Git, Docker, Postman).
+                  Also part-time at Prominds Digital as Full Stack / WordPress
+                  developer. Comfortable augmenting products with AI/ML
+                  libraries (TensorFlow, NumPy, pandas) and shipping to
+                  Vercel/Render. Pursuing BCA at Amity University (CGPA 8.93).
                 </p>
 
                 <div role="list" aria-label="Technical skills">
                   {[
+                    "WebRTC",
+                    "SIP",
+                    "Node.js",
+                    "TypeScript",
+                    "Next.js",
                     "MongoDB",
                     "Express",
                     "React",
-                    "Node.js",
-                    "JavaScript",
-                    "TypeScript",
                   ].map((tech) => (
                     <span key={tech} role="listitem">
                       {tech}
@@ -348,46 +424,40 @@ export default function About() {
               </div>
             </section>
 
-            {/* Skills Section */}
-            <section id="skills-section" aria-labelledby="skills-heading">
+            {/* Current focus */}
+            <section id="focus-section" aria-labelledby="focus-heading">
               <div>
                 <span>$</span>
-                <h2 id="skills-heading">What I&apos;m Doing</h2>
+                <h2 id="focus-heading">What I&apos;m Doing</h2>
               </div>
 
               <div>
-                {/* Machine Learning Card */}
+                {/* Junior SWE @ CHATI */}
                 <article>
                   <div>
                     <CodeIcon />
                   </div>
-                  <h3>Learning Machine Learning</h3>
+                  <h3>Junior Software Developer @ CHATI</h3>
                   <p>
-                    Driven by a deep passion for technology&apos;s potential, I
-                    am on an exciting and immersive journey into the field of
-                    machine learning. My current focus is on building hands-on
-                    projects to deepen my understanding of the entire ML
-                    pipeline, from data preprocessing to model deployment. I am
-                    mastering essential tools like scikit-learn and TensorFlow
-                    to build and refine models, with the ultimate goal of
-                    creating elegant and effective solutions to real-world
-                    challenges.
+                    Working on AI-powered calling software, building real-time
+                    voice flows on top of <strong>WebRTC</strong> and the{" "}
+                    <strong>SIP</strong> protocol. Day-to-day is hands-on with
+                    media negotiation, signaling, and integrating the AI agent
+                    into the live call pipeline.
                   </p>
                 </article>
 
-                {/* YouTube Card */}
+                {/* System Design & Automation */}
                 <article>
                   <div>
-                    <YoutubeIcon />
+                    <SystemIcon />
                   </div>
-                  <h3>Content Creation</h3>
+                  <h3>System Design &amp; Automation</h3>
                   <p>
-                    Beyond coding, I am passionate about sharing my experiences.
-                    Once a month, I create and upload a video that offers a look
-                    into my life as a developer—from the technical challenges of
-                    a new project to the personal lessons learned along the way.
-                    My goal is to build in public and share my process with the
-                    community.
+                    Studying <strong>system design</strong> and architecture
+                    patterns, refactoring older projects to apply what I learn,
+                    and building small automation tools to remove repetitive
+                    work from my day-to-day flow.
                   </p>
                 </article>
               </div>

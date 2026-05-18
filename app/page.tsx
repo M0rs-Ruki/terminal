@@ -88,14 +88,30 @@ export default function Home() {
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": "https://www.anuppradhan.in/#website",
     name: "Anup Pradhan",
     alternateName: "Anup Pradhan Portfolio",
     url: "https://www.anuppradhan.in",
     description:
-      "Software Developer portfolio showcasing projects, skills, and experience",
+      "Software Developer portfolio showcasing projects, skills, experience, and a developer blog.",
+    inLanguage: "en-IN",
     creator: {
       "@type": "Person",
       name: "Anup Pradhan",
+      url: "https://www.anuppradhan.in",
+    },
+    publisher: {
+      "@type": "Person",
+      name: "Anup Pradhan",
+      url: "https://www.anuppradhan.in",
+    },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: "https://www.anuppradhan.in/blog?q={search_term_string}",
+      },
+      "query-input": "required name=search_term_string",
     },
   };
 

@@ -44,17 +44,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       locale: "en_IN",
       publishedTime: post.date || undefined,
       modifiedTime: post.date || undefined,
-      authors: [`${SITE_URL}`],
+      authors: [SITE_URL],
       tags: post.tags,
-      images: [
-        {
-          url: "/images/logo.jpg",
-          width: 1200,
-          height: 630,
-          alt: post.title,
-          type: "image/jpeg",
-        },
-      ],
+      // Image is auto-attached from app/blog/[slug]/opengraph-image.tsx
     },
     twitter: {
       card: "summary_large_image",
@@ -62,7 +54,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       creator: "@AnupPradhan0",
       title: post.title,
       description,
-      images: ["/images/logo.jpg"],
+      // Image is auto-attached from app/blog/[slug]/opengraph-image.tsx
     },
     robots: {
       index: true,
