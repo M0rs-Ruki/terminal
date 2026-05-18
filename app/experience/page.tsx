@@ -18,26 +18,35 @@ export const revalidate = 86400;
 // SEO Metadata for Experience page
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.anuppradhan.in"),
-  title: "Experience | Software Developer Roles",
+  title: "Experience | Junior Software Developer @ CHATI · WebRTC + SIP",
   description:
-    "Professional experience of Anup Pradhan as a Software Developer at Prominds Digital and CHATI, building full‑stack SaaS products, AI meeting assistants, large-scale data pipelines, and high-performance web applications.",
+    "Experience of Anup Pradhan: Junior Software Developer at CHATI (promoted from intern, Apr 2026) building AI-powered calling software on WebRTC and SIP; part-time Full Stack / WordPress Developer at Prominds Digital — SaaS for automotive dealerships, large-scale data migration, and high-performance web apps.",
   keywords: [
-    "Software Developer Experience",
-    "Prominds Digital",
-    "CHATI",
-    "Full Stack Developer",
-    "Backend Developer",
+    "Anup Pradhan Experience",
+    "Junior Software Developer",
+    "Junior Software Developer CHATI",
+    "Software Developer Intern CHATI",
+    "Software Developer Bhubaneswar",
+    "AI Calling Developer",
+    "WebRTC Developer",
+    "SIP Developer",
+    "Real-time Voice Engineer",
     "AI Meeting Assistant",
-    "SaaS Developer",
+    "Full Stack Developer Prominds Digital",
+    "WordPress Developer",
+    "Backend Developer India",
+    "Promotion Junior Software Developer",
+    "Data Pipeline Engineer",
+    "Union-Find Deduplication",
     "Bhubaneswar Software Developer",
   ],
   authors: [{ name: "Anup Pradhan", url: "https://www.anuppradhan.in" }],
   creator: "Anup Pradhan",
   publisher: "Anup Pradhan",
   openGraph: {
-    title: "Experience | Software Developer Roles",
+    title: "Experience | Junior Software Developer @ CHATI · WebRTC + SIP",
     description:
-      "Experience at Prominds Digital and CHATI, including SaaS visitor management, AI meeting assistant, CMS platform, and large-scale data migration.",
+      "Junior Software Developer at CHATI (promoted from intern Apr 2026) — AI calling on WebRTC + SIP. Part-time Full Stack / WordPress Developer at Prominds Digital.",
     type: "profile",
     url: "https://www.anuppradhan.in/experience",
     siteName: "Anup Pradhan - Developer Portfolio",
@@ -47,7 +56,7 @@ export const metadata: Metadata = {
         url: "https://www.anuppradhan.in/images/logo.jpg",
         width: 1200,
         height: 630,
-        alt: "Anup Pradhan - Software Developer Experience",
+        alt: "Anup Pradhan — Junior Software Developer experience",
         type: "image/jpeg",
       },
     ],
@@ -56,9 +65,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@AnupPradhan0",
     creator: "@AnupPradhan0",
-    title: "Experience | Software Developer Roles",
+    title: "Experience | Junior Software Developer @ CHATI · WebRTC + SIP",
     description:
-      "Professional experience as a Software Developer at Prominds Digital and CHATI, building scalable web apps and AI-driven systems.",
+      "Junior Software Developer at CHATI building AI calling software on WebRTC + SIP. Part-time Full Stack / WordPress Developer at Prominds Digital.",
     images: ["https://www.anuppradhan.in/images/logo.jpg"],
   },
   robots: {
@@ -91,8 +100,11 @@ function buildStructuredData() {
   const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
+    "@id": `${SITE_URL}/#person`,
     name: AUTHOR_NAME,
     url: SITE_URL,
+    mainEntityOfPage: `${SITE_URL}/experience`,
+    image: `${SITE_URL}/images/logo.jpg`,
     jobTitle: "Junior Software Developer",
     hasOccupation: [
       {
@@ -144,6 +156,7 @@ function buildStructuredData() {
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
+    "@id": `${SITE_URL}/experience#breadcrumb`,
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
       {
