@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface PostMeta {
   slug: string;
@@ -16,6 +16,49 @@ interface FullPost extends PostMeta {
 
 type LoadState = "loading" | "ready" | "error";
 
+function applyWordReveal(root: HTMLElement): void {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const textNodes: Text[] = [];
+  let n: Node | null;
+  while ((n = walker.nextNode())) {
+    const parent = (n as Text).parentElement;
+    if (!parent) continue;
+    // Skip text inside <code>/<pre> so code blocks don't fragment
+    if (parent.closest("code, pre")) continue;
+    if (n.textContent && n.textContent.trim()) textNodes.push(n as Text);
+  }
+
+  let totalWords = 0;
+  const splitCache: string[][] = textNodes.map((tn) => {
+    const parts = (tn.textContent || "").split(/(\s+)/);
+    totalWords += parts.filter((p) => p && !/^\s+$/.test(p)).length;
+    return parts;
+  });
+
+  // Aim for ~3s total reveal, clamp per-word delay between 6ms and 28ms
+  const perWordMs = Math.min(28, Math.max(6, 3000 / Math.max(1, totalWords)));
+
+  let wordIdx = 0;
+  textNodes.forEach((tn, i) => {
+    const parts = splitCache[i];
+    const frag = document.createDocumentFragment();
+    parts.forEach((part) => {
+      if (!part) return;
+      if (/^\s+$/.test(part)) {
+        frag.appendChild(document.createTextNode(part));
+      } else {
+        const span = document.createElement("span");
+        span.className = "blog-word";
+        span.style.setProperty("--d", `${Math.round(wordIdx * perWordMs)}ms`);
+        span.textContent = part;
+        frag.appendChild(span);
+        wordIdx++;
+      }
+    });
+    tn.parentNode?.replaceChild(frag, tn);
+  });
+}
+
 const Blog: React.FC = () => {
   const [posts, setPosts] = useState<PostMeta[]>([]);
   const [listState, setListState] = useState<LoadState>("loading");
@@ -23,6 +66,7 @@ const Blog: React.FC = () => {
   const [post, setPost] = useState<FullPost | null>(null);
   const [postState, setPostState] = useState<LoadState>("ready");
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -75,19 +119,24 @@ const Blog: React.FC = () => {
     };
   }, [selectedSlug]);
 
+  useEffect(() => {
+    if (postState !== "ready" || !post || !contentRef.current) return;
+    applyWordReveal(contentRef.current);
+  }, [postState, post]);
+
   if (selectedSlug) {
     return (
       <div className="terminal-blog">
-        <div className="mb-3 flex items-center gap-3">
+        <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
           <button
             type="button"
             onClick={() => setSelectedSlug(null)}
-            className="text-xs sm:text-sm text-green-400/80 font-mono hover:text-green-300 transition-colors cursor-pointer"
+            className="text-xs sm:text-sm text-green-400/80 font-mono hover:text-green-300 transition-colors cursor-pointer py-1"
           >
             ← back to posts
           </button>
           {post && (
-            <span className="text-xs sm:text-sm text-gray-500 font-mono truncate">
+            <span className="text-xs sm:text-sm text-gray-500 font-mono truncate min-w-0">
               {post.slug}.mdx
             </span>
           )}
@@ -97,20 +146,20 @@ const Blog: React.FC = () => {
           <p className="text-green-400/70 font-mono text-sm">Loading post…</p>
         )}
         {postState === "error" && (
-          <p className="text-red-400 font-mono text-sm">
+          <p className="text-red-400 font-mono text-sm break-words">
             Failed to load post: {errorMsg}
           </p>
         )}
         {postState === "ready" && post && (
-          <article className="space-y-4">
-            <header className="border-b border-green-800/40 pb-4">
-              <h2 className="text-xl sm:text-2xl text-green-400 font-bold font-mono">
+          <article className="space-y-3">
+            <header className="border-b border-green-800/40 pb-3">
+              <h2 className="text-base sm:text-lg text-green-400 font-bold font-mono break-words">
                 {post.title}
               </h2>
-              <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-gray-500 font-mono mt-2">
+              <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500 font-mono mt-2">
                 {post.date && <time dateTime={post.date}>{post.date}</time>}
                 {post.tags && post.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5">
                     {post.tags.map((tag) => (
                       <span
                         key={tag}
@@ -125,6 +174,7 @@ const Blog: React.FC = () => {
             </header>
 
             <div
+              ref={contentRef}
               className="terminal-blog-content text-gray-300"
               dangerouslySetInnerHTML={{ __html: post.html }}
             />
@@ -137,9 +187,7 @@ const Blog: React.FC = () => {
   return (
     <div className="terminal-blog">
       <div className="mb-3 flex items-center gap-3">
-        <span className="text-green-400 font-mono text-sm sm:text-base">
-          BLOG.log
-        </span>
+        <span className="text-green-400 font-mono text-sm">BLOG.log</span>
         <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
       </div>
 
@@ -147,7 +195,7 @@ const Blog: React.FC = () => {
         <p className="text-green-400/70 font-mono text-sm">Loading posts…</p>
       )}
       {listState === "error" && (
-        <p className="text-red-400 font-mono text-sm">
+        <p className="text-red-400 font-mono text-sm break-words">
           Failed to load posts: {errorMsg}
         </p>
       )}
@@ -161,28 +209,28 @@ const Blog: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSelectedSlug(p.slug)}
-                className="w-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-4 sm:p-5 cursor-pointer group"
+                className="w-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 sm:p-4 cursor-pointer group"
               >
-                <div className="flex items-center justify-between gap-3 mb-2">
-                  <h3 className="text-lg sm:text-xl text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-3 mb-1">
+                  <h3 className="text-sm sm:text-base text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors break-words">
                     {p.title}
                   </h3>
                   {p.date && (
                     <time
                       dateTime={p.date}
-                      className="shrink-0 text-xs sm:text-sm text-gray-500 font-mono"
+                      className="shrink-0 text-xs text-gray-500 font-mono"
                     >
                       {p.date}
                     </time>
                   )}
                 </div>
                 {p.excerpt && (
-                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
+                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
                     {p.excerpt}
                   </p>
                 )}
                 {p.tags && p.tags.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-2">
+                  <div className="mt-2 flex flex-wrap gap-1.5">
                     {p.tags.map((tag) => (
                       <span
                         key={tag}
