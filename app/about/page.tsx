@@ -125,23 +125,42 @@ const YoutubeIcon = () => (
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": "https://www.anuppradhan.in/#person",
   name: "Anup Pradhan",
+  givenName: "Anup",
+  familyName: "Pradhan",
   url: "https://www.anuppradhan.in",
+  mainEntityOfPage: "https://www.anuppradhan.in/about",
   image: "https://www.anuppradhan.in/images/logo.jpg",
-  jobTitle: "Software Developer",
+  email: "mailto:anuppradhan929@gmail.com",
+  jobTitle: "Junior Software Developer",
   description:
-    "Software Developer from Bhubaneswar, India specializing in backend development, RESTful APIs, and machine learning. Currently pursuing BCA at Amity University.",
+    "Junior Software Developer at CHATI working on AI-powered calling software with WebRTC and SIP. Backend-focused full-stack engineer from Bhubaneswar, India; also a part-time Full Stack / WordPress developer at Prominds Digital. Currently pursuing BCA at Amity University.",
+  worksFor: [
+    { "@type": "Organization", name: "CHATI" },
+    { "@type": "Organization", name: "Prominds Digital" },
+  ],
   address: {
     "@type": "PostalAddress",
     addressLocality: "Bhubaneswar",
     addressRegion: "Odisha",
     addressCountry: "IN",
   },
+  nationality: { "@type": "Country", name: "India" },
+  knowsLanguage: ["English", "Hindi", "Odia"],
   knowsAbout: [
+    "Software Development",
+    "Backend Development",
+    "Full Stack Development",
+    "AI Calling",
+    "WebRTC",
+    "SIP",
+    "Real-time Voice",
     "MongoDB",
     "Express.js",
     "React",
     "Node.js",
+    "Next.js",
     "TypeScript",
     "JavaScript",
     "Machine Learning",
@@ -154,20 +173,17 @@ const structuredData = {
     "Cloudinary",
     "Vercel",
     "Render",
-    "Next.js",
     "Python",
     "scikit-learn",
     "NumPy",
     "pandas",
+    "System Design",
   ],
   alumniOf: [
     {
       "@type": "EducationalOrganization",
       name: "Amity University",
-      address: {
-        "@type": "PostalAddress",
-        addressCountry: "IN",
-      },
+      address: { "@type": "PostalAddress", addressCountry: "IN" },
     },
   ],
   hasCredential: [
@@ -183,8 +199,16 @@ const structuredData = {
     },
   ],
   skills:
-    "Software Development, Backend Development, API Development, Machine Learning, MongoDB, Express.js, React, Node.js, TypeScript, Python, TensorFlow",
-  sameAs: ["https://twitter.com/AnupPradhan0"],
+    "Software Development, Backend Development, AI Calling, WebRTC, SIP, API Development, Machine Learning, MongoDB, Express.js, React, Node.js, Next.js, TypeScript, Python",
+  sameAs: [
+    "https://github.com/anupPradhan0",
+    "https://www.linkedin.com/in/anup-pradhan77",
+    "https://x.com/AnupPradhan0",
+    "https://twitter.com/AnupPradhan0",
+    "https://www.instagram.com/anup.pradhan_",
+    "https://www.youtube.com/@morscode7",
+    "https://leetcode.com/u/Anuppradhan/",
+  ],
 };
 
 // Breadcrumb Structured Data
