@@ -129,6 +129,12 @@ export default function RootLayout({
           title="LLMs Description"
           href="https://www.anuppradhan.in/llms.txt"
         />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Anup Pradhan — Blog (RSS)"
+          href="https://www.anuppradhan.in/blog/rss.xml"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

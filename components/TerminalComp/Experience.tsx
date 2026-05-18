@@ -1,7 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { durationLabel, formatMonths, monthsBetween } from "@/lib/duration";
+
+// Role start/end dates — single source of truth. Durations recompute automatically
+// on every render, so the visible "X mos" / "Y yr Z mos" labels stay current
+// without manual edits each month.
+const CHATI_INTERN_START = new Date(2025, 10, 1); // Nov 2025
+const CHATI_INTERN_END = new Date(2026, 3, 1);    // Apr 2026 (promotion)
+const CHATI_JR_START = new Date(2026, 3, 1);      // Apr 2026
+
+const PROMINDS_WP_START = new Date(2025, 3, 1);   // Apr 2025
+const PROMINDS_FS_START = new Date(2025, 10, 1);  // Nov 2025
 
 // Typewriter effect component
 interface TypewriterTextProps {
@@ -77,6 +88,21 @@ const Experience: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Computed once per mount — accurate to the day the user opens the page.
+  const duration = useMemo(() => {
+    const now = new Date();
+    return {
+      chatiTotal: durationLabel(CHATI_INTERN_START, now),
+      chatiIntern: formatMonths(
+        monthsBetween(CHATI_INTERN_START, CHATI_INTERN_END)
+      ),
+      chatiJr: durationLabel(CHATI_JR_START, now),
+      promindsTotal: durationLabel(PROMINDS_WP_START, now),
+      promindsFs: durationLabel(PROMINDS_FS_START, now),
+      promindsWp: durationLabel(PROMINDS_WP_START, now),
+    };
+  }, []);
+
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden">
       <MatrixRain />
@@ -108,127 +134,177 @@ const Experience: React.FC = () => {
               </div>
             </div>
 
-            <div className="ml-3 sm:ml-6 border-l-2 border-green-800/30 pl-3 sm:pl-6 space-y-6">
+            <div className="ml-3 sm:ml-6 border-l-2 border-green-800/30 pl-3 sm:pl-6 space-y-8">
               {/* CHATI */}
-              <div className="border-b border-green-800/20 pb-4">
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                  <div className="flex items-start gap-3">
-                    <div className="shrink-0">
-                      <Image
-                        src="/images/Chati.ico"
-                        alt="CHATI — Software Developer (Internship)"
-                        title="CHATI — Software Developer (Internship)"
-                        width={64}
-                        height={64}
-                        className="h-12 w-12 sm:h-16 sm:w-16 rounded-lg border border-green-800/50 bg-black/40 object-contain"
-                      />
-                    </div>
-                    <div>
-                      <h3 className="text-green-400 font-semibold text-base sm:text-lg font-mono">
-                        Software Developer
-                      </h3>
-                      <p className="text-gray-400 text-xs sm:text-sm">
-                        CHATI · Internship
-                      </p>
-                      <p className="text-gray-500 text-xs sm:text-sm">
-                        Oct 2025 — Present · Bhubaneswar, Odisha, India ·
-                        On-site
-                      </p>
-                    </div>
+              <div className="border-b border-green-800/20 pb-6">
+                {/* Company header */}
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="shrink-0">
+                    <Image
+                      src="/images/Chati.ico"
+                      alt="CHATI"
+                      title="CHATI"
+                      width={64}
+                      height={64}
+                      className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg border border-green-800/50 bg-black/40 object-contain"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-green-400 font-semibold text-base sm:text-lg font-mono">
+                      CHATI
+                    </h3>
+                    <p className="text-gray-400 text-xs sm:text-sm">
+                      {duration.chatiTotal}
+                    </p>
+                    <p className="text-gray-500 text-xs sm:text-sm">
+                      Bhubaneswar, Odisha, India · On-site
+                    </p>
                   </div>
                 </div>
 
-                <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-6">
-                  <li>
-                    Developed an AI-powered meeting assistant that joins calls,
-                    records conversations, and generates structured
-                    transcript-based summaries.
+                {/* Nested roles with vertical timeline */}
+                <ol className="relative border-l-2 border-green-800/30 ml-5 sm:ml-7 space-y-6">
+                  {/* Junior Software Developer (current) */}
+                  <li className="pl-4 sm:pl-5 relative">
+                    <span
+                      aria-hidden="true"
+                      className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-green-400 ring-2 ring-black shadow-[0_0_0_2px_rgba(74,222,128,0.35)]"
+                    />
+                    <h4 className="text-green-400 font-semibold text-sm sm:text-base font-mono">
+                      Junior Software Developer
+                    </h4>
+                    <p className="text-gray-400 text-xs sm:text-sm">Full-time</p>
+                    <p className="text-gray-500 text-xs sm:text-sm">
+                      Apr 2026 — Present · {duration.chatiJr}
+                    </p>
+                    <p className="mt-2 text-gray-300 text-sm sm:text-base">
+                      Currently working as a Junior Software Developer at CHATI
+                      after being promoted from the internship role — continuing
+                      to build on the AI calling and meeting-assistant platform
+                      with WebRTC and SIP-protocol work.
+                    </p>
                   </li>
-                  <li>
-                    Integrated the platform with Zoom, Microsoft Teams, and
-                    Google Meet to support a growing base of 500+ active users.
+
+                  {/* Software Developer Intern */}
+                  <li className="pl-4 sm:pl-5 relative">
+                    <span
+                      aria-hidden="true"
+                      className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-black border-2 border-green-700"
+                    />
+                    <h4 className="text-green-400 font-semibold text-sm sm:text-base font-mono">
+                      Software Developer Intern
+                    </h4>
+                    <p className="text-gray-400 text-xs sm:text-sm">Internship</p>
+                    <p className="text-gray-500 text-xs sm:text-sm">
+                      Nov 2025 — Apr 2026 · {duration.chatiIntern}
+                    </p>
+
+                    <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-5">
+                      <li>
+                        AI Meeting Assistant: architected a multi-platform bot
+                        (Zoom, Teams, Meet) for live transcription and
+                        summaries, scaling to 500+ active users.
+                      </li>
+                      <li>
+                        Custom CMS: designed and deployed an end-to-end,
+                        scalable CMS from scratch to streamline internal
+                        content operations.
+                      </li>
+                      <li>
+                        Data Engineering: engineered a high-performance pipeline
+                        to migrate 1.2M records cross-referenced with 920K
+                        records, bringing total execution time under 10
+                        minutes.
+                      </li>
+                      <li>
+                        Designed a Union–Find based deduplication system that
+                        groups related citizen records into clusters in near
+                        O(1) per link, keeping
+                        <code className="mx-1">/v1/citizen/all/unverified</code>
+                        fast and scalable.
+                      </li>
+                    </ul>
                   </li>
-                  <li>
-                    Architected a custom CMS to manage internal content and
-                    operational workflows for the product team.
-                  </li>
-                  <li>
-                    Engineered a high-performance data pipeline to clean,
-                    validate, and migrate over 1.2M records into production
-                    safely.
-                  </li>
-                  <li>
-                    Implemented chunked and batch-processing strategies with
-                    strict validation to keep only high-quality data in the
-                    main database.
-                  </li>
-                  <li>
-                    Designed and implemented a Union–Find based deduplication
-                    system that groups related citizen records into duplicate
-                    clusters in near O(1) time per link, keeping
-                    <code className="mx-1">/v1/citizen/all/unverified</code>
-                    fast and scalable.
-                  </li>
-                  <li>
-                    Achieved high-speed validation and migration across 1.2M+
-                    records cross-referenced with 920K+ records in under 10
-                    minutes.
-                  </li>
-                </ul>
+                </ol>
               </div>
 
               {/* Prominds Digital */}
               <div>
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                  <div className="flex items-start gap-3">
-                    <div className="shrink-0">
-                      <Image
-                        src="/images/PromindsD.png"
-                        alt="Prominds Digital — Software Developer"
-                        title="Prominds Digital — Software Developer (Part-time)"
-                        width={64}
-                        height={64}
-                        className="h-12 w-12 sm:h-16 sm:w-16 rounded-lg border border-green-800/50 bg-black/40 object-contain"
-                      />
-                    </div>
-                    <div>
-                      <h3 className="text-green-400 font-semibold text-base sm:text-lg font-mono">
-                        Software Developer
-                      </h3>
-                      <p className="text-gray-400 text-xs sm:text-sm">
-                        Prominds Digital · Part-time
-                      </p>
-                      <p className="text-gray-500 text-xs sm:text-sm">
-                        Jul 2024 — Present · Bhubaneswar, Odisha, India ·
-                        On-site
-                      </p>
-                    </div>
+                {/* Company header */}
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="shrink-0">
+                    <Image
+                      src="/images/PromindsD.png"
+                      alt="Prominds Digital"
+                      title="Prominds Digital"
+                      width={64}
+                      height={64}
+                      className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg border border-green-800/50 bg-black/40 object-contain"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-green-400 font-semibold text-base sm:text-lg font-mono">
+                      Prominds Digital
+                    </h3>
+                    <p className="text-gray-400 text-xs sm:text-sm">
+                      Part-time · {duration.promindsTotal}
+                    </p>
+                    <p className="text-gray-500 text-xs sm:text-sm">
+                      Bhubaneswar, Odisha, India · Remote
+                    </p>
                   </div>
                 </div>
 
-                <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-6">
-                  <li>
-                    Architected and shipped a scalable SaaS showroom visitor
-                    management system for automotive dealerships.
+                {/* Nested roles with vertical timeline */}
+                <ol className="relative border-l-2 border-green-800/30 ml-5 sm:ml-7 space-y-6">
+                  {/* Full Stack Developer (current) */}
+                  <li className="pl-4 sm:pl-5 relative">
+                    <span
+                      aria-hidden="true"
+                      className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-green-400 ring-2 ring-black shadow-[0_0_0_2px_rgba(74,222,128,0.35)]"
+                    />
+                    <h4 className="text-green-400 font-semibold text-sm sm:text-base font-mono">
+                      Full Stack Developer
+                    </h4>
+                    <p className="text-gray-500 text-xs sm:text-sm">
+                      Nov 2025 — Present · {duration.promindsFs}
+                    </p>
+
+                    <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-5">
+                      <li>
+                        Developed an automotive visitor-management SaaS used
+                        across 5 dealerships (5k+ monthly entries), with
+                        WhatsApp automation and lead pipelines built in.
+                      </li>
+                      <li>
+                        Managing the architectural shift and migration of
+                        legacy infrastructure to a modern, streamlined CRM
+                        solution.
+                      </li>
+                    </ul>
                   </li>
-                  <li>
-                    Deployed the platform across 5+ dealerships, processing over
-                    5,000 visitor entries every month with reliable uptime.
+
+                  {/* WordPress Developer */}
+                  <li className="pl-4 sm:pl-5 relative">
+                    <span
+                      aria-hidden="true"
+                      className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-black border-2 border-green-700"
+                    />
+                    <h4 className="text-green-400 font-semibold text-sm sm:text-base font-mono">
+                      WordPress Developer
+                    </h4>
+                    <p className="text-gray-500 text-xs sm:text-sm">
+                      Apr 2025 — Present · {duration.promindsWp}
+                    </p>
+
+                    <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-5">
+                      <li>
+                        Launched 5 WordPress websites and improved performance
+                        scores by 50%, achieving a peak score of 84.
+                      </li>
+                    </ul>
                   </li>
-                  <li>
-                    Integrated core features including automated WhatsApp
-                    follow-ups, digital enquiry tracking, and end-to-end lead
-                    pipelines.
-                  </li>
-                  <li>
-                    Delivered multiple full-stack web applications tailored to
-                    diverse business workflows and requirements.
-                  </li>
-                  <li>
-                    Optimized performance across key modules, significantly
-                    improving core web vitals and user experience.
-                  </li>
-                </ul>
+                </ol>
               </div>
             </div>
           </section>
