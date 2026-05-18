@@ -269,7 +269,7 @@ const HELP_ITEMS: HelpItem[] = [
   { type: "command", command: "yes [string]", description: "Repeat string (limited)." },
   { type: "command", command: "ai <question>", description: "Chat with AI assistant (10 requests/day)." },
   { type: "command", command: "clear", description: "Clear the terminal screen." },
-  { type: "command", command: "refresh", description: "Reload the page." },
+  { type: "command", command: "blog", description: "Open the blog." },
   { type: "command", command: "exit", description: "Close this tab/window." },
 ];
 
@@ -311,7 +311,7 @@ const TAB_COMPLETIONS: string[] = [
   "banner",
   "yes",
   "clear",
-  "refresh",
+  "blog",
   "exit",
 ];
 
@@ -336,7 +336,7 @@ const COMMAND_NAMES = [
   "history",
   "man",
   "clear",
-  "refresh",
+  "blog",
   "exit",
   "ai",
   "neofetch",
@@ -805,7 +805,7 @@ export default function Terminal({ onFirstCommand }: TerminalProps) {
       return;
     }
 
-    // help, whoami, date, clear, refresh, exit
+    // help, whoami, date, clear, blog, exit
     if (commandName === "help") {
       newHist.push({ type: "output", content: <Help /> });
       setHistory(newHist);
@@ -825,8 +825,8 @@ export default function Terminal({ onFirstCommand }: TerminalProps) {
       setHistory([]);
       return;
     }
-    if (commandName === "refresh") {
-      window.location.reload();
+    if (commandName === "blog") {
+      window.location.href = "/blog";
       return;
     }
     if (commandName === "exit") {
@@ -980,7 +980,7 @@ export default function Terminal({ onFirstCommand }: TerminalProps) {
             "experience",
             "contact",
             "clear",
-            "refresh",
+            "blog",
           ].map((cmd) => (
             <button
               key={cmd}
