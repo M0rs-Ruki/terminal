@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Script from "next/script";
 import { notFound } from "next/navigation";
-import { evaluate } from "@mdx-js/mdx";
-import * as runtime from "react/jsx-runtime";
-import remarkGfm from "remark-gfm";
+import BlogTerminalPage from "@/components/BlogTerminalPage";
+import BlogSeoArticle from "@/components/BlogSeoArticle";
 import { getAllPostSlugs, getPostBySlug } from "@/lib/blog";
-import { useMDXComponents as getMDXComponents } from "@/mdx-components";
+import { renderPostHtml } from "@/lib/render-post";
 
 const SITE_URL = "https://www.anuppradhan.in";
 const AUTHOR_NAME = "Anup Pradhan";
@@ -19,7 +17,9 @@ export function generateStaticParams() {
   return getAllPostSlugs().map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = getPostBySlug(slug);
   if (!post) return { title: "Post not found" };
@@ -46,7 +46,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       modifiedTime: post.date || undefined,
       authors: [SITE_URL],
       tags: post.tags,
-      // Image is auto-attached from app/blog/[slug]/opengraph-image.tsx
     },
     twitter: {
       card: "summary_large_image",
@@ -54,7 +53,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       creator: "@AnupPradhan0",
       title: post.title,
       description,
-      // Image is auto-attached from app/blog/[slug]/opengraph-image.tsx
     },
     robots: {
       index: true,
@@ -75,15 +73,9 @@ export default async function BlogPostPage({ params }: PageProps) {
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
-  const compiled = await evaluate(post.content, {
-    ...(runtime as unknown as Parameters<typeof evaluate>[1]),
-    remarkPlugins: [remarkGfm],
-  });
-
-  const MDXContent = compiled.default;
-  const components = getMDXComponents({});
-
+  const html = await renderPostHtml(post.content);
   const url = `${SITE_URL}/blog/${slug}`;
+
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -125,8 +117,17 @@ export default async function BlogPostPage({ params }: PageProps) {
     ],
   };
 
+  const initialPost = {
+    slug: post.slug,
+    title: post.title,
+    date: post.date,
+    excerpt: post.excerpt,
+    tags: post.tags,
+    html,
+  };
+
   return (
-    <div className="relative min-h-screen bg-black text-white overflow-hidden">
+    <>
       <Script
         id={`article-schema-${slug}`}
         type="application/ld+json"
@@ -139,44 +140,13 @@ export default async function BlogPostPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         strategy="afterInteractive"
       />
-      <article className="relative z-10 max-w-3xl mx-auto p-4 sm:p-6 lg:p-8">
-        <div className="mb-6 sm:mb-8 border border-green-800 bg-black/50 backdrop-blur-sm rounded-lg p-3 sm:p-4 flex items-center justify-between">
-          <span className="text-green-400 font-mono text-sm sm:text-base">
-            {post.title.toLowerCase().replace(/\s+/g, "-")}.mdx
-          </span>
-          <Link
-            href="/blog"
-            className="text-xs sm:text-sm text-green-400/80 font-mono hover:text-green-300 transition-colors"
-          >
-            ← all posts
-          </Link>
-        </div>
-
-        <header className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl text-green-400 font-bold font-mono mb-2">
-            {post.title}
-          </h1>
-          <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-gray-500 font-mono">
-            {post.date && <time dateTime={post.date}>{post.date}</time>}
-            {post.tags && post.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2 py-0.5 bg-green-900/30 border border-green-800/50 rounded-full text-green-400"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-        </header>
-
-        <div className="prose-blog">
-          <MDXContent components={components} />
-        </div>
-      </article>
-    </div>
+      <BlogSeoArticle
+        title={post.title}
+        date={post.date}
+        excerpt={post.excerpt}
+        html={html}
+      />
+      <BlogTerminalPage slug={slug} initialPost={initialPost} />
+    </>
   );
 }

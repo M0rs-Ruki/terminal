@@ -5,6 +5,7 @@
 
 export const HOME_DIR = [
   "about",
+  "blog",
   "projects",
   "skills",
   "experience",
@@ -26,10 +27,12 @@ export const FILE_CONTENTS: Record<string, string> = {
     "CHATI (Software Developer Intern), Prominds Digital (Part-time). Type 'cd experience' for full timeline.",
   contact:
     "Get in touch: email, LinkedIn, GitHub. Type 'cd contact' for links and copy-paste.",
+  blog:
+    "Developer blog — MDX posts on backend, system design, WebRTC/SIP, and experiments. Type 'blog' or 'cd blog' to open /blog.",
   welcome:
     "Hi, I'm Anup Pradhan. Welcome to my portfolio terminal. Type 'help' or 'ls' for commands.",
   README:
-    "Portfolio terminal — Anup Pradhan. Commands: help, ls, cd <section>, pwd, cat <file>, whoami, hostname, date, echo, clear, ai <question>. Sections: about, projects, skills, experience, contact.",
+    "Portfolio terminal — Anup Pradhan. Commands: help, ls, cd <section>, pwd, cat <file>, whoami, hostname, date, echo, clear, blog, ai <question>. Sections: about, blog, projects, skills, experience, contact.",
 };
 
 /** Format ls -l style: permissions, fake size, date, name */
@@ -107,9 +110,9 @@ export function printfFormat(format: string, args: string[]): string {
 export const MAN_PAGES: Record<string, string> = {
   help: "help — Display list of available commands and short descriptions.",
   ls: "ls [ -l | -a | -la ] — List directory contents. -l long format, -a include hidden.",
-  cd: "cd [dir] — Change directory. cd with no args goes home. Sections: about, projects, skills, experience, contact, welcome.",
+  cd: "cd [dir] — Change directory. cd with no args goes home. Sections: about, blog, projects, skills, experience, contact, welcome.",
   pwd: "pwd — Print working directory.",
-  cat: "cat <file> — Print file contents. Files: about, projects, skills, experience, contact, welcome, README.",
+  cat: "cat <file> — Print file contents. Files: about, blog, projects, skills, experience, contact, welcome, README.",
   whoami: "whoami — Print current username.",
   hostname: "hostname — Print system hostname.",
   id: "id — Print user and group IDs.",

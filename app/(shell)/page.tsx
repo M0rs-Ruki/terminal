@@ -1,19 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Script from "next/script";
-import Tag from "@/components/Tag";
 import TerminalComp from "@/components/TerminalComp";
+import { useShell } from "@/context/ShellContext";
 
-export default function Home() {
-  const [firstCommandExecuted, setFirstCommandExecuted] =
-    useState<boolean>(false);
+function HomeTerminal() {
+  const searchParams = useSearchParams();
+  const { setHideIdentityOnMobile } = useShell();
+  const section = searchParams.get("section");
+  const cmd = searchParams.get("cmd");
 
   const handleFirstCommand = (): void => {
-    setFirstCommandExecuted(true);
+    setHideIdentityOnMobile(true);
   };
 
-  // Structured Data - Person Schema
+  return (
+    <TerminalComp
+      onFirstCommand={handleFirstCommand}
+      initialSection={section}
+      initialCommand={cmd}
+    />
+  );
+}
+
+export default function Home() {
   const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -47,11 +59,11 @@ export default function Home() {
       "Software Development",
     ],
     sameAs: [
-      "https://www.linkedin.com/in/anup-pradhan77",
+      "https://www.linkedin.com/in/anuppradhan0",
       "https://github.com/anupPradhan0",
       "https://x.com/AnupPradhan0",
       "https://www.youtube.com/@morscode7",
-      "https://www.instagram.com/anup.pradhan_",
+      "https://www.instagram.com/anuppradhan.in",
       "https://leetcode.com/u/Anuppradhan/",
     ],
     alumniOf: {
@@ -70,7 +82,6 @@ export default function Home() {
     },
   };
 
-  // Breadcrumb Schema
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -84,7 +95,6 @@ export default function Home() {
     ],
   };
 
-  // Website Schema
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -117,52 +127,27 @@ export default function Home() {
 
   return (
     <>
-      {/* Structured Data - Person Schema */}
       <Script
         id="person-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
         strategy="afterInteractive"
       />
-
-      {/* Breadcrumb Schema */}
       <Script
         id="breadcrumb-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         strategy="afterInteractive"
       />
-
-      {/* Website Schema */}
       <Script
         id="website-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         strategy="afterInteractive"
       />
-
-      <main className="app-shell" role="main">
-        <div className="main-content-area">
-          {/* Identity Card Section */}
-          <section
-            className={`identity-pane ${firstCommandExecuted ? "hide-on-mobile" : ""
-              }`}
-            aria-label="Developer Identity Card - Anup Pradhan Software Developer specializing in backend development and machine learning"
-          >
-            <Tag />
-          </section>
-
-          {/* Terminal Section */}
-          <section
-            className="terminal-pane"
-            aria-label="Interactive Terminal - Explore skills, projects, and experience with commands"
-          >
-            <TerminalComp onFirstCommand={handleFirstCommand} />
-          </section>
-        </div>
-      </main>
-
-      {/* Meta description for SEO - rendered via Next.js Head in layout */}
+      <Suspense fallback={null}>
+        <HomeTerminal />
+      </Suspense>
       <Script
         id="seo-meta-tags"
         strategy="afterInteractive"

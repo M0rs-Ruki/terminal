@@ -266,8 +266,8 @@ const structuredData = {
   sameAs: [
     "https://www.youtube.com/@morscode7",
     "https://x.com/AnupPradhan0",
-    "https://www.instagram.com/anup.pradhan_",
-    "https://www.linkedin.com/in/anup-pradhan77",
+    "https://www.instagram.com/anuppradhan.in",
+    "https://www.linkedin.com/in/anuppradhan0",
     "https://github.com/anupPradhan0",
     "https://leetcode.com/u/Anuppradhan/",
   ],
@@ -331,13 +331,13 @@ export default function Contact() {
     {
       icon: InstagramIcon,
       name: "Instagram",
-      href: "https://www.instagram.com/anup.pradhan_",
+      href: "https://www.instagram.com/anuppradhan.in",
       color: "pink",
     },
     {
       icon: LinkedinIcon,
       name: "LinkedIn",
-      href: "https://www.linkedin.com/in/anup-pradhan77",
+      href: "https://www.linkedin.com/in/anuppradhan0",
       color: "blue",
     },
     {

@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { remark } from "remark";
-import remarkGfm from "remark-gfm";
-import remarkHtml from "remark-html";
 import { getAllPostSlugs, getPostBySlug } from "@/lib/blog";
+import { renderPostHtml } from "@/lib/render-post";
 
 export const dynamic = "force-static";
 
@@ -21,9 +19,7 @@ export async function GET(_request: Request, { params }: RouteContext) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const html = String(
-    await remark().use(remarkGfm).use(remarkHtml, { sanitize: false }).process(post.content)
-  );
+  const html = await renderPostHtml(post.content);
 
   return NextResponse.json({
     slug: post.slug,

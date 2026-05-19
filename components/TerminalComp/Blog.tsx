@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import type { BlogInitialPost } from "@/components/BlogTerminalPage.types";
 
 interface PostMeta {
   slug: string;
@@ -15,6 +18,12 @@ interface FullPost extends PostMeta {
 }
 
 type LoadState = "loading" | "ready" | "error";
+
+interface BlogProps {
+  slug?: string | null;
+  initialPost?: BlogInitialPost | null;
+  syncUrls?: boolean;
+}
 
 function rankRecommendations(
   current: PostMeta,
@@ -40,7 +49,6 @@ function rankRecommendations(
 }
 
 function applyWordReveal(root: HTMLElement): void {
-  // Guard against double-walk (e.g. React Strict Mode re-runs effects)
   if (root.dataset.wordsWalked === "1") return;
   root.dataset.wordsWalked = "1";
 
@@ -50,7 +58,6 @@ function applyWordReveal(root: HTMLElement): void {
   while ((n = walker.nextNode())) {
     const parent = (n as Text).parentElement;
     if (!parent) continue;
-    // Skip text inside <code>/<pre> so code blocks don't fragment
     if (parent.closest("code, pre")) continue;
     if (n.textContent && n.textContent.trim()) textNodes.push(n as Text);
   }
@@ -62,7 +69,6 @@ function applyWordReveal(root: HTMLElement): void {
     return parts;
   });
 
-  // Aim for ~3s total reveal, clamp per-word delay between 6ms and 28ms
   const perWordMs = Math.min(28, Math.max(6, 3000 / Math.max(1, totalWords)));
 
   let wordIdx = 0;
@@ -88,10 +94,15 @@ function applyWordReveal(root: HTMLElement): void {
 
 interface RecommendationsProps {
   items: PostMeta[];
+  syncUrls: boolean;
   onSelect: (slug: string) => void;
 }
 
-const Recommendations: React.FC<RecommendationsProps> = ({ items, onSelect }) => {
+const Recommendations: React.FC<RecommendationsProps> = ({
+  items,
+  syncUrls,
+  onSelect,
+}) => {
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
 
@@ -135,42 +146,22 @@ const Recommendations: React.FC<RecommendationsProps> = ({ items, onSelect }) =>
       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
         {items.map((p) => (
           <li key={p.slug}>
-            <button
-              type="button"
-              onClick={() => onSelect(p.slug)}
-              className="w-full h-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 cursor-pointer group"
-            >
-              <div className="flex items-start justify-between gap-2 mb-1">
-                <h4 className="text-sm text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors break-words">
-                  {p.title}
-                </h4>
-                {p.date && (
-                  <time
-                    dateTime={p.date}
-                    className="shrink-0 text-[11px] text-gray-500 font-mono"
-                  >
-                    {p.date}
-                  </time>
-                )}
-              </div>
-              {p.excerpt && (
-                <p className="text-gray-400 text-xs leading-relaxed line-clamp-2">
-                  {p.excerpt}
-                </p>
-              )}
-              {p.tags && p.tags.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {p.tags.slice(0, 3).map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-1.5 py-0.5 bg-green-900/30 border border-green-800/50 rounded-full text-green-400 text-[10px] font-mono"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </button>
+            {syncUrls ? (
+              <Link
+                href={`/blog/${p.slug}`}
+                className="block w-full h-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 cursor-pointer group"
+              >
+                <PostCardContent post={p} />
+              </Link>
+            ) : (
+              <button
+                type="button"
+                onClick={() => onSelect(p.slug)}
+                className="w-full h-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 cursor-pointer group"
+              >
+                <PostCardContent post={p} />
+              </button>
+            )}
           </li>
         ))}
       </ul>
@@ -178,16 +169,69 @@ const Recommendations: React.FC<RecommendationsProps> = ({ items, onSelect }) =>
   );
 };
 
-const Blog: React.FC = () => {
+function PostCardContent({ post: p }: { post: PostMeta }) {
+  return (
+    <>
+      <div className="flex items-start justify-between gap-2 mb-1">
+        <h4 className="text-sm text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors break-words">
+          {p.title}
+        </h4>
+        {p.date && (
+          <time
+            dateTime={p.date}
+            className="shrink-0 text-[11px] text-gray-500 font-mono"
+          >
+            {p.date}
+          </time>
+        )}
+      </div>
+      {p.excerpt && (
+        <p className="text-gray-400 text-xs leading-relaxed line-clamp-2">
+          {p.excerpt}
+        </p>
+      )}
+      {p.tags && p.tags.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-1">
+          {p.tags.slice(0, 3).map((tag) => (
+            <span
+              key={tag}
+              className="px-1.5 py-0.5 bg-green-900/30 border border-green-800/50 rounded-full text-green-400 text-[10px] font-mono"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
+const Blog: React.FC<BlogProps> = ({
+  slug: slugProp = null,
+  initialPost = null,
+  syncUrls = false,
+}) => {
+  const router = useRouter();
+  const [internalSlug, setInternalSlug] = useState<string | null>(null);
+  const activeSlug = syncUrls ? slugProp : internalSlug;
+
   const [posts, setPosts] = useState<PostMeta[]>([]);
   const [listState, setListState] = useState<LoadState>("loading");
-  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [post, setPost] = useState<FullPost | null>(null);
   const [postState, setPostState] = useState<LoadState>("ready");
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [notFound, setNotFound] = useState<boolean>(false);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const articleRef = useRef<HTMLDivElement | null>(null);
+
+  const goToSlug = (next: string | null) => {
+    if (syncUrls) {
+      if (next) router.push(`/blog/${next}`);
+      else router.push("/blog");
+      return;
+    }
+    setInternalSlug(next);
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -213,16 +257,25 @@ const Blog: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!selectedSlug) {
+    if (!activeSlug) {
       setPost(null);
+      setPostState("ready");
       return;
     }
+
+    if (initialPost && initialPost.slug === activeSlug) {
+      setPost(initialPost);
+      setPostState("ready");
+      setNotFound(false);
+      return;
+    }
+
     let cancelled = false;
     setPostState("loading");
     setNotFound(false);
     (async () => {
       try {
-        const res = await fetch(`/api/blog/${selectedSlug}`);
+        const res = await fetch(`/api/blog/${activeSlug}`);
         if (res.status === 404) {
           if (!cancelled) {
             setNotFound(true);
@@ -246,7 +299,7 @@ const Blog: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [selectedSlug]);
+  }, [activeSlug, initialPost]);
 
   useEffect(() => {
     if (postState !== "ready" || !post || !contentRef.current) return;
@@ -255,11 +308,10 @@ const Blog: React.FC = () => {
   }, [postState, post]);
 
   useEffect(() => {
-    if (!selectedSlug) return;
+    if (!activeSlug) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
       const target = e.target as HTMLElement | null;
-      // Don't hijack Esc when typing in a multi-line editor / contenteditable
       if (
         target &&
         (target.tagName === "TEXTAREA" || target.isContentEditable)
@@ -267,27 +319,40 @@ const Blog: React.FC = () => {
         return;
       }
       e.preventDefault();
-      setSelectedSlug(null);
+      goToSlug(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [selectedSlug]);
+  }, [activeSlug, syncUrls]);
 
-  if (selectedSlug) {
+  if (activeSlug) {
     return (
       <div className="terminal-blog" ref={articleRef}>
         <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
-          <button
-            type="button"
-            onClick={() => setSelectedSlug(null)}
-            title="Press Esc to go back"
-            className="text-xs sm:text-sm text-green-400/80 font-mono hover:text-green-300 transition-colors cursor-pointer py-1"
-          >
-            ← back to posts{" "}
-            <kbd className="hidden sm:inline ml-1 px-1.5 py-0.5 text-[10px] border border-green-800/60 rounded bg-black/40 text-green-400/70">
-              Esc
-            </kbd>
-          </button>
+          {syncUrls ? (
+            <Link
+              href="/blog"
+              title="Press Esc to go back"
+              className="text-xs sm:text-sm text-green-400/80 font-mono hover:text-green-300 transition-colors py-1"
+            >
+              ← back to posts{" "}
+              <kbd className="hidden sm:inline ml-1 px-1.5 py-0.5 text-[10px] border border-green-800/60 rounded bg-black/40 text-green-400/70">
+                Esc
+              </kbd>
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={() => goToSlug(null)}
+              title="Press Esc to go back"
+              className="text-xs sm:text-sm text-green-400/80 font-mono hover:text-green-300 transition-colors cursor-pointer py-1"
+            >
+              ← back to posts{" "}
+              <kbd className="hidden sm:inline ml-1 px-1.5 py-0.5 text-[10px] border border-green-800/60 rounded bg-black/40 text-green-400/70">
+                Esc
+              </kbd>
+            </button>
+          )}
           {post && (
             <span className="text-xs sm:text-sm text-gray-500 font-mono truncate min-w-0">
               {post.slug}.mdx
@@ -300,7 +365,7 @@ const Blog: React.FC = () => {
         )}
         {postState === "error" && notFound && (
           <p className="text-red-400 font-mono text-sm break-words">
-            cat: {selectedSlug}.mdx: No such file or directory
+            cat: {activeSlug}.mdx: No such file or directory
           </p>
         )}
         {postState === "error" && !notFound && (
@@ -339,7 +404,8 @@ const Blog: React.FC = () => {
 
             <Recommendations
               items={rankRecommendations(post, posts)}
-              onSelect={(slug) => setSelectedSlug(slug)}
+              syncUrls={syncUrls}
+              onSelect={(s) => goToSlug(s)}
             />
           </article>
         )}
@@ -369,42 +435,22 @@ const Blog: React.FC = () => {
         <ul className="space-y-2">
           {posts.map((p) => (
             <li key={p.slug}>
-              <button
-                type="button"
-                onClick={() => setSelectedSlug(p.slug)}
-                className="w-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 sm:p-4 cursor-pointer group"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-3 mb-1">
-                  <h3 className="text-sm sm:text-base text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors break-words">
-                    {p.title}
-                  </h3>
-                  {p.date && (
-                    <time
-                      dateTime={p.date}
-                      className="shrink-0 text-xs text-gray-500 font-mono"
-                    >
-                      {p.date}
-                    </time>
-                  )}
-                </div>
-                {p.excerpt && (
-                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
-                    {p.excerpt}
-                  </p>
-                )}
-                {p.tags && p.tags.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {p.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 bg-green-900/30 border border-green-800/50 rounded-full text-green-400 text-xs font-mono"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </button>
+              {syncUrls ? (
+                <Link
+                  href={`/blog/${p.slug}`}
+                  className="block w-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 sm:p-4 cursor-pointer group"
+                >
+                  <ListPostContent post={p} />
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => goToSlug(p.slug)}
+                  className="w-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 sm:p-4 cursor-pointer group"
+                >
+                  <ListPostContent post={p} />
+                </button>
+              )}
             </li>
           ))}
         </ul>
@@ -412,5 +458,42 @@ const Blog: React.FC = () => {
     </div>
   );
 };
+
+function ListPostContent({ post: p }: { post: PostMeta }) {
+  return (
+    <>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-3 mb-1">
+        <h3 className="text-sm sm:text-base text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors break-words">
+          {p.title}
+        </h3>
+        {p.date && (
+          <time
+            dateTime={p.date}
+            className="shrink-0 text-xs text-gray-500 font-mono"
+          >
+            {p.date}
+          </time>
+        )}
+      </div>
+      {p.excerpt && (
+        <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
+          {p.excerpt}
+        </p>
+      )}
+      {p.tags && p.tags.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {p.tags.map((tag) => (
+            <span
+              key={tag}
+              className="px-2 py-0.5 bg-green-900/30 border border-green-800/50 rounded-full text-green-400 text-xs font-mono"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
 
 export default Blog;

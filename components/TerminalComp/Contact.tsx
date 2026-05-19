@@ -234,13 +234,13 @@ const Contact: React.FC = () => {
     {
       icon: InstagramIcon,
       name: "Instagram",
-      href: "https://www.instagram.com/anup.pradhan_",
+      href: "https://www.instagram.com/anuppradhan.in",
       color: "pink",
     },
     {
       icon: LinkedinIcon,
       name: "LinkedIn",
-      href: "https://www.linkedin.com/in/anup-pradhan77",
+      href: "https://www.linkedin.com/in/anuppradhan0",
       color: "blue",
     },
     {
