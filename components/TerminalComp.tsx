@@ -271,7 +271,9 @@ const HELP_ITEMS: HelpItem[] = [
   { type: "command", command: "cd skills", description: "See my technical skills." },
   { type: "command", command: "cd experience", description: "View my professional experience." },
   { type: "command", command: "cd contact", description: "Get my contact information." },
-  { type: "command", command: "cat <file>", description: "Print file contents (e.g. cat README)." },
+  { type: "command", command: "cd blog", description: "Open the blog (/blog)." },
+  { type: "command", command: "blog", description: "Open the blog (/blog)." },
+  { type: "command", command: "cat <file>", description: "Print file contents (e.g. cat README, cat blog)." },
   { type: "command", command: "whoami", description: "Print current user." },
   { type: "command", command: "hostname", description: "Print system hostname." },
   { type: "command", command: "id", description: "Print user and group IDs." },
@@ -289,14 +291,13 @@ const HELP_ITEMS: HelpItem[] = [
   { type: "command", command: "yes [string]", description: "Repeat string (limited)." },
   { type: "command", command: "ai <question>", description: "Chat with AI assistant (10 requests/day)." },
   { type: "command", command: "clear", description: "Clear the terminal screen." },
-  { type: "command", command: "blog", description: "Open the blog." },
   { type: "command", command: "exit", description: "Close this tab/window." },
 ];
 
 const WELCOME_LINES: string[] = [
   "Hi, I'm Anup Pradhan, a Software Developer.",
   "Welcome to my interactive portfolio terminal!",
-  "Type 'help' or 'ls' for commands. Use 'cd <name>' to open sections (e.g. cd about, cd projects).",
+  "Type 'help' or 'ls' for commands. Use 'cd <name>' to open sections (e.g. cd about, cd blog, cd projects).",
   "✨ NEW: Try 'ai <your question>' to chat with AI assistant!",
 ];
 
@@ -308,6 +309,9 @@ const TAB_COMPLETIONS: string[] = [
   "cd skills",
   "cd experience",
   "cd contact",
+  "cd blog",
+  "blog",
+  "cat blog",
   "help",
   "ls",
   "ls -l",
@@ -366,7 +370,15 @@ const COMMAND_NAMES = [
   "yes",
 ];
 
-const CD_SECTIONS = ["welcome", "about", "projects", "skills", "experience", "contact"];
+const CD_SECTIONS = [
+  "welcome",
+  "about",
+  "blog",
+  "projects",
+  "skills",
+  "experience",
+  "contact",
+];
 
 function getCommonPrefix(strings: string[]): string {
   if (strings.length === 0) return "";
@@ -610,6 +622,11 @@ export default function Terminal({
       return true;
     }
 
+    if (commandName === "cd" && args[0]?.toLowerCase() === "blog") {
+      router.push("/blog");
+      return true;
+    }
+
     if (
       commandName === "cd" &&
       args[0] &&
@@ -743,6 +760,10 @@ export default function Terminal({
         return;
       }
       const dir = args[0].toLowerCase();
+      if (dir === "blog") {
+        router.push("/blog");
+        return;
+      }
       const sectionMap: Record<string, React.ReactNode> = {
         welcome: <Welcome />,
         about: <About />,
@@ -1039,6 +1060,10 @@ export default function Terminal({
 
       const boot = async () => {
         if (initialSection) {
+          if (initialSection === "blog") {
+            router.replace("/blog", { scroll: false });
+            return;
+          }
           await processCommand(`cd ${initialSection}`, true);
           router.replace("/", { scroll: false });
         } else if (initialCommand) {
