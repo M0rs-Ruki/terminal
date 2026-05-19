@@ -202,10 +202,10 @@ const structuredData = {
     "Software Development, Backend Development, AI Calling, WebRTC, SIP, API Development, Machine Learning, MongoDB, Express.js, React, Node.js, Next.js, TypeScript, Python",
   sameAs: [
     "https://github.com/anupPradhan0",
-    "https://www.linkedin.com/in/anup-pradhan77",
+    "https://www.linkedin.com/in/anuppradhan0",
     "https://x.com/AnupPradhan0",
     "https://twitter.com/AnupPradhan0",
-    "https://www.instagram.com/anup.pradhan_",
+    "https://www.instagram.com/anuppradhan.in",
     "https://www.youtube.com/@morscode7",
     "https://leetcode.com/u/Anuppradhan/",
   ],

@@ -28,7 +28,7 @@ const rightLines = [
   "  [ Navigation ]",
   "  > Portfolio : https://anuppradhan.in",
   "  > GitHub    : github.com/anupPradhan0",
-  "  > LinkedIn  : linkedin.com/in/anup-pradhan",
+  "  > LinkedIn  : linkedin.com/in/anuppradhan0",
   "  > Twitter   : x.com/anuppradhan",
   "  > Email     : anup@anuppradhan.in",
   "",

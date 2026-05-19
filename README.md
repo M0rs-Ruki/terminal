@@ -265,7 +265,7 @@ vercel
 ## 🤝 Connect With Me
 
 - **GitHub**: [@anupPradhan0](https://github.com/anupPradhan0)
-- **LinkedIn**: [Anup Pradhan](https://www.linkedin.com/in/anup-pradhan77)
+- **LinkedIn**: [Anup Pradhan](https://www.linkedin.com/in/anuppradhan0)
 - **Twitter/X**: [@AnupPradhan0](https://x.com/AnupPradhan0)
 - **YouTube**: [@morscode7](https://www.youtube.com/@morscode7)
 - **Email**: [anuppradhan929@gmail.com](mailto:anuppradhan929@gmail.com)

@@ -47,11 +47,11 @@ export default function Home() {
       "Software Development",
     ],
     sameAs: [
-      "https://www.linkedin.com/in/anup-pradhan77",
+      "https://www.linkedin.com/in/anuppradhan0",
       "https://github.com/anupPradhan0",
       "https://x.com/AnupPradhan0",
       "https://www.youtube.com/@morscode7",
-      "https://www.instagram.com/anup.pradhan_",
+      "https://www.instagram.com/anuppradhan.in",
       "https://leetcode.com/u/Anuppradhan/",
     ],
     alumniOf: {
