@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import "@/public/css/TerminalComp.css";
+import type { BlogInitialPost } from "@/components/BlogTerminalPage.types";
 
 import About from "./TerminalComp/About";
 import Projects from "./TerminalComp/Projects";
@@ -47,7 +49,24 @@ interface HelpItem {
 
 interface TerminalProps {
   onFirstCommand?: () => void;
+  /** When set, this terminal is mounted on /blog routes. */
+  blogRoute?: boolean;
+  initialBlogSlug?: string | null;
+  initialBlogPost?: BlogInitialPost | null;
+  /** Deep-link from /?section=about */
+  initialSection?: string | null;
+  /** Deep-link from /?cmd=help */
+  initialCommand?: string | null;
 }
+
+const HOME_CD_SECTIONS = [
+  "about",
+  "projects",
+  "skills",
+  "experience",
+  "contact",
+  "welcome",
+] as const;
 
 // ============ NEW: AI Rate Limiting Helper ============
 const AI_RATE_LIMIT = {
@@ -478,7 +497,15 @@ const MAX_COMMAND_HISTORY = 50;
 
 const PWD_DISPLAY = "/home/anup";
 
-export default function Terminal({ onFirstCommand }: TerminalProps) {
+export default function Terminal({
+  onFirstCommand,
+  blogRoute = false,
+  initialBlogSlug = null,
+  initialBlogPost = null,
+  initialSection = null,
+  initialCommand = null,
+}: TerminalProps) {
+  const router = useRouter();
   const [history, setHistory] = useState<HistoryLine[]>([]);
   const [input, setInput] = useState<string>("");
   const [cwd, setCwd] = useState<string>("~");
@@ -571,10 +598,45 @@ export default function Terminal({ onFirstCommand }: TerminalProps) {
     }
   };
 
+  const redirectFromBlogRoute = (trimmedCmd: string): boolean => {
+    if (!blogRoute) return false;
+
+    const parts = trimmedCmd.split(/\s+/);
+    const commandName = parts[0]?.toLowerCase() ?? "";
+    const args = parts.slice(1);
+
+    if (commandName === "blog") {
+      router.push("/blog");
+      return true;
+    }
+
+    if (
+      commandName === "cd" &&
+      args[0] &&
+      HOME_CD_SECTIONS.includes(
+        args[0].toLowerCase() as (typeof HOME_CD_SECTIONS)[number]
+      )
+    ) {
+      const dir = args[0].toLowerCase();
+      router.push(dir === "welcome" ? "/" : `/?section=${dir}`);
+      return true;
+    }
+
+    router.push(`/?cmd=${encodeURIComponent(trimmedCmd)}`);
+    return true;
+  };
+
   const processCommand = async (
     cmd: string,
     isAuto: boolean = false
   ): Promise<void> => {
+    const trimmedCmd = cmd.trim();
+
+    if (!isAuto && blogRoute && trimmedCmd) {
+      redirectFromBlogRoute(trimmedCmd);
+      return;
+    }
+
     const newHist: HistoryLine[] = [
       ...history,
       { type: "prompt", command: cmd },
@@ -584,8 +646,6 @@ export default function Terminal({ onFirstCommand }: TerminalProps) {
       onFirstCommand();
       setIsFirstUserCommand(false);
     }
-
-    const trimmedCmd = cmd.trim();
 
     // Command history: store every successfully run command (newest first), skip empty and auto
     if (!isAuto && trimmedCmd) {
@@ -827,8 +887,7 @@ export default function Terminal({ onFirstCommand }: TerminalProps) {
       return;
     }
     if (commandName === "blog") {
-      newHist.push({ type: "output", content: <Blog /> });
-      setHistory(newHist);
+      router.push("/blog");
       return;
     }
     if (commandName === "exit") {
@@ -858,7 +917,20 @@ export default function Terminal({ onFirstCommand }: TerminalProps) {
   };
 
   const handleNav = async (cmd: string): Promise<void> => {
-    // Nav sections use cd <name> like a real terminal
+    if (blogRoute) {
+      if (cmd === "blog") {
+        router.push("/blog");
+        return;
+      }
+      const cdSections = ["about", "projects", "skills", "experience", "contact"];
+      if (cdSections.includes(cmd)) {
+        router.push(`/?section=${cmd}`);
+        return;
+      }
+      router.push(`/?cmd=${encodeURIComponent(cmd)}`);
+      return;
+    }
+
     const cdSections = ["about", "projects", "skills", "experience", "contact"];
     const commandToRun = cdSections.includes(cmd) ? `cd ${cmd}` : cmd;
     await processCommand(commandToRun);
@@ -944,9 +1016,39 @@ export default function Terminal({ onFirstCommand }: TerminalProps) {
     if (!isTouchDevice) {
       inputRef.current?.focus();
     }
-    // Defer to avoid synchronous setState in effect
     setTimeout(() => {
-      processCommand("cd welcome", true);
+      if (blogRoute) {
+        setHistory([
+          { type: "prompt", command: "cd welcome" },
+          { type: "output", content: <Welcome /> },
+          { type: "prompt", command: "blog" },
+          {
+            type: "output",
+            content: (
+              <Blog
+                slug={initialBlogSlug}
+                initialPost={initialBlogPost}
+                syncUrls
+              />
+            ),
+          },
+        ]);
+        setIsFirstUserCommand(false);
+        return;
+      }
+
+      const boot = async () => {
+        if (initialSection) {
+          await processCommand(`cd ${initialSection}`, true);
+          router.replace("/", { scroll: false });
+        } else if (initialCommand) {
+          await processCommand(initialCommand, true);
+          router.replace("/", { scroll: false });
+        } else {
+          await processCommand("cd welcome", true);
+        }
+      };
+      void boot();
     }, 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
