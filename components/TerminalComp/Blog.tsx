@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { formatBlogPostLabel } from "@/lib/blog-search";
 import type { BlogInitialPost } from "@/components/BlogTerminalPage.types";
 
 interface PostMeta {
@@ -33,6 +34,27 @@ interface BlogProps {
   slug?: string | null;
   initialPost?: BlogInitialPost | null;
   syncUrls?: boolean;
+}
+
+function BlogPostLink({
+  href,
+  className,
+  children,
+}: {
+  href: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className}
+    >
+      {children}
+    </a>
+  );
 }
 
 function rankRecommendations(
@@ -139,12 +161,12 @@ const Recommendations: React.FC<RecommendationsProps> = ({
         {items.map((p) => (
           <li key={p.slug}>
             {syncUrls ? (
-              <Link
+              <BlogPostLink
                 href={`/blog/${p.slug}`}
                 className="block w-full h-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 cursor-pointer group"
               >
-                <PostCardContent post={p} />
-              </Link>
+                <PostCardContent post={p} showBlogLabel />
+              </BlogPostLink>
             ) : (
               <button
                 type="button"
@@ -161,12 +183,18 @@ const Recommendations: React.FC<RecommendationsProps> = ({
   );
 };
 
-function PostCardContent({ post: p }: { post: PostMeta }) {
+function PostCardContent({
+  post: p,
+  showBlogLabel = false,
+}: {
+  post: PostMeta;
+  showBlogLabel?: boolean;
+}) {
   return (
     <>
       <div className="flex items-start justify-between gap-2 mb-1">
         <h4 className="text-sm text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors break-words">
-          {p.title}
+          {showBlogLabel ? formatBlogPostLabel(p.title) : p.title}
         </h4>
         {p.date && (
           <time
@@ -299,6 +327,10 @@ const Blog: React.FC<BlogProps> = ({
   useEffect(() => {
     if (postState !== "ready" || !post || !contentRef.current) return;
     applyWordReveal(contentRef.current);
+    contentRef.current.querySelectorAll("a").forEach((anchor) => {
+      anchor.setAttribute("target", "_blank");
+      anchor.setAttribute("rel", "noopener noreferrer");
+    });
     const scrollParent = articleRef.current?.closest(".terminal-body");
     const article = articleRef.current;
     if (scrollParent instanceof HTMLElement && article) {
@@ -445,12 +477,12 @@ const Blog: React.FC<BlogProps> = ({
             {posts.map((p) => (
               <li key={p.slug} className="min-w-0">
                 {syncUrls ? (
-                  <Link
+                  <BlogPostLink
                     href={`/blog/${p.slug}`}
                     className="block h-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 sm:p-4 cursor-pointer group"
                   >
-                    <ListPostContent post={p} />
-                  </Link>
+                    <ListPostContent post={p} showBlogLabel />
+                  </BlogPostLink>
                 ) : (
                   <button
                     type="button"
@@ -469,12 +501,18 @@ const Blog: React.FC<BlogProps> = ({
   );
 };
 
-function ListPostContent({ post: p }: { post: PostMeta }) {
+function ListPostContent({
+  post: p,
+  showBlogLabel = false,
+}: {
+  post: PostMeta;
+  showBlogLabel?: boolean;
+}) {
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-3 mb-1">
         <h3 className="text-sm sm:text-base text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors break-words">
-          {p.title}
+          {showBlogLabel ? formatBlogPostLabel(p.title) : p.title}
         </h3>
         {p.date && (
           <time

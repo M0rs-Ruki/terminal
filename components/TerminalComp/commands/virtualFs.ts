@@ -124,7 +124,7 @@ export const MAN_PAGES: Record<string, string> = {
   history: "history — List recent commands.",
   man: "man <command> — Show manual for command.",
   clear: "clear — Clear terminal screen.",
-  blog: "blog — Open the blog page (/blog).",
+  blog: "blog [keyword] — Open /blog or search posts (e.g. blog Malware). Typing a post name also suggests matches.",
   exit: "exit — Close tab (flavor).",
   ai: "ai <question> — Chat with portfolio AI assistant (rate limited).",
   neofetch: "neofetch — Display system info and ASCII logo.",
