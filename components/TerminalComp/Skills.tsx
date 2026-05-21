@@ -9,6 +9,7 @@ interface SkillsCategory {
   backend: string[];
   databases: string[];
   tools: string[];
+  deployment: string[];
   ai_ml: string[];
 }
 
@@ -48,29 +49,36 @@ const skillsData: SkillsCategory = {
     "CSS3",
   ],
   frontend: ["React", "Next.js", "Remix", "TanStack Query", "Tailwind CSS", "EJS", "Vite"],
-  backend: ["Node.js", "Express.js", "FastAPI", "REST APIs", "Auth0"],
-  databases: ["MongoDB", "Mongoose", "MongoDB Atlas", "RabbitMQ", "Redis"],
+  backend: ["Node.js", "Express.js", "FastAPI", "REST APIs", "OAuth 2.0", "JWT"],
+  databases: ["MongoDB", "Mongoose", "MongoDB Atlas", "RabbitMQ", "Redis", "PostgreSQL", "VectorDB", "Weaviate", "Neo4j"],
   tools: [
     "Git & GitHub",
     "Docker",
+    "Kubernetes",
     "Postman",
     "Linux/CLI",
     "Claude Code",
     "OpenCode",
-    "Auth0",
+    "Ubuntu",
+    "Arch Linux",
+  ],
+  deployment: [
+    "AWS S3",
+    "Azure",
+    "GCP",
+    "VPS (Virtual Private Server)",
+    "Vercel",
+    "Render",
     "Dokploy",
-    "Ubuntu Deployment",
-    "S3 Storage",
-    "Cloudinary Storage",
   ],
   ai_ml: [
     "Pandas",
     "NumPy",
     "PyTorch",
-    "TensorFlow (Basics)",
-    "Cohere API",
-    "Gemini API",
-    "OpenAI API",
+    "TensorFlow",
+    "RAG (Retrieval-Augmented Generation)",
+    "Tool Calling",
+    "MCP (Model Context Protocol)",
   ],
 };
 
@@ -81,6 +89,7 @@ const terminalCommands: Record<keyof SkillsCategory, string> = {
   backend: "ps aux | grep backend",
   databases: "show databases;",
   tools: "which --all tools",
+  deployment: "kubectl get deployments -A",
   ai_ml: "python -m pip list | grep ai",
 };
 
@@ -137,6 +146,17 @@ const ToolIcon: React.FC = () => (
     aria-hidden="true"
   >
     <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" />
+  </svg>
+);
+
+const DeployIcon: React.FC = () => (
+  <svg
+    className="w-5 h-5"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-1.41-1.41L13.17 13H7v-2h6.17l-2.58-2.59L12 7l5 5z" />
   </svg>
 );
 
@@ -363,16 +383,22 @@ const Skills: React.FC = () => {
       skills: skillsData.databases,
     },
     {
-      key: "ai_ml",
-      title: "AI/ML",
-      icon: <BrainIcon />,
-      skills: skillsData.ai_ml,
-    },
-    {
       key: "tools",
       title: "Tools",
       icon: <ToolIcon />,
       skills: skillsData.tools,
+    },
+    {
+      key: "deployment",
+      title: "Deployment",
+      icon: <DeployIcon />,
+      skills: skillsData.deployment,
+    },
+    {
+      key: "ai_ml",
+      title: "AI/ML",
+      icon: <BrainIcon />,
+      skills: skillsData.ai_ml,
     },
   ];
 

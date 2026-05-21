@@ -1,0 +1,57 @@
+"use client";
+
+import {
+  formatBlogPostLabel,
+  type BlogSearchPost,
+} from "@/lib/blog-search";
+
+interface BlogSearchResultsProps {
+  posts: BlogSearchPost[];
+  query?: string;
+}
+
+export default function BlogSearchResults({
+  posts,
+  query,
+}: BlogSearchResultsProps) {
+  if (posts.length === 0) {
+    return (
+      <p className="text-gray-400 font-mono text-sm">
+        No blog posts found{query ? ` for "${query}"` : ""}.
+      </p>
+    );
+  }
+
+  return (
+    <div className="blog-search-results font-mono text-sm">
+      <p className="text-green-400/90 mb-2">
+        $ blog search{query ? ` "${query}"` : ""} — {posts.length} result
+        {posts.length === 1 ? "" : "s"}
+      </p>
+      <ul className="space-y-2 list-none p-0 m-0">
+        {posts.map((p) => (
+          <li key={p.slug}>
+            <a
+              href={`/blog/${p.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 rounded-lg p-3 transition-colors group"
+            >
+              <span className="text-green-400 font-semibold group-hover:text-green-300">
+                {formatBlogPostLabel(p.title)}
+              </span>
+              {p.excerpt && (
+                <p className="text-gray-400 text-xs mt-1 line-clamp-2">
+                  {p.excerpt}
+                </p>
+              )}
+              <span className="text-green-400/70 text-xs mt-2 inline-block">
+                → /blog/{p.slug}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}

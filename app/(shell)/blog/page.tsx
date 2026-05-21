@@ -1,119 +1,41 @@
-import type { Metadata } from "next";
 import Script from "next/script";
 import BlogTerminalPage from "@/components/BlogTerminalPage";
 import { getAllPosts } from "@/lib/blog";
+import { buildBlogIndexJsonLd } from "@/lib/blog-seo";
+import { BLOG_CANONICAL, SITE_URL } from "@/lib/seo-config";
 
-const SITE_URL = "https://www.anuppradhan.in";
-const AUTHOR_NAME = "Anup Pradhan";
-const BLOG_DESCRIPTION =
-  "Notes, write-ups and tinkering by Anup Pradhan — backend, system design, AI calling, WebRTC/SIP, and the small experiments in between.";
+import { buildBlogIndexMetadata } from "@/lib/blog-seo";
 
-export const metadata: Metadata = {
-  title: "Blog",
-  description: BLOG_DESCRIPTION,
-  keywords: [
-    "Anup Pradhan Blog",
-    "Software Developer Blog",
-    "Backend Engineering Blog",
-    "System Design Notes",
-    "AI Calling Blog",
-    "WebRTC Blog",
-    "SIP Protocol Blog",
-    "Developer Notes India",
-  ],
-  authors: [{ name: AUTHOR_NAME, url: SITE_URL }],
-  alternates: { canonical: `${SITE_URL}/blog` },
-  openGraph: {
-    type: "website",
-    url: `${SITE_URL}/blog`,
-    title: "Blog | Anup Pradhan",
-    description: BLOG_DESCRIPTION,
-    siteName: AUTHOR_NAME,
-    locale: "en_IN",
-    images: [
-      {
-        url: "/images/logo.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Anup Pradhan — Blog",
-        type: "image/jpeg",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@AnupPradhan0",
-    creator: "@AnupPradhan0",
-    title: "Blog | Anup Pradhan",
-    description: BLOG_DESCRIPTION,
-    images: ["/images/logo.jpg"],
-  },
-};
+export const metadata = buildBlogIndexMetadata();
 
 export default function BlogIndexPage() {
   const posts = getAllPosts();
-
-  const blogSchema = {
-    "@context": "https://schema.org",
-    "@type": "Blog",
-    "@id": `${SITE_URL}/blog`,
-    url: `${SITE_URL}/blog`,
-    name: "Anup Pradhan — Blog",
-    description: BLOG_DESCRIPTION,
-    inLanguage: "en-IN",
-    author: {
-      "@type": "Person",
-      name: AUTHOR_NAME,
-      url: SITE_URL,
-    },
-    publisher: {
-      "@type": "Person",
-      name: AUTHOR_NAME,
-      url: SITE_URL,
-    },
-    blogPost: posts.map((p) => ({
-      "@type": "BlogPosting",
-      headline: p.title,
-      url: `${SITE_URL}/blog/${p.slug}`,
-      datePublished: p.date || undefined,
-      description: p.excerpt ?? p.title,
-      keywords: p.tags?.join(", "),
-      author: { "@type": "Person", name: AUTHOR_NAME, url: SITE_URL },
-    })),
-  };
-
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
-    ],
-  };
+  const jsonLd = buildBlogIndexJsonLd(posts);
 
   return (
     <>
       <Script
-        id="blog-index-schema"
+        id="blog-index-jsonld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}
-        strategy="afterInteractive"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Script
-        id="blog-breadcrumb-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-        strategy="afterInteractive"
-      />
-      <nav className="sr-only" aria-label="Blog posts">
-        <h1>Blog</h1>
+      <nav className="sr-only" aria-label="Blog posts index for search engines">
+        <h1>Anup Pradhan — Developer Blog</h1>
+        <p>
+          Essays on backend engineering, system design, WebRTC/SIP, open-source
+          security, and developer tooling.
+        </p>
         <ul>
           {posts.map((p) => (
             <li key={p.slug}>
               <a href={`${SITE_URL}/blog/${p.slug}`}>{p.title}</a>
+              {p.excerpt && <p>{p.excerpt}</p>}
+              {p.date && <time dateTime={p.date}>{p.date}</time>}
             </li>
           ))}
         </ul>
+        <a href={BLOG_CANONICAL}>All posts</a>
       </nav>
       <BlogTerminalPage slug={null} />
     </>

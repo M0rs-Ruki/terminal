@@ -26,8 +26,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <a
         href={href}
         className="text-green-400 underline decoration-green-800/60 underline-offset-4 hover:text-green-300 hover:decoration-green-400/80 transition-colors"
-        target={href?.startsWith("http") ? "_blank" : undefined}
-        rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
+        target="_blank"
+        rel="noopener noreferrer"
       >
         {children}
       </a>

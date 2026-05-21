@@ -163,7 +163,7 @@ const About: React.FC = () => {
                 delivery.​ Comfortable augmeting products with AI/ML libraries
                 (TensorFlow, NumPy, pandas) and shipping to Vercel/Render,
                 guided by a build‑to‑learn mindset and ongoing BCA studies (CGPA
-                8.96)..
+                8.93)..
               </p>
 
               <div className="mt-4 sm:mt-6 flex flex-wrap gap-2">

@@ -11,6 +11,11 @@ import Skills from "./TerminalComp/Skills";
 import Contact from "./TerminalComp/Contact";
 import Experience from "./TerminalComp/Experience";
 import Blog from "./TerminalComp/Blog";
+import BlogSearchResults from "./TerminalComp/BlogSearchResults";
+import {
+  searchBlogPosts,
+  type BlogSearchPost,
+} from "@/lib/blog-search";
 import {
   HOME_DIR,
   FILE_CONTENTS,
@@ -272,7 +277,7 @@ const HELP_ITEMS: HelpItem[] = [
   { type: "command", command: "cd experience", description: "View my professional experience." },
   { type: "command", command: "cd contact", description: "Get my contact information." },
   { type: "command", command: "cd blog", description: "Open the blog (/blog)." },
-  { type: "command", command: "blog", description: "Open the blog (/blog)." },
+  { type: "command", command: "blog [keyword]", description: "Open blog or search posts (e.g. blog Malware)." },
   { type: "command", command: "cat <file>", description: "Print file contents (e.g. cat README, cat blog)." },
   { type: "command", command: "whoami", description: "Print current user." },
   { type: "command", command: "hostname", description: "Print system hostname." },
@@ -393,7 +398,8 @@ function getCommonPrefix(strings: string[]): string {
 
 /** Context-aware tab completion: returns matches and the line to set (single match or common prefix). */
 function getTabCompletion(
-  input: string
+  input: string,
+  blogPosts: BlogSearchPost[] = []
 ): { matches: string[]; setLine: string; isPartial: boolean } {
   const raw = input.trimEnd();
   const endsWithSpace = /\s$/.test(input);
@@ -405,6 +411,24 @@ function getTabCompletion(
     : raw;
   const argPrefix = prefix.toLowerCase();
   const baseForArg = endsWithSpace ? raw + " " : parts.slice(0, -1).join(" ") + (parts.length > 1 ? " " : "");
+
+  if (isCompletingArg && command === "blog" && blogPosts.length > 0) {
+    const matches = blogPosts
+      .filter(
+        (p) =>
+          p.slug.toLowerCase().startsWith(argPrefix) ||
+          p.title.toLowerCase().includes(argPrefix)
+      )
+      .map((p) => p.slug);
+    if (matches.length === 0) return { matches: [], setLine: input, isPartial: false };
+    const common = getCommonPrefix(matches);
+    const setLine = matches.length === 1 ? baseForArg + matches[0] : baseForArg + common;
+    return {
+      matches,
+      setLine,
+      isPartial: matches.length > 1 && common.length === prefix.length,
+    };
+  }
 
   if (isCompletingArg && (command === "cd" || command === "cat" || command === "man")) {
     const list =
@@ -529,9 +553,27 @@ export default function Terminal({
   const savedInputRef = useRef<string>("");
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [blogPostsCache, setBlogPostsCache] = useState<BlogSearchPost[]>([]);
 
   const user = "anup";
   const host = "ruki";
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/blog");
+        if (!res.ok) return;
+        const data: { posts: BlogSearchPost[] } = await res.json();
+        if (!cancelled) setBlogPostsCache(data.posts ?? []);
+      } catch {
+        /* ignore */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // ============ AI Command Handler: shows user question (prompt) + AI response ============
   const handleAICommand = async (
@@ -618,7 +660,12 @@ export default function Terminal({
     const args = parts.slice(1);
 
     if (commandName === "blog") {
-      router.push("/blog");
+      const q = args.join(" ").trim();
+      if (q) {
+        router.push(`/?cmd=${encodeURIComponent(`blog ${q}`)}`);
+      } else {
+        router.push("/blog");
+      }
       return true;
     }
 
@@ -908,7 +955,19 @@ export default function Terminal({
       return;
     }
     if (commandName === "blog") {
-      router.push("/blog");
+      const query = args.join(" ").trim();
+      if (!query) {
+        router.push("/blog");
+        return;
+      }
+      const matches = searchBlogPosts(blogPostsCache, query);
+      newHist.push({
+        type: "output",
+        content: (
+          <BlogSearchResults posts={matches} query={query} />
+        ),
+      });
+      setHistory(newHist);
       return;
     }
     if (commandName === "exit") {
@@ -917,7 +976,31 @@ export default function Terminal({
       return;
     }
 
-    // command not found
+    // Try blog title/slug search before "command not found"
+    if (blogPostsCache.length > 0 && trimmedCmd.length >= 2) {
+      const blogMatches = searchBlogPosts(blogPostsCache, trimmedCmd);
+      if (blogMatches.length > 0) {
+        newHist.push({
+          type: "output",
+          content: (
+            <div>
+              <p className="text-gray-400 font-mono text-sm mb-2">
+                No command &quot;{parts[0]}&quot; — blog posts matching &quot;
+                {trimmedCmd}&quot;:
+              </p>
+              <BlogSearchResults posts={blogMatches} query={trimmedCmd} />
+              <p className="text-gray-500 font-mono text-xs mt-2">
+                Tip: use <span className="text-green-400">blog {trimmedCmd}</span>{" "}
+                next time
+              </p>
+            </div>
+          ),
+        });
+        setHistory(newHist);
+        return;
+      }
+    }
+
     newHist.push({
       type: "output",
       content: (
@@ -1020,7 +1103,7 @@ export default function Terminal({
     }
     if (e.key === "Tab") {
       e.preventDefault();
-      const { matches, setLine } = getTabCompletion(input);
+      const { matches, setLine } = getTabCompletion(input, blogPostsCache);
       if (matches.length === 1) {
         setInput(setLine);
         setTabSuggestions(null);
@@ -1082,10 +1165,16 @@ export default function Terminal({
     const el = terminalRef.current;
     if (!el) return;
     const id = requestAnimationFrame(() => {
+      const blogEl = el.querySelector(".terminal-blog");
+      if (blogEl && blogRoute) {
+        const top = (blogEl as HTMLElement).offsetTop - 8;
+        el.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+        return;
+      }
       el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
     });
     return () => cancelAnimationFrame(id);
-  }, [history]);
+  }, [history, blogRoute]);
 
   return (
     <div

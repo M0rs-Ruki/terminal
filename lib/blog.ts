@@ -7,6 +7,10 @@ export interface BlogFrontmatter {
   date: string;
   excerpt?: string;
   tags?: string[];
+  /** Optional last-updated date (ISO) for dateModified in SEO */
+  updated?: string;
+  /** Extra SEO keywords beyond tags */
+  keywords?: string[];
 }
 
 export interface BlogPost extends BlogFrontmatter {
@@ -31,6 +35,10 @@ function readPostFile(slug: string): BlogPost | null {
     date: String(data.date ?? ""),
     excerpt: data.excerpt ? String(data.excerpt) : undefined,
     tags: Array.isArray(data.tags) ? data.tags.map(String) : undefined,
+    updated: data.updated ? String(data.updated) : undefined,
+    keywords: Array.isArray(data.keywords)
+      ? data.keywords.map(String)
+      : undefined,
     content,
   };
 }
@@ -54,6 +62,8 @@ export function getAllPosts(): BlogPostMeta[] {
         date: post.date,
         excerpt: post.excerpt,
         tags: post.tags,
+        updated: post.updated,
+        keywords: post.keywords,
       };
     })
     .filter((p): p is BlogPostMeta => p !== null)
