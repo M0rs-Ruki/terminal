@@ -308,7 +308,6 @@
   min-width: 0;
   display: flex;
   align-items: center;
-  padding-bottom: env(safe-area-inset-bottom, 1rem);
 }
 
 .input-value {
@@ -368,6 +367,11 @@
   .terminal-body {
     padding: 0.75rem;
   }
+
+  /* Empty space below the prompt so anup@ruki:~$ sits above the screen edge */
+  .input-form {
+    margin-bottom: calc(2.75rem + env(safe-area-inset-bottom, 12px));
+  }
 }
 
 @media (max-width: 480px) {
@@ -387,6 +391,10 @@
 
   .terminal-body {
     padding: 0.6rem;
+  }
+
+  .input-form {
+    margin-bottom: calc(3.25rem + env(safe-area-inset-bottom, 16px));
   }
 
   .history-line {
