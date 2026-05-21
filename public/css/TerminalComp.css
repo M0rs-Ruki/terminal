@@ -459,6 +459,12 @@
   max-width: 56rem;
 }
 
+.terminal-blog-read-next a,
+.terminal-blog-read-next button {
+  opacity: 1;
+  visibility: visible;
+}
+
 .terminal-blog-content {
   font-size: inherit;
   line-height: 1.65;
@@ -523,6 +529,13 @@
   text-underline-offset: 3px;
   text-decoration-color: rgba(22, 101, 52, 0.6);
   transition: color 0.15s, text-decoration-color 0.15s;
+  opacity: 1;
+}
+
+.terminal-blog-content a .blog-word {
+  opacity: 1;
+  animation: none;
+  transform: none;
 }
 
 .terminal-blog-content a:hover {

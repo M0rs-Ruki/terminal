@@ -19,6 +19,16 @@ interface FullPost extends PostMeta {
 
 type LoadState = "loading" | "ready" | "error";
 
+function formatPostDate(date: string): string {
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return date;
+  return parsed.toLocaleDateString("en-IN", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
 interface BlogProps {
   slug?: string | null;
   initialPost?: BlogInitialPost | null;
@@ -58,7 +68,7 @@ function applyWordReveal(root: HTMLElement): void {
   while ((n = walker.nextNode())) {
     const parent = (n as Text).parentElement;
     if (!parent) continue;
-    if (parent.closest("code, pre")) continue;
+    if (parent.closest("code, pre, a")) continue;
     if (n.textContent && n.textContent.trim()) textNodes.push(n as Text);
   }
 
@@ -103,47 +113,23 @@ const Recommendations: React.FC<RecommendationsProps> = ({
   syncUrls,
   onSelect,
 }) => {
-  const sectionRef = useRef<HTMLDivElement | null>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    if (typeof IntersectionObserver === "undefined") {
-      const id = window.setTimeout(() => setVisible(true), 0);
-      return () => window.clearTimeout(id);
-    }
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            setVisible(true);
-            obs.disconnect();
-            break;
-          }
-        }
-      },
-      { threshold: 0.1 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
   if (items.length === 0) return null;
 
   return (
     <section
-      ref={sectionRef}
-      aria-label="Recommended posts"
-      className={`mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-green-800/40 transition-all duration-700 ${
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-      }`}
+      aria-label="More posts to read"
+      className="terminal-blog-read-next mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-green-800/40"
     >
-      <div className="flex items-center gap-2 mb-3">
-        <span className="text-green-400 font-mono text-sm">$ ls ./read-next/</span>
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-green-400 font-mono text-sm sm:text-base">
+          $ ls ./read-next/
+        </span>
         <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
       </div>
-      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+      <p className="text-gray-500 font-mono text-xs sm:text-sm mb-3">
+        Continue reading — pick another post:
+      </p>
+      <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 list-none p-0 m-0">
         {items.map((p) => (
           <li key={p.slug}>
             {syncUrls ? (
@@ -181,7 +167,7 @@ function PostCardContent({ post: p }: { post: PostMeta }) {
             dateTime={p.date}
             className="shrink-0 text-[11px] text-gray-500 font-mono"
           >
-            {p.date}
+            {formatPostDate(p.date)}
           </time>
         )}
       </div>
@@ -202,6 +188,9 @@ function PostCardContent({ post: p }: { post: PostMeta }) {
           ))}
         </div>
       )}
+      <p className="mt-3 text-green-400/80 font-mono text-xs group-hover:text-green-300">
+        → open post
+      </p>
     </>
   );
 }
@@ -380,7 +369,9 @@ const Blog: React.FC<BlogProps> = ({
                 {post.title}
               </h2>
               <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500 font-mono mt-2">
-                {post.date && <time dateTime={post.date}>{post.date}</time>}
+                {post.date && (
+                  <time dateTime={post.date}>{formatPostDate(post.date)}</time>
+                )}
                 {post.tags && post.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1.5">
                     {post.tags.map((tag) => (
@@ -432,28 +423,33 @@ const Blog: React.FC<BlogProps> = ({
         <p className="text-gray-400 text-sm font-mono">No posts yet.</p>
       )}
       {listState === "ready" && posts.length > 0 && (
-        <ul className="space-y-2">
-          {posts.map((p) => (
-            <li key={p.slug}>
-              {syncUrls ? (
-                <Link
-                  href={`/blog/${p.slug}`}
-                  className="block w-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 sm:p-4 cursor-pointer group"
-                >
-                  <ListPostContent post={p} />
-                </Link>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => goToSlug(p.slug)}
-                  className="w-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 sm:p-4 cursor-pointer group"
-                >
-                  <ListPostContent post={p} />
-                </button>
-              )}
-            </li>
-          ))}
-        </ul>
+        <>
+          <p className="text-gray-500 font-mono text-xs sm:text-sm mb-3">
+            {posts.length} post{posts.length === 1 ? "" : "s"} — tap to read
+          </p>
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 list-none p-0 m-0">
+            {posts.map((p) => (
+              <li key={p.slug} className="min-w-0">
+                {syncUrls ? (
+                  <Link
+                    href={`/blog/${p.slug}`}
+                    className="block h-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 sm:p-4 cursor-pointer group"
+                  >
+                    <ListPostContent post={p} />
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => goToSlug(p.slug)}
+                    className="w-full h-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 sm:p-4 cursor-pointer group"
+                  >
+                    <ListPostContent post={p} />
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );
@@ -471,12 +467,12 @@ function ListPostContent({ post: p }: { post: PostMeta }) {
             dateTime={p.date}
             className="shrink-0 text-xs text-gray-500 font-mono"
           >
-            {p.date}
+            {formatPostDate(p.date)}
           </time>
         )}
       </div>
       {p.excerpt && (
-        <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
+        <p className="text-gray-300 text-xs sm:text-sm leading-relaxed line-clamp-3">
           {p.excerpt}
         </p>
       )}
@@ -492,6 +488,9 @@ function ListPostContent({ post: p }: { post: PostMeta }) {
           ))}
         </div>
       )}
+      <p className="mt-3 text-green-400/80 font-mono text-xs group-hover:text-green-300">
+        → read post
+      </p>
     </>
   );
 }
