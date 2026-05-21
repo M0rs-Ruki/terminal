@@ -1082,10 +1082,16 @@ export default function Terminal({
     const el = terminalRef.current;
     if (!el) return;
     const id = requestAnimationFrame(() => {
+      const blogEl = el.querySelector(".terminal-blog");
+      if (blogEl && blogRoute) {
+        const top = (blogEl as HTMLElement).offsetTop - 8;
+        el.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+        return;
+      }
       el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
     });
     return () => cancelAnimationFrame(id);
-  }, [history]);
+  }, [history, blogRoute]);
 
   return (
     <div

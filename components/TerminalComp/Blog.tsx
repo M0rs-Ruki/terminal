@@ -58,6 +58,8 @@ function rankRecommendations(
     .map((x) => x.post);
 }
 
+const WORD_REVEAL_MAX_WORDS = 400;
+
 function applyWordReveal(root: HTMLElement): void {
   if (root.dataset.wordsWalked === "1") return;
   root.dataset.wordsWalked = "1";
@@ -78,6 +80,10 @@ function applyWordReveal(root: HTMLElement): void {
     totalWords += parts.filter((p) => p && !/^\s+$/.test(p)).length;
     return parts;
   });
+
+  if (totalWords > WORD_REVEAL_MAX_WORDS) {
+    return;
+  }
 
   const perWordMs = Math.min(28, Math.max(6, 3000 / Math.max(1, totalWords)));
 
@@ -293,8 +299,16 @@ const Blog: React.FC<BlogProps> = ({
   useEffect(() => {
     if (postState !== "ready" || !post || !contentRef.current) return;
     applyWordReveal(contentRef.current);
-    articleRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [postState, post]);
+    const scrollParent = articleRef.current?.closest(".terminal-body");
+    const article = articleRef.current;
+    if (scrollParent instanceof HTMLElement && article) {
+      const parentRect = scrollParent.getBoundingClientRect();
+      const articleRect = article.getBoundingClientRect();
+      const top =
+        scrollParent.scrollTop + (articleRect.top - parentRect.top) - 8;
+      scrollParent.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    }
+  }, [postState, post, activeSlug]);
 
   useEffect(() => {
     if (!activeSlug) return;

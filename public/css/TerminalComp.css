@@ -21,6 +21,7 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
+  min-height: 0;
   background: #000;
   font-family: var(--terminal-font);
   font-size: 0.875rem;
@@ -54,11 +55,15 @@
   background-size: 120px 120px;
 }
 
-/* Header bar at the top */
+/* Header bar at the top — always visible above scrolling content */
 .terminal-header {
+  position: relative;
+  z-index: 20;
   flex-shrink: 0;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
   padding: 0.5rem;
   background: #000;
   border-bottom: 2px solid #22c55e;
@@ -90,15 +95,21 @@
 
 /* Navigation bar in the header */
 .terminal-nav {
-  flex-grow: 1;
-  text-align: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem;
   color: #22c55e;
 }
 
 /* Buttons within the navigation bar */
 .nav-button {
-  margin-right: 0.5rem;
+  margin-right: 0;
   padding: 0.5rem 0.75rem;
+  flex-shrink: 0;
   font-size: 0.875rem;
   font-weight: 500;
   color: #10b981;
@@ -127,11 +138,13 @@
 
 /* Main content area of the terminal */
 .terminal-body {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   padding: 1rem;
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* History lines */
