@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   formatBlogPostLabel,
   type BlogSearchPost,
@@ -31,10 +32,8 @@ export default function BlogSearchResults({
       <ul className="space-y-2 list-none p-0 m-0">
         {posts.map((p) => (
           <li key={p.slug}>
-            <a
+            <Link
               href={`/blog/${p.slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
               className="block border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 rounded-lg p-3 transition-colors group"
             >
               <span className="text-green-400 font-semibold group-hover:text-green-300">
@@ -48,7 +47,7 @@ export default function BlogSearchResults({
               <span className="text-green-400/70 text-xs mt-2 inline-block">
                 → /blog/{p.slug}
               </span>
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

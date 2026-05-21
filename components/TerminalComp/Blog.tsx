@@ -36,27 +36,6 @@ interface BlogProps {
   syncUrls?: boolean;
 }
 
-function BlogPostLink({
-  href,
-  className,
-  children,
-}: {
-  href: string;
-  className?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={className}
-    >
-      {children}
-    </a>
-  );
-}
-
 function rankRecommendations(
   current: PostMeta,
   pool: PostMeta[],
@@ -161,12 +140,12 @@ const Recommendations: React.FC<RecommendationsProps> = ({
         {items.map((p) => (
           <li key={p.slug}>
             {syncUrls ? (
-              <BlogPostLink
+              <Link
                 href={`/blog/${p.slug}`}
                 className="block w-full h-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 cursor-pointer group"
               >
-                <PostCardContent post={p} showBlogLabel />
-              </BlogPostLink>
+                <PostCardContent post={p} />
+              </Link>
             ) : (
               <button
                 type="button"
@@ -477,12 +456,12 @@ const Blog: React.FC<BlogProps> = ({
             {posts.map((p) => (
               <li key={p.slug} className="min-w-0">
                 {syncUrls ? (
-                  <BlogPostLink
+                  <Link
                     href={`/blog/${p.slug}`}
                     className="block h-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 sm:p-4 cursor-pointer group"
                   >
-                    <ListPostContent post={p} showBlogLabel />
-                  </BlogPostLink>
+                    <ListPostContent post={p} />
+                  </Link>
                 ) : (
                   <button
                     type="button"
