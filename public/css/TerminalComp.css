@@ -63,7 +63,7 @@
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
-  column-gap: 0.5rem;
+  column-gap: 0.65rem;
   padding: 0.5rem 0.65rem;
   background: #000;
   border-bottom: 2px solid #22c55e;
@@ -94,13 +94,13 @@
   background: #22c55e;
 }
 
-/* Navigation bar in the header — one row, centered */
+/* Navigation: 4 buttons per row, 2 rows (no horizontal scroll) */
 .terminal-nav {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-  gap: 0.35rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(2, auto);
+  gap: 0.35rem 0.4rem;
+  width: 100%;
   min-width: 0;
   color: #22c55e;
 }
@@ -108,11 +108,14 @@
 /* Buttons within the navigation bar */
 .nav-button {
   margin: 0;
-  padding: 0.4rem 0.65rem;
+  width: 100%;
+  padding: 0.4rem 0.35rem;
   font-size: 0.8125rem;
   font-weight: 500;
+  text-align: center;
   white-space: nowrap;
-  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: #10b981;
   background: rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(16, 185, 129, 0.4);
@@ -354,20 +357,12 @@
   }
 
   .terminal-nav {
-    gap: 0.25rem;
-    overflow-x: auto;
-    justify-content: flex-start;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .terminal-nav::-webkit-scrollbar {
-    display: none;
+    gap: 0.25rem 0.3rem;
   }
 
   .nav-button {
     font-size: 0.7rem;
-    padding: 0.35rem 0.5rem;
+    padding: 0.35rem 0.25rem;
   }
 
   .terminal-body {
@@ -406,9 +401,8 @@
 
 @media (max-width: 360px) {
   .nav-button {
-    font-size: 0.65rem;
-    padding: 0.3rem 0.5rem;
-    min-width: 60px;
+    font-size: 0.6rem;
+    padding: 0.28rem 0.2rem;
   }
 
   .terminal-body {
