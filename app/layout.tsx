@@ -100,6 +100,11 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://www.anuppradhan.in",
+    types: {
+      "application/rss+xml": [
+        { url: "https://www.anuppradhan.in/blog/rss.xml", title: "Anup Pradhan — Blog RSS" },
+      ],
+    },
   },
   referrer: "strict-origin-when-cross-origin",
   category: "technology",

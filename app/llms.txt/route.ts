@@ -23,7 +23,7 @@ export async function GET() {
     `Site: ${SITE_URL}`,
     "Author: Anup Pradhan",
     "Title: Software Developer Portfolio",
-    "Summary: Portfolio covering software development projects, skills, experience, blog, and contact details.",
+    "Summary: Portfolio covering software development projects, skills, experience, developer blog (backend, security, WebRTC/SIP), and contact details.",
     "User-agent: *",
     "Allow: /",
     "Disallow: /api/",
