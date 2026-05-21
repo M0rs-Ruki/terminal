@@ -55,15 +55,13 @@
   background-size: 120px 120px;
 }
 
-/* Header bar at the top — always visible above scrolling content */
+/* Header bar at the top */
 .terminal-header {
   position: relative;
   z-index: 20;
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 0.35rem;
   padding: 0.5rem;
   background: #000;
   border-bottom: 2px solid #22c55e;
@@ -93,23 +91,17 @@
   background: #22c55e;
 }
 
-/* Navigation bar in the header */
+/* Navigation bar in the header (desktop: single centered row) */
 .terminal-nav {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 0.35rem;
+  flex-grow: 1;
+  text-align: center;
   color: #22c55e;
 }
 
 /* Buttons within the navigation bar */
 .nav-button {
-  margin-right: 0;
+  margin-right: 0.5rem;
   padding: 0.5rem 0.75rem;
-  flex-shrink: 0;
   font-size: 0.875rem;
   font-weight: 500;
   color: #10b981;
@@ -127,7 +119,7 @@
   color: #34d399;
   box-shadow:
     0 0 12px rgba(34, 197, 94, 0.5),
-    0 2px 8px rgba(0, 0, 0, 0.3);
+    0 2px 8px rgba(0, 0, 0, 0.2);
   transform: translateY(-1px);
 }
 
@@ -305,7 +297,6 @@
   min-width: 0;
   display: flex;
   align-items: center;
-  padding-bottom: env(safe-area-inset-bottom, 1rem);
 }
 
 .input-value {
@@ -348,21 +339,52 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  /* Mobile only: dots left, nav in 4 + 4 grid */
+  .terminal-header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    column-gap: 0.5rem;
+    padding: 0.45rem 0.5rem;
+  }
+
+  .window-dots {
+    flex-shrink: 0;
+  }
+
   .terminal-nav {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(2, auto);
+    flex-grow: unset;
+    gap: 0.25rem 0.3rem;
+    width: 100%;
+    min-width: 0;
   }
 
   .nav-button {
     margin-right: 0;
-    margin-bottom: 0.5rem;
-    font-size: 0.75rem;
+    width: 100%;
+    padding: 0.35rem 0.25rem;
+    font-size: 0.7rem;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transform: none;
+  }
+
+  .nav-button:hover {
+    transform: none;
   }
 
   .terminal-body {
     padding: 0.75rem;
+  }
+
+  /* Empty space below the prompt so anup@ruki:~$ sits above the screen edge */
+  .input-form {
+    margin-bottom: calc(2.75rem + env(safe-area-inset-bottom, 12px));
   }
 }
 
@@ -376,22 +398,17 @@
     height: 0.65rem;
   }
 
-  .terminal-nav {
-    gap: 0.25rem;
-    padding: 0 0.5rem;
-  }
-
   .nav-button {
-    flex: 1 1 calc(50% - 0.5rem);
-    text-align: center;
-    min-width: 70px;
-    font-size: 0.7rem;
-    padding: 0.4rem 0.6rem;
-    margin-bottom: 0.5rem;
+    font-size: 0.65rem;
+    padding: 0.3rem 0.45rem;
   }
 
   .terminal-body {
     padding: 0.6rem;
+  }
+
+  .input-form {
+    margin-bottom: calc(3.25rem + env(safe-area-inset-bottom, 16px));
   }
 
   .history-line {
@@ -406,9 +423,8 @@
 
 @media (max-width: 360px) {
   .nav-button {
-    font-size: 0.65rem;
-    padding: 0.3rem 0.5rem;
-    min-width: 60px;
+    font-size: 0.6rem;
+    padding: 0.28rem 0.2rem;
   }
 
   .terminal-body {

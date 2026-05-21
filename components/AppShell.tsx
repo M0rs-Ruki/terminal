@@ -5,10 +5,18 @@ import { usePathname } from "next/navigation";
 import Tag from "@/components/Tag";
 import { ShellContext } from "@/context/ShellContext";
 
+function isBlogPath(pathname: string): boolean {
+  return pathname === "/blog" || pathname.startsWith("/blog/");
+}
+
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const isBlog = isBlogPath(pathname);
   const [hideIdentityOnMobile, setHideIdentityOnMobile] = useState(false);
+
+  const hideIdentityOnMobileOnly =
+    isBlog || (isHome && hideIdentityOnMobile);
 
   return (
     <ShellContext.Provider value={{ setHideIdentityOnMobile }}>
@@ -16,7 +24,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <div className="main-content-area">
           <section
             className={`identity-pane ${
-              isHome && hideIdentityOnMobile ? "hide-on-mobile" : ""
+              hideIdentityOnMobileOnly ? "hide-on-mobile" : ""
             }`}
             aria-label="Developer identity — Anup Pradhan"
           >

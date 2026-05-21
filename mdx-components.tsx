@@ -22,16 +22,21 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         {children}
       </p>
     ),
-    a: ({ href, children }) => (
-      <a
-        href={href}
-        className="text-green-400 underline decoration-green-800/60 underline-offset-4 hover:text-green-300 hover:decoration-green-400/80 transition-colors"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {children}
-      </a>
-    ),
+    a: ({ href, children }) => {
+      const isExternal =
+        href?.startsWith("http") || href?.startsWith("//");
+      return (
+        <a
+          href={href}
+          className="text-green-400 underline decoration-green-800/60 underline-offset-4 hover:text-green-300 hover:decoration-green-400/80 transition-colors"
+          {...(isExternal
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
+        >
+          {children}
+        </a>
+      );
+    },
     ul: ({ children }) => (
       <ul className="list-disc list-outside ml-5 sm:ml-6 mb-4 space-y-1 text-gray-300 text-sm sm:text-base">
         {children}

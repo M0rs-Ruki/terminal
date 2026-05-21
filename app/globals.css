@@ -323,8 +323,9 @@ html {
     display: none;
   }
 
-  /* Adjust terminal pane to full height when identity is hidden */
-  .identity-pane.hide-on-mobile+.terminal-pane {
+  /* Full-height terminal when identity is hidden (home command or blog on mobile) */
+  .identity-pane.hide-on-mobile + .terminal-pane {
+    width: 100%;
     height: 100vh;
     max-height: 100vh;
     min-height: 100vh;
