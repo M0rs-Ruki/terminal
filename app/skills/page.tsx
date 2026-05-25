@@ -1,5 +1,10 @@
 import { Metadata } from "next";
 import type { ReactNode } from "react";
+import {
+  skills as skillsData,
+  skillCommands as terminalCommands,
+  type SkillsCategory,
+} from "@/lib/portfolio-data";
 
 // Enhanced SEO Metadata
 export const metadata: Metadata = {
@@ -82,15 +87,6 @@ export const metadata: Metadata = {
 };
 
 // Type definitions
-interface SkillsCategory {
-  languages: string[];
-  frontend: string[];
-  backend: string[];
-  databases: string[];
-  tools: string[];
-  deployment: string[];
-  ai_ml: string[];
-}
 
 interface CategoryConfig {
   key: keyof SkillsCategory;
@@ -99,56 +95,6 @@ interface CategoryConfig {
   skills: string[];
 }
 
-// Skills data
-const skillsData: SkillsCategory = {
-  languages: [
-    "JavaScript (ES6+)",
-    "TypeScript",
-    "Python",
-    "C++",
-    "HTML5",
-    "CSS3",
-  ],
-  frontend: ["React", "Next.js", "Remix", "TanStack Query", "Tailwind CSS", "EJS", "Vite"],
-  backend: ["Node.js", "Express.js", "FastAPI", "REST APIs", "OAuth 2.0", "JWT"],
-  databases: ["MongoDB", "RabbitMQ", "Redis", "PostgreSQL", "VectorDB", "Weaviate", "Neo4j"],
-  tools: [
-    "Git & GitHub",
-    "Docker",
-    "Kubernetes",
-    "Postman",
-    "Linux/CLI",
-    "Claude Code",
-    "OpenCode",
-    "Ubuntu",
-    "Arch Linux",
-  ],
-  deployment: [
-    "AWS S3",
-    "Azure",
-    "GCP",
-    "VPS (Virtual Private Server)",
-    "Vercel",
-    "Render",
-    "Dokploy",
-  ],
-  ai_ml: [ "Pandas", "NumPy", "PyTorch", "TensorFlow",
-    "RAG (Retrieval-Augmented Generation)",
-    "Tool Calling",
-    "MCP (Model Context Protocol)"
-  ],
-};
-
-// Terminal commands for each category
-const terminalCommands: Record<keyof SkillsCategory, string> = {
-  languages: "ls -la /skills/languages/",
-  frontend: "cat /skills/frontend/stack.txt",
-  backend: "ps aux | grep backend",
-  databases: "show databases;",
-  tools: "which --all tools",
-  deployment: "kubectl get deployments -A",
-  ai_ml: "python -m pip list | grep ai",
-};
 
 // Simplified SVG Icons
 const CodeIcon = () => (

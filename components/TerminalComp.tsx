@@ -27,6 +27,19 @@ import {
   getCowsay,
   getBanner,
   getNeofetchData,
+  TOOL_VERSIONS,
+  getUptime,
+  getFreeOutput,
+  getDfOutput,
+  getPsOutput,
+  getEnvOutput,
+  getWhoOutput,
+  getLastOutput,
+  getTreeOutput,
+  grepFile,
+  getLsbRelease,
+  getGitStatus,
+  getSlTrain,
 } from "./TerminalComp/commands/virtualFs";
 
 // Type definitions
@@ -245,7 +258,9 @@ const Neofetch: React.FC<{ user: string; host: string }> = ({ user, host }) => {
   );
 };
 
-const Prompt: React.FC<PromptProps & { cwd?: string }> = ({ user, host, cwd = "~" }) => (
+// Rendered once per history line, so memoized to skip re-rendering unchanged
+// lines whenever the terminal re-renders (e.g. on every keystroke).
+const Prompt: React.FC<PromptProps & { cwd?: string }> = React.memo(({ user, host, cwd = "~" }) => (
   <span
     className="terminal-prompt"
     aria-label={`Command prompt for ${user} at ${host}`}
@@ -257,11 +272,13 @@ const Prompt: React.FC<PromptProps & { cwd?: string }> = ({ user, host, cwd = "~
     <span className="prompt-directory">{cwd === "~" ? "~" : cwd}</span>
     <span className="prompt-symbol">$ </span>
   </span>
-);
+));
+Prompt.displayName = "Prompt";
 
-const OutputLine: React.FC<OutputLineProps> = ({ children }) => (
+const OutputLine: React.FC<OutputLineProps> = React.memo(({ children }) => (
   <div className="output-line">{children}</div>
-);
+));
+OutputLine.displayName = "OutputLine";
 
 // Static data moved outside components to avoid dependency issues
 const HELP_ITEMS: HelpItem[] = [
@@ -297,6 +314,27 @@ const HELP_ITEMS: HelpItem[] = [
   { type: "command", command: "ai <question>", description: "Chat with AI assistant (10 requests/day)." },
   { type: "command", command: "clear", description: "Clear the terminal screen." },
   { type: "command", command: "exit", description: "Close this tab/window." },
+  { type: "title", text: "System & files:" },
+  { type: "command", command: "uptime", description: "Show how long the system has been up." },
+  { type: "command", command: "free [-h]", description: "Show memory usage." },
+  { type: "command", command: "df [-h]", description: "Show disk space usage." },
+  { type: "command", command: "ps [aux]", description: "Snapshot of running processes." },
+  { type: "command", command: "top", description: "Running processes (snapshot)." },
+  { type: "command", command: "env", description: "Print environment variables." },
+  { type: "command", command: "groups", description: "Print the current user's groups." },
+  { type: "command", command: "who / w / users", description: "Show who is logged on." },
+  { type: "command", command: "last", description: "Show recent login history." },
+  { type: "command", command: "arch", description: "Print machine architecture." },
+  { type: "command", command: "lsb_release [-a]", description: "Print distribution info." },
+  { type: "command", command: "tree", description: "List files as a tree." },
+  { type: "command", command: "head/tail <file>", description: "Print a file's contents." },
+  { type: "command", command: "wc <file>", description: "Count lines, words, bytes." },
+  { type: "command", command: "grep <pat> [file]", description: "Print lines matching a pattern." },
+  { type: "command", command: "which <cmd>", description: "Locate a command." },
+  { type: "command", command: "whatis <cmd>", description: "One-line command description." },
+  { type: "command", command: "git [status|log]", description: "Show repository status." },
+  { type: "command", command: "node/npm/python", description: "Print tool versions." },
+  { type: "command", command: "sl", description: "Steam locomotive (for ls typos)." },
 ];
 
 const WELCOME_LINES: string[] = [
@@ -342,6 +380,26 @@ const TAB_COMPLETIONS: string[] = [
   "clear",
   "blog",
   "exit",
+  "uptime",
+  "free",
+  "free -h",
+  "df",
+  "df -h",
+  "ps",
+  "ps aux",
+  "top",
+  "env",
+  "groups",
+  "who",
+  "last",
+  "arch",
+  "lsb_release -a",
+  "tree",
+  "git status",
+  "git log",
+  "which",
+  "whatis",
+  "sl",
 ];
 
 // Command names for first-word completion and man
@@ -373,6 +431,52 @@ const COMMAND_NAMES = [
   "cowsay",
   "banner",
   "yes",
+  "uptime",
+  "free",
+  "df",
+  "ps",
+  "top",
+  "env",
+  "printenv",
+  "groups",
+  "who",
+  "w",
+  "users",
+  "last",
+  "arch",
+  "lsb_release",
+  "tree",
+  "head",
+  "tail",
+  "wc",
+  "grep",
+  "which",
+  "whatis",
+  "node",
+  "npm",
+  "python",
+  "python3",
+  "git",
+  "sl",
+  "sudo",
+  "touch",
+  "mkdir",
+  "rm",
+  "rmdir",
+  "mv",
+  "cp",
+  "reboot",
+  "shutdown",
+  "poweroff",
+  "halt",
+  "vim",
+  "vi",
+  "nano",
+  "emacs",
+  "apt",
+  "apt-get",
+  "pacman",
+  "yum",
 ];
 
 const CD_SECTIONS = [
@@ -756,49 +860,7 @@ export default function Terminal({
     const commandName = parts[0]?.toLowerCase() ?? "";
     const args = parts.slice(1);
 
-    // pwd
-    if (commandName === "pwd") {
-      newHist.push({ type: "output", content: cwd === "~" ? PWD_DISPLAY : cwd });
-      setHistory(newHist);
-      return;
-    }
-
-    // ls [ -l | -a | -la ]
-    if (commandName === "ls") {
-      const long = args.includes("-l") || args.includes("-la");
-      const list = [...HOME_DIR];
-      const out = long ? formatLsLong(list) : list.join("  ");
-      newHist.push({ type: "output", content: <pre className="pre-output">{out}</pre> });
-      setHistory(newHist);
-      return;
-    }
-
-    // cat <file>
-    if (commandName === "cat") {
-      const name = args[0];
-      if (!name) {
-        newHist.push({ type: "output", content: "cat: missing operand" });
-        setHistory(newHist);
-        return;
-      }
-      const key = HOME_DIR.find((e) => e.toLowerCase() === name.toLowerCase());
-      if (key && FILE_CONTENTS[key]) {
-        newHist.push({ type: "output", content: FILE_CONTENTS[key] });
-      } else {
-        newHist.push({
-          type: "output",
-          content: (
-            <span className="terminal-stderr">
-              cat: {name}: No such file or directory
-            </span>
-          ),
-        });
-      }
-      setHistory(newHist);
-      return;
-    }
-
-    // cd [dir]
+    // cd [dir] — changes the working "directory" and may navigate (side effects)
     if (commandName === "cd") {
       if (args.length === 0) {
         setCwd("~");
@@ -837,123 +899,13 @@ export default function Terminal({
       return;
     }
 
-    // hostname, id, uname, cal, history, printf, man
-    if (commandName === "hostname") {
-      newHist.push({ type: "output", content: host });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "id") {
-      newHist.push({
-        type: "output",
-        content: `uid=1000(${user}) gid=1000(${user}) groups=1000(${user})`,
-      });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "uname") {
-      const all = args.includes("-a");
-      newHist.push({
-        type: "output",
-        content: all
-          ? `Linux ${host} 6.x portfolio-terminal #1 Next.js`
-          : "Linux",
-      });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "cal") {
-      newHist.push({ type: "output", content: <pre className="pre-output">{getCalOutput()}</pre> });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "history") {
-      const list = commandHistory
-        .map((c, i) => `  ${i + 1}  ${c}`)
-        .join("\n");
-      newHist.push({ type: "output", content: <pre className="pre-output">{list || " (empty)"}</pre> });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "printf") {
-      const format = args[0] ?? "";
-      const out = printfFormat(format, args.slice(1));
-      newHist.push({ type: "output", content: out });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "man") {
-      const topic = args[0]?.toLowerCase();
-      const page = topic ? MAN_PAGES[topic] : null;
-      if (page) {
-        newHist.push({ type: "output", content: page });
-      } else {
-        newHist.push({
-          type: "output",
-          content: (
-            <span className="terminal-stderr">
-              No manual entry for {topic ?? ""}
-            </span>
-          ),
-        });
-      }
-      setHistory(newHist);
-      return;
-    }
-
-    // neofetch, fortune, cowsay, banner, yes
-    if (commandName === "neofetch") {
-      newHist.push({ type: "output", content: <Neofetch user={user} host={host} /> });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "fortune") {
-      newHist.push({ type: "output", content: getFortune() });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "cowsay") {
-      const msg = args.length ? args.join(" ") : "moo";
-      newHist.push({ type: "output", content: <pre className="pre-output">{getCowsay(msg)}</pre> });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "banner") {
-      const text = args.length ? args.join(" ") : " ";
-      newHist.push({ type: "output", content: <pre className="pre-output">{getBanner(text)}</pre> });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "yes") {
-      const word = args.length ? args.join(" ") : "y";
-      const repeated = Array(8)
-        .fill(word)
-        .join("\n");
-      newHist.push({ type: "output", content: repeated });
-      setHistory(newHist);
-      return;
-    }
-
-    // help, whoami, date, clear, blog, exit
-    if (commandName === "help") {
-      newHist.push({ type: "output", content: <Help /> });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "whoami") {
-      newHist.push({ type: "output", content: user });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "date") {
-      newHist.push({ type: "output", content: new Date().toString() });
-      setHistory(newHist);
-      return;
-    }
+    // clear — wipe the screen, no output line
     if (commandName === "clear") {
       setHistory([]);
       return;
     }
+
+    // blog — navigate to the blog index or render search results (side effects)
     if (commandName === "blog") {
       const query = args.join(" ").trim();
       if (!query) {
@@ -963,15 +915,181 @@ export default function Terminal({
       const matches = searchBlogPosts(blogPostsCache, query);
       newHist.push({
         type: "output",
-        content: (
-          <BlogSearchResults posts={matches} query={query} />
-        ),
+        content: <BlogSearchResults posts={matches} query={query} />,
       });
       setHistory(newHist);
       return;
     }
-    if (commandName === "exit") {
-      newHist.push({ type: "output", content: "Close this tab to exit." });
+
+    // Helpers for the pure-command map below.
+    const pre = (s: string) => <pre className="pre-output">{s}</pre>;
+    const stderr = (s: string) => <span className="terminal-stderr">{s}</span>;
+    // This is a read-only, in-browser filesystem — mutating commands always fail.
+    const readOnlyFs = (cmd: string) => (a: string[]) =>
+      stderr(`${cmd}: cannot operate on '${a[0] ?? ""}': Read-only file system`);
+    // Privileged commands are politely refused.
+    const notPermitted = (cmd: string) => () =>
+      stderr(`${cmd}: Operation not permitted — this is a portfolio, not your server. Nice try 😄`);
+    // Editors can't run in here; nudge toward cat.
+    const editorJoke = (cmd: string) => (a: string[]) =>
+      `${cmd}: cannot open a real editor here. Use 'cat ${a[0] ?? "<file>"}' to read files instead.`;
+    // Package managers need a real machine.
+    const pkgManager = (cmd: string) => () =>
+      stderr(`E: Could not open lock file — are you root? '${cmd}' isn't available on this read-only terminal. Try 'cd skills' instead.`);
+
+    // Pure commands: each maps args to output content with no side effects.
+    const outputCommands: Record<string, (args: string[]) => React.ReactNode> = {
+      pwd: () => (cwd === "~" ? PWD_DISPLAY : cwd),
+      ls: (a) => {
+        const long = a.includes("-l") || a.includes("-la");
+        const list = [...HOME_DIR];
+        const out = long ? formatLsLong(list) : list.join("  ");
+        return <pre className="pre-output">{out}</pre>;
+      },
+      cat: (a) => {
+        const name = a[0];
+        if (!name) return "cat: missing operand";
+        const key = HOME_DIR.find((e) => e.toLowerCase() === name.toLowerCase());
+        if (key && FILE_CONTENTS[key]) return FILE_CONTENTS[key];
+        return (
+          <span className="terminal-stderr">
+            cat: {name}: No such file or directory
+          </span>
+        );
+      },
+      hostname: () => host,
+      id: () => `uid=1000(${user}) gid=1000(${user}) groups=1000(${user})`,
+      uname: (a) =>
+        a.includes("-a")
+          ? `Linux ${host} 6.x portfolio-terminal #1 Next.js`
+          : "Linux",
+      cal: () => <pre className="pre-output">{getCalOutput()}</pre>,
+      history: () => {
+        const list = commandHistory.map((c, i) => `  ${i + 1}  ${c}`).join("\n");
+        return <pre className="pre-output">{list || " (empty)"}</pre>;
+      },
+      printf: (a) => printfFormat(a[0] ?? "", a.slice(1)),
+      man: (a) => {
+        const topic = a[0]?.toLowerCase();
+        const page = topic ? MAN_PAGES[topic] : null;
+        if (page) return page;
+        return (
+          <span className="terminal-stderr">
+            No manual entry for {topic ?? ""}
+          </span>
+        );
+      },
+      neofetch: () => <Neofetch user={user} host={host} />,
+      fortune: () => getFortune(),
+      cowsay: (a) => (
+        <pre className="pre-output">{getCowsay(a.length ? a.join(" ") : "moo")}</pre>
+      ),
+      banner: (a) => (
+        <pre className="pre-output">{getBanner(a.length ? a.join(" ") : " ")}</pre>
+      ),
+      yes: (a) => Array(8).fill(a.length ? a.join(" ") : "y").join("\n"),
+      help: () => <Help />,
+      whoami: () => user,
+      date: () => new Date().toString(),
+      exit: () => "Close this tab to exit.",
+
+      // --- System info ---
+      uptime: () => getUptime(),
+      arch: () => "x86_64",
+      free: (a) => pre(getFreeOutput(a.includes("-h"))),
+      df: (a) => pre(getDfOutput(a.includes("-h"))),
+      ps: (a) => pre(getPsOutput(a.includes("aux") || a.includes("-aux") || a.includes("-ef"))),
+      top: () => pre(getPsOutput(true)),
+      env: () => pre(getEnvOutput(user)),
+      printenv: () => pre(getEnvOutput(user)),
+      groups: () => `${user} sudo docker users developers`,
+      who: () => getWhoOutput(user),
+      w: () => getWhoOutput(user),
+      users: () => user,
+      last: () => pre(getLastOutput(user)),
+      lsb_release: () => pre(getLsbRelease()),
+
+      // --- Files ---
+      tree: () => pre(getTreeOutput(HOME_DIR)),
+      head: (a) => outputCommands.cat(a),
+      tail: (a) => outputCommands.cat(a),
+      wc: (a) => {
+        const name = a[0];
+        const key = name && HOME_DIR.find((e) => e.toLowerCase() === name.toLowerCase());
+        if (!key || FILE_CONTENTS[key] === undefined) {
+          return stderr(`wc: ${name ?? ""}: No such file or directory`);
+        }
+        const text = FILE_CONTENTS[key];
+        const lines = text.split("\n").length;
+        const words = text.trim().split(/\s+/).length;
+        const bytes = text.length;
+        return ` ${lines}  ${words}  ${bytes} ${key}`;
+      },
+      grep: (a) => {
+        if (a.length < 1) return stderr("usage: grep <pattern> [file]");
+        const pattern = a[0];
+        const fileArg = a[1];
+        const key = fileArg
+          ? HOME_DIR.find((e) => e.toLowerCase() === fileArg.toLowerCase())
+          : undefined;
+        const out = grepFile(pattern, key, FILE_CONTENTS, HOME_DIR);
+        return out ? pre(out) : "";
+      },
+      which: (a) => {
+        if (a.length === 0) return stderr("usage: which <command>");
+        const lines = a.map((name) => {
+          const cmd = name.toLowerCase();
+          return MAN_PAGES[cmd] !== undefined
+            ? `/usr/bin/${cmd}`
+            : `which: no ${name} in (/usr/local/bin:/usr/bin:/bin)`;
+        });
+        return lines.length === 1 ? lines[0] : pre(lines.join("\n"));
+      },
+      whatis: (a) => {
+        const topic = a[0]?.toLowerCase();
+        const page = topic ? MAN_PAGES[topic] : undefined;
+        if (!page) return `${topic ?? ""}: nothing appropriate.`;
+        const desc = page.split("—")[1]?.trim() ?? page;
+        return `${topic} (1)         - ${desc}`;
+      },
+
+      // --- Toolchain versions ---
+      node: () => TOOL_VERSIONS.node,
+      npm: () => TOOL_VERSIONS.npm,
+      python: () => TOOL_VERSIONS.python,
+      python3: () => TOOL_VERSIONS.python,
+
+      // --- Source control ---
+      git: (a) => pre(getGitStatus((a[0] ?? "").toLowerCase())),
+
+      // --- Easter egg ---
+      sl: () => pre(getSlTrain()),
+
+      // --- Privileged / mutating commands: refused on a read-only terminal ---
+      sudo: () => stderr(`${user} is not in the sudoers file. This incident will be reported.`),
+      touch: readOnlyFs("touch"),
+      mkdir: readOnlyFs("mkdir"),
+      rm: readOnlyFs("rm"),
+      rmdir: readOnlyFs("rmdir"),
+      mv: readOnlyFs("mv"),
+      cp: readOnlyFs("cp"),
+      reboot: notPermitted("reboot"),
+      shutdown: notPermitted("shutdown"),
+      poweroff: notPermitted("poweroff"),
+      halt: notPermitted("halt"),
+      vim: editorJoke("vim"),
+      vi: editorJoke("vi"),
+      nano: editorJoke("nano"),
+      emacs: editorJoke("emacs"),
+      apt: pkgManager("apt"),
+      "apt-get": pkgManager("apt-get"),
+      pacman: pkgManager("pacman"),
+      yum: pkgManager("yum"),
+    };
+
+    const handler = outputCommands[commandName];
+    if (handler) {
+      newHist.push({ type: "output", content: handler(args) });
       setHistory(newHist);
       return;
     }

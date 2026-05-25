@@ -1,16 +1,16 @@
 import { Metadata } from "next";
 import { durationLabel, formatMonths, monthsBetween } from "@/lib/duration";
+import {
+  CHATI_INTERN_START,
+  CHATI_INTERN_END,
+  CHATI_JR_START,
+  PROMINDS_WP_START,
+  PROMINDS_FS_START,
+} from "@/lib/portfolio-data";
 
 const SITE_URL = "https://www.anuppradhan.in";
 const AUTHOR_NAME = "Anup Pradhan";
 
-// Single source of truth for role timestamps. Duration labels recompute on every
-// request — no monthly manual edits.
-const CHATI_INTERN_START = new Date(2025, 10, 1); // Nov 2025
-const CHATI_INTERN_END = new Date(2026, 3, 1);    // Apr 2026 (promoted)
-const CHATI_JR_START = new Date(2026, 3, 1);      // Apr 2026
-const PROMINDS_WP_START = new Date(2025, 3, 1);   // Apr 2025
-const PROMINDS_FS_START = new Date(2025, 10, 1);  // Nov 2025
 
 // Static page — re-render daily so durations stay fresh between deploys.
 export const revalidate = 86400;

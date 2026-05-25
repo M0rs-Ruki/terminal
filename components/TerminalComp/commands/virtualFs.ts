@@ -132,7 +132,229 @@ export const MAN_PAGES: Record<string, string> = {
   cowsay: "cowsay [message] — Cow says your message.",
   banner: "banner <text> — Print text in large ASCII (short text).",
   yes: "yes [string] — Repeat string (limited output).",
+  uptime: "uptime — Show how long the system has been running.",
+  free: "free [ -h ] — Display amount of free and used memory.",
+  df: "df [ -h ] — Report file system disk space usage.",
+  ps: "ps [ aux ] — Report a snapshot of current processes.",
+  top: "top — Display running processes (static snapshot).",
+  env: "env — Print the environment variables.",
+  printenv: "printenv — Print all environment variables.",
+  groups: "groups — Print the groups the current user belongs to.",
+  who: "who — Show who is logged on.",
+  w: "w — Show who is logged on and what they are doing.",
+  users: "users — Print the user names of users currently logged in.",
+  last: "last — Show a listing of last logged in users.",
+  tree: "tree — List contents of directories in a tree-like format.",
+  head: "head <file> — Output the first part of a file.",
+  tail: "tail <file> — Output the last part of a file.",
+  grep: "grep <pattern> <file> — Print lines matching a pattern.",
+  wc: "wc <file> — Print newline, word and byte counts for a file.",
+  which: "which <command> — Locate a command in PATH.",
+  whatis: "whatis <command> — Display one-line manual page descriptions.",
+  arch: "arch — Print machine hardware architecture.",
+  lsb_release: "lsb_release [ -a ] — Print distribution-specific information.",
+  sudo: "sudo <command> — Execute a command as another user.",
+  touch: "touch <file> — Change file timestamps / create empty file.",
+  mkdir: "mkdir <dir> — Make directories.",
+  rm: "rm <file> — Remove files or directories.",
+  rmdir: "rmdir <dir> — Remove empty directories.",
+  mv: "mv <src> <dst> — Move (rename) files.",
+  cp: "cp <src> <dst> — Copy files and directories.",
+  vim: "vim <file> — Vi IMproved, a programmer's text editor.",
+  vi: "vi <file> — A screen-oriented text editor.",
+  nano: "nano <file> — Nano's ANOther editor, a small text editor.",
+  emacs: "emacs <file> — The extensible, customizable text editor.",
+  apt: "apt <command> — Package manager for Debian-based systems.",
+  "apt-get": "apt-get <command> — APT package handling utility.",
+  pacman: "pacman <command> — Package manager for Arch Linux.",
+  yum: "yum <command> — Package manager for RPM-based systems.",
+  halt: "halt — Halt the machine.",
+  git: "git [ status | log ] — The stupid content tracker.",
+  node: "node [ -v ] — Run the Node.js runtime.",
+  npm: "npm [ -v ] — The Node package manager.",
+  python: "python [ --version ] — The Python interpreter.",
+  python3: "python3 [ --version ] — The Python 3 interpreter.",
+  sl: "sl — Steam Locomotive. For when you mistype 'ls'.",
+  reboot: "reboot — Reboot the machine.",
+  shutdown: "shutdown — Power off the machine.",
+  poweroff: "poweroff — Power off the machine.",
 };
+
+// Version strings reported by the faux toolchain commands.
+export const TOOL_VERSIONS = {
+  node: "v22.11.0",
+  npm: "10.9.0",
+  python: "Python 3.12.7",
+} as const;
+
+/** uptime(1): current time + a fixed-but-plausible uptime and load average. */
+export function getUptime(): string {
+  const time = new Date().toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+  return ` ${time} up 42 days,  3:14,  1 user,  load average: 0.08, 0.03, 0.01`;
+}
+
+/** free(1): memory usage. Human-readable (-h) or in kibibytes. */
+export function getFreeOutput(human: boolean): string {
+  if (human) {
+    return [
+      "              total        used        free      shared  buff/cache   available",
+      "Mem:           15Gi       4.2Gi       8.1Gi       512Mi       3.1Gi        10Gi",
+      "Swap:         2.0Gi          0B       2.0Gi",
+    ].join("\n");
+  }
+  return [
+    "              total        used        free      shared  buff/cache   available",
+    "Mem:        16384000     4404019     8493465      524288     3486516    10567680",
+    "Swap:        2097152           0     2097152",
+  ].join("\n");
+}
+
+/** df(1): disk usage of the (virtual) portfolio file system. */
+export function getDfOutput(human: boolean): string {
+  if (human) {
+    return [
+      "Filesystem      Size  Used Avail Use% Mounted on",
+      "/dev/portfolio   50G   18G   29G  39% /",
+      "tmpfs           2.0G     0  2.0G   0% /dev/shm",
+      "/dev/skills      10G  6.5G  3.0G  68% /home/anup/skills",
+    ].join("\n");
+  }
+  return [
+    "Filesystem     1K-blocks      Used Available Use% Mounted on",
+    "/dev/portfolio  52428800  18874368  30408704  39% /",
+    "tmpfs            2097152         0   2097152   0% /dev/shm",
+    "/dev/skills     10485760   6815744   3145728  68% /home/anup/skills",
+  ].join("\n");
+}
+
+/** ps(1): a fixed snapshot of "running" processes. `aux` gives the wide form. */
+export function getPsOutput(aux: boolean): string {
+  if (aux) {
+    return [
+      "USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND",
+      "anup         1  0.0  0.1  16823  9921 ?        Ss   00:00   0:01 /sbin/init",
+      "anup       420  0.3  2.1 998244 84992 ?        Sl   00:00   0:42 next-server",
+      "anup       777  0.1  1.0 512000 40000 ?        S    00:00   0:07 portfolio-terminal",
+      "anup      1337  0.0  0.5 128000 20000 pts/0    R+   14:23   0:00 ps aux",
+    ].join("\n");
+  }
+  return [
+    "    PID TTY          TIME CMD",
+    "    420 pts/0    00:00:42 next-server",
+    "    777 pts/0    00:00:07 portfolio-terminal",
+    "   1337 pts/0    00:00:00 ps",
+  ].join("\n");
+}
+
+/** env(1): a small set of plausible environment variables. */
+export function getEnvOutput(user: string): string {
+  return [
+    `USER=${user}`,
+    `LOGNAME=${user}`,
+    `HOME=/home/${user}`,
+    "SHELL=/bin/bash",
+    "TERM=xterm-256color",
+    `PWD=/home/${user}`,
+    "LANG=en_IN.UTF-8",
+    "EDITOR=vim",
+    "PATH=/usr/local/bin:/usr/bin:/bin",
+    "PORTFOLIO=Anup Pradhan — Software Developer",
+  ].join("\n");
+}
+
+/** who/w/users: a single active session. */
+export function getWhoOutput(user: string): string {
+  const time = new Date().toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+  return `${user}     pts/0        ${time} (:0)`;
+}
+
+/** last(1): a short, fabricated login history. */
+export function getLastOutput(user: string): string {
+  return [
+    `${user}     pts/0        192.168.1.42     Mon 09:14    still logged in`,
+    `${user}     pts/0        192.168.1.42     Sun 21:03 - 23:40  (02:37)`,
+    "reboot   system boot  6.x-portfolio    Sun 20:58",
+    "",
+    "wtmp begins Sun 20:58",
+  ].join("\n");
+}
+
+/** tree(1): a flat tree of the virtual home directory. */
+export function getTreeOutput(entries: readonly string[]): string {
+  const lines = [".", ...entries.map((e, i) =>
+    (i === entries.length - 1 ? "└── " : "├── ") + e
+  )];
+  lines.push("", `0 directories, ${entries.length} files`);
+  return lines.join("\n");
+}
+
+/** grep(1) over a virtual file's contents (or the directory listing). */
+export function grepFile(
+  pattern: string,
+  fileKey: string | undefined,
+  files: Record<string, string>,
+  entries: readonly string[]
+): string {
+  const haystack = fileKey && files[fileKey] !== undefined
+    ? files[fileKey].split(/(?<=[.!?])\s+/)
+    : [...entries];
+  const needle = pattern.toLowerCase();
+  const matches = haystack.filter((line) =>
+    line.toLowerCase().includes(needle)
+  );
+  return matches.join("\n");
+}
+
+/** lsb_release -a style distribution info. */
+export function getLsbRelease(): string {
+  return [
+    "Distributor ID: PortfolioOS",
+    "Description:    Anup Pradhan Portfolio Terminal",
+    "Release:        2026.05",
+    "Codename:       greenscreen",
+  ].join("\n");
+}
+
+/** git status, portfolio edition. */
+export function getGitStatus(sub: string): string {
+  if (sub === "log") {
+    return [
+      "commit a11ce7b (HEAD -> main, origin/main)",
+      "Author: Anup Pradhan <anuppradhan929@gmail.com>",
+      "Date:   Mon May 26 2026",
+      "",
+      "    feat: ship interactive portfolio terminal",
+    ].join("\n");
+  }
+  return [
+    "On branch main",
+    "Your branch is up to date with 'origin/main'.",
+    "",
+    "nothing to commit, working tree clean ✨",
+  ].join("\n");
+}
+
+const SL_TRAIN = `      ====        ________                ___________
+  _D _|  |_______/        \\__I_I_____===__|_________|
+   |(_)---  |   H\\________/ |   |        =|___ ___|
+   /     |  |   H  |  |     |   |         ||_| |_||
+  |      |  |   H  |__--------------------| [___] |
+  | ________|___H__/__|_____/[][]~\\_______|       |
+  |/ |   |-----------I_____I [][] []  D   |=======|__`;
+
+/** sl(1): the classic "you typed ls wrong" steam locomotive. */
+export function getSlTrain(): string {
+  return SL_TRAIN;
+}
 
 const FORTUNES = [
   "The only way to do great work is to love what you do.",

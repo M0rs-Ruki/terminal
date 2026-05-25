@@ -1,0 +1,241 @@
+// Single source of truth for portfolio content.
+//
+// Each section is rendered twice — once as a static, SEO-friendly page under
+// `app/*/page.tsx` and once as an interactive pane under
+// `components/TerminalComp/*`. The two renderings differ on purpose, but the
+// underlying data must not. Both sides import from here so the lists stay in
+// lock-step (they had already drifted before this was centralized).
+
+// ---------------------------------------------------------------------------
+// Projects
+// ---------------------------------------------------------------------------
+
+export interface Project {
+  name: string;
+  description: string;
+  imageUrl: string;
+  liveUrl: string;
+  githubUrl: string;
+  tech: string[];
+}
+
+export const projects: Project[] = [
+  {
+    name: "AutoPulse",
+    description:
+      "A multi-tenant dealership and automotive management application for showroom visitor management with WhatsApp integration, digital & field enquiries, delivery updates, vehicle models, lead sources, and templates. Includes RBAC, organization-level feature toggles, lead/CRM workflows, and has been deployed to 5+ showrooms with 5000+ visitor entries.",
+    imageUrl: "/images/autopulse.png",
+    liveUrl: "#",
+    githubUrl: "https://github.com/anupPradhan0/AutoPulseOLD",
+    tech: [
+      "Next.js 16",
+      "React 19",
+      "Tailwind CSS 4",
+      "Radix UI",
+      "Express.js",
+      "TypeScript",
+      "Prisma",
+      "PostgreSQL",
+      "JWT",
+      "RabbitMQ",
+    ],
+  },
+  {
+    name: "AI-powered personal finance tracker",
+    description:
+      "RukiAI is an AI-driven personal finance tracker designed to help users log expenses, set budgets, and receive smart, personalized financial advice. Built with Node.js, MongoDB, and EJS, it integrates Cohere's AI API to deliver real-time insights while also featuring a custom local AI model to demonstrate advanced AI capabilities for recruiters. The project showcases both cloud-based AI integration and self-hosted model development in one application.",
+    imageUrl: "/images/ruki-ai-project.png",
+    liveUrl: "https://www.rukiai.online/",
+    githubUrl: "https://github.com/anupPradhan0/AI-Personal-Finance-Tracker",
+    tech: [
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "EJS",
+      "Tailwind",
+      "JavaScript",
+      "Cohere AI",
+    ],
+  },
+  {
+    name: "WhatsApp Campaign Management Platform",
+    description:
+      "A full-stack MERN application for managing WhatsApp marketing campaigns with role-based access for admins and resellers. Features include client onboarding, financial transaction tracking with credit/debit records, and an integrated complaint management system. Built with React and TypeScript, featuring hierarchical user tree visualization with collapsible nodes and modal views. Backend powered by Node.js, Express, and MongoDB with Mongoose ODM for handling transactions, user management, and campaign operations. Integrated Cloudinary for image storage with automated cleanup scheduling.",
+    imageUrl: "/images/whatsApp-Campaign.png",
+    liveUrl: "https://whats-app-campaigner.vercel.app",
+    githubUrl: "https://github.com/anupPradhan0/WhatsApp-Campaigner",
+    tech: [
+      "React",
+      "Tailwind CSS",
+      "TypeScript",
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "Mongoose(ODM)",
+      "Cloudinary",
+    ],
+  },
+  {
+    name: "Neural Network From Scratch (in Python)",
+    description:
+      "Tech: Python, NumPy, Matplotlib, Tensorflow. Implemented a basic neural network from the ground up using only Python and NumPy—no external ML libraries. Designed input, hidden, and output layers; implemented forward propagation, activation functions (Sigmoid/ReLU), and backpropagation manually. Trained on sample data to demonstrate model learning.",
+    imageUrl: "/images/neural-network-project.png",
+    liveUrl: "https://digit-recognizer-fullstack.vercel.app/",
+    githubUrl: "https://github.com/anupPradhan0/digit-recognition-neural-network",
+    tech: ["Python", "NumPy", "Matplotlib", "Tensorflow", "Jupyter Notebook"],
+  },
+  {
+    name: "YouTube Backend",
+    description:
+      "Designed and built a backend system simulating YouTube features using Node.js, Express, and MongoDB. Implemented video upload, metadata storage, user registration & login with JWT auth. Structured REST APIs to handle likes, comments, views, and subscriptions. Deployed with Postman testing and MongoDB Atlas.",
+    imageUrl: "/images/youtube-backend-project.png",
+    liveUrl: "#",
+    githubUrl: "https://github.com/anupPradhan0/YouTube-Clone-Backend",
+    tech: ["Node.js", "Express", "MongoDB", "JWT", "Postman", "MongoDB Atlas"],
+  },
+  {
+    name: "Network Marketing Full-stack",
+    description:
+      "Network Marketing Platform is a full-stack web application for managing a multi-level marketing (MLM) system. It allows users to register, refer others through unique affiliate links, track team members, view transaction and purchase histories, and monitor course progress.",
+    imageUrl: "/images/network-marketing-project.png",
+    liveUrl: "#",
+    githubUrl: "https://github.com/anupPradhan0/Network-Marketing",
+    tech: [
+      "MongoDB",
+      "Express",
+      "Node.js",
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Tailwind",
+    ],
+  },
+  {
+    name: "AI Fiesta clone Fun projects",
+    description:
+      "AI Madness is a premium web application that lets users submit a single prompt and instantly compare responses from multiple AI models (ChatGPT, Claude, Gemini, Perplexity, DeepSeek) on one dashboard. Built with Node.js, Express, MongoDB, and Cohere API, featuring glassmorphism design, neon effects, and toggle-enabled AI panels for seamless multi-model testing.",
+    imageUrl: "/images/ai-fiesta-project.png",
+    liveUrl: "https://ai-madness.onrender.com/",
+    githubUrl: "https://github.com/anupPradhan0/AI-Madness",
+    tech: [
+      "Node.js",
+      "MongoDB",
+      "Express",
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Tailwind",
+      "Cohere AI",
+    ],
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Skills
+// ---------------------------------------------------------------------------
+
+export interface SkillsCategory {
+  languages: string[];
+  frontend: string[];
+  backend: string[];
+  databases: string[];
+  tools: string[];
+  deployment: string[];
+  ai_ml: string[];
+}
+
+export const skills: SkillsCategory = {
+  languages: ["JavaScript (ES6+)", "TypeScript", "Python", "C++", "HTML5", "CSS3"],
+  frontend: ["React", "Next.js", "Remix", "TanStack Query", "Tailwind CSS", "EJS", "Vite"],
+  backend: ["Node.js", "Express.js", "FastAPI", "REST APIs", "OAuth 2.0", "JWT"],
+  databases: [
+    "MongoDB",
+    "Mongoose",
+    "MongoDB Atlas",
+    "RabbitMQ",
+    "Redis",
+    "PostgreSQL",
+    "VectorDB",
+    "Weaviate",
+    "Neo4j",
+  ],
+  tools: [
+    "Git & GitHub",
+    "Docker",
+    "Kubernetes",
+    "Postman",
+    "Linux/CLI",
+    "Claude Code",
+    "OpenCode",
+    "Ubuntu",
+    "Arch Linux",
+  ],
+  deployment: [
+    "AWS S3",
+    "Azure",
+    "GCP",
+    "VPS (Virtual Private Server)",
+    "Vercel",
+    "Render",
+    "Dokploy",
+  ],
+  ai_ml: [
+    "Pandas",
+    "NumPy",
+    "PyTorch",
+    "TensorFlow",
+    "RAG (Retrieval-Augmented Generation)",
+    "Tool Calling",
+    "MCP (Model Context Protocol)",
+  ],
+};
+
+// Faux shell command shown above each skill category.
+export const skillCommands: Record<keyof SkillsCategory, string> = {
+  languages: "ls -la /skills/languages/",
+  frontend: "cat /skills/frontend/stack.txt",
+  backend: "ps aux | grep backend",
+  databases: "show databases;",
+  tools: "which --all tools",
+  deployment: "kubectl get deployments -A",
+  ai_ml: "python -m pip list | grep ai",
+};
+
+// ---------------------------------------------------------------------------
+// Contact
+// ---------------------------------------------------------------------------
+
+export const CONTACT_EMAIL = "anuppradhan929@gmail.com";
+export const CONTACT_LOCATION = "Bhubaneswar, Odisha, India";
+export const RESUME_URL =
+  "https://docs.google.com/document/d/17j42jMRIdxD2HG9eWuUKHr0StgfkClw0/edit?usp=sharing&ouid=108009276343665861649&rtpof=true&sd=true";
+
+// Icon rendering differs between the static page and the terminal pane, so each
+// side keys its own icon set off `name`; only the link metadata lives here.
+export interface SocialLinkData {
+  name: string;
+  href: string;
+  color: string;
+}
+
+export const socialLinks: SocialLinkData[] = [
+  { name: "YouTube", href: "https://www.youtube.com/@morscode7", color: "red" },
+  { name: "Twitter / X", href: "https://x.com/AnupPradhan0", color: "blue" },
+  { name: "Instagram", href: "https://www.instagram.com/anuppradhan.in", color: "pink" },
+  { name: "LinkedIn", href: "https://www.linkedin.com/in/anuppradhan0", color: "blue" },
+  { name: "GitHub", href: "https://github.com/anupPradhan0", color: "purple" },
+  { name: "LeetCode", href: "https://leetcode.com/u/Anuppradhan/", color: "yellow" },
+];
+
+// ---------------------------------------------------------------------------
+// Experience — role start/end dates
+//
+// Durations are recomputed from these on every render (see lib/duration), so
+// the visible "X mos" labels stay current without manual edits each month.
+// ---------------------------------------------------------------------------
+
+export const CHATI_INTERN_START = new Date(2025, 10, 1); // Nov 2025
+export const CHATI_INTERN_END = new Date(2026, 3, 1); // Apr 2026 (promotion)
+export const CHATI_JR_START = new Date(2026, 3, 1); // Apr 2026
+export const PROMINDS_WP_START = new Date(2025, 3, 1); // Apr 2025
+export const PROMINDS_FS_START = new Date(2025, 10, 1); // Nov 2025
