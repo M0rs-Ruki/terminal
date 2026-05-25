@@ -27,6 +27,19 @@ import {
   getCowsay,
   getBanner,
   getNeofetchData,
+  TOOL_VERSIONS,
+  getUptime,
+  getFreeOutput,
+  getDfOutput,
+  getPsOutput,
+  getEnvOutput,
+  getWhoOutput,
+  getLastOutput,
+  getTreeOutput,
+  grepFile,
+  getLsbRelease,
+  getGitStatus,
+  getSlTrain,
 } from "./TerminalComp/commands/virtualFs";
 
 // Type definitions
@@ -301,6 +314,27 @@ const HELP_ITEMS: HelpItem[] = [
   { type: "command", command: "ai <question>", description: "Chat with AI assistant (10 requests/day)." },
   { type: "command", command: "clear", description: "Clear the terminal screen." },
   { type: "command", command: "exit", description: "Close this tab/window." },
+  { type: "title", text: "System & files:" },
+  { type: "command", command: "uptime", description: "Show how long the system has been up." },
+  { type: "command", command: "free [-h]", description: "Show memory usage." },
+  { type: "command", command: "df [-h]", description: "Show disk space usage." },
+  { type: "command", command: "ps [aux]", description: "Snapshot of running processes." },
+  { type: "command", command: "top", description: "Running processes (snapshot)." },
+  { type: "command", command: "env", description: "Print environment variables." },
+  { type: "command", command: "groups", description: "Print the current user's groups." },
+  { type: "command", command: "who / w / users", description: "Show who is logged on." },
+  { type: "command", command: "last", description: "Show recent login history." },
+  { type: "command", command: "arch", description: "Print machine architecture." },
+  { type: "command", command: "lsb_release [-a]", description: "Print distribution info." },
+  { type: "command", command: "tree", description: "List files as a tree." },
+  { type: "command", command: "head/tail <file>", description: "Print a file's contents." },
+  { type: "command", command: "wc <file>", description: "Count lines, words, bytes." },
+  { type: "command", command: "grep <pat> [file]", description: "Print lines matching a pattern." },
+  { type: "command", command: "which <cmd>", description: "Locate a command." },
+  { type: "command", command: "whatis <cmd>", description: "One-line command description." },
+  { type: "command", command: "git [status|log]", description: "Show repository status." },
+  { type: "command", command: "node/npm/python", description: "Print tool versions." },
+  { type: "command", command: "sl", description: "Steam locomotive (for ls typos)." },
 ];
 
 const WELCOME_LINES: string[] = [
@@ -346,6 +380,26 @@ const TAB_COMPLETIONS: string[] = [
   "clear",
   "blog",
   "exit",
+  "uptime",
+  "free",
+  "free -h",
+  "df",
+  "df -h",
+  "ps",
+  "ps aux",
+  "top",
+  "env",
+  "groups",
+  "who",
+  "last",
+  "arch",
+  "lsb_release -a",
+  "tree",
+  "git status",
+  "git log",
+  "which",
+  "whatis",
+  "sl",
 ];
 
 // Command names for first-word completion and man
@@ -377,6 +431,52 @@ const COMMAND_NAMES = [
   "cowsay",
   "banner",
   "yes",
+  "uptime",
+  "free",
+  "df",
+  "ps",
+  "top",
+  "env",
+  "printenv",
+  "groups",
+  "who",
+  "w",
+  "users",
+  "last",
+  "arch",
+  "lsb_release",
+  "tree",
+  "head",
+  "tail",
+  "wc",
+  "grep",
+  "which",
+  "whatis",
+  "node",
+  "npm",
+  "python",
+  "python3",
+  "git",
+  "sl",
+  "sudo",
+  "touch",
+  "mkdir",
+  "rm",
+  "rmdir",
+  "mv",
+  "cp",
+  "reboot",
+  "shutdown",
+  "poweroff",
+  "halt",
+  "vim",
+  "vi",
+  "nano",
+  "emacs",
+  "apt",
+  "apt-get",
+  "pacman",
+  "yum",
 ];
 
 const CD_SECTIONS = [
@@ -821,6 +921,22 @@ export default function Terminal({
       return;
     }
 
+    // Helpers for the pure-command map below.
+    const pre = (s: string) => <pre className="pre-output">{s}</pre>;
+    const stderr = (s: string) => <span className="terminal-stderr">{s}</span>;
+    // This is a read-only, in-browser filesystem — mutating commands always fail.
+    const readOnlyFs = (cmd: string) => (a: string[]) =>
+      stderr(`${cmd}: cannot operate on '${a[0] ?? ""}': Read-only file system`);
+    // Privileged commands are politely refused.
+    const notPermitted = (cmd: string) => () =>
+      stderr(`${cmd}: Operation not permitted — this is a portfolio, not your server. Nice try 😄`);
+    // Editors can't run in here; nudge toward cat.
+    const editorJoke = (cmd: string) => (a: string[]) =>
+      `${cmd}: cannot open a real editor here. Use 'cat ${a[0] ?? "<file>"}' to read files instead.`;
+    // Package managers need a real machine.
+    const pkgManager = (cmd: string) => () =>
+      stderr(`E: Could not open lock file — are you root? '${cmd}' isn't available on this read-only terminal. Try 'cd skills' instead.`);
+
     // Pure commands: each maps args to output content with no side effects.
     const outputCommands: Record<string, (args: string[]) => React.ReactNode> = {
       pwd: () => (cwd === "~" ? PWD_DISPLAY : cwd),
@@ -876,6 +992,99 @@ export default function Terminal({
       whoami: () => user,
       date: () => new Date().toString(),
       exit: () => "Close this tab to exit.",
+
+      // --- System info ---
+      uptime: () => getUptime(),
+      arch: () => "x86_64",
+      free: (a) => pre(getFreeOutput(a.includes("-h"))),
+      df: (a) => pre(getDfOutput(a.includes("-h"))),
+      ps: (a) => pre(getPsOutput(a.includes("aux") || a.includes("-aux") || a.includes("-ef"))),
+      top: () => pre(getPsOutput(true)),
+      env: () => pre(getEnvOutput(user)),
+      printenv: () => pre(getEnvOutput(user)),
+      groups: () => `${user} sudo docker users developers`,
+      who: () => getWhoOutput(user),
+      w: () => getWhoOutput(user),
+      users: () => user,
+      last: () => pre(getLastOutput(user)),
+      lsb_release: () => pre(getLsbRelease()),
+
+      // --- Files ---
+      tree: () => pre(getTreeOutput(HOME_DIR)),
+      head: (a) => outputCommands.cat(a),
+      tail: (a) => outputCommands.cat(a),
+      wc: (a) => {
+        const name = a[0];
+        const key = name && HOME_DIR.find((e) => e.toLowerCase() === name.toLowerCase());
+        if (!key || FILE_CONTENTS[key] === undefined) {
+          return stderr(`wc: ${name ?? ""}: No such file or directory`);
+        }
+        const text = FILE_CONTENTS[key];
+        const lines = text.split("\n").length;
+        const words = text.trim().split(/\s+/).length;
+        const bytes = text.length;
+        return ` ${lines}  ${words}  ${bytes} ${key}`;
+      },
+      grep: (a) => {
+        if (a.length < 1) return stderr("usage: grep <pattern> [file]");
+        const pattern = a[0];
+        const fileArg = a[1];
+        const key = fileArg
+          ? HOME_DIR.find((e) => e.toLowerCase() === fileArg.toLowerCase())
+          : undefined;
+        const out = grepFile(pattern, key, FILE_CONTENTS, HOME_DIR);
+        return out ? pre(out) : "";
+      },
+      which: (a) => {
+        if (a.length === 0) return stderr("usage: which <command>");
+        const lines = a.map((name) => {
+          const cmd = name.toLowerCase();
+          return MAN_PAGES[cmd] !== undefined
+            ? `/usr/bin/${cmd}`
+            : `which: no ${name} in (/usr/local/bin:/usr/bin:/bin)`;
+        });
+        return lines.length === 1 ? lines[0] : pre(lines.join("\n"));
+      },
+      whatis: (a) => {
+        const topic = a[0]?.toLowerCase();
+        const page = topic ? MAN_PAGES[topic] : undefined;
+        if (!page) return `${topic ?? ""}: nothing appropriate.`;
+        const desc = page.split("—")[1]?.trim() ?? page;
+        return `${topic} (1)         - ${desc}`;
+      },
+
+      // --- Toolchain versions ---
+      node: () => TOOL_VERSIONS.node,
+      npm: () => TOOL_VERSIONS.npm,
+      python: () => TOOL_VERSIONS.python,
+      python3: () => TOOL_VERSIONS.python,
+
+      // --- Source control ---
+      git: (a) => pre(getGitStatus((a[0] ?? "").toLowerCase())),
+
+      // --- Easter egg ---
+      sl: () => pre(getSlTrain()),
+
+      // --- Privileged / mutating commands: refused on a read-only terminal ---
+      sudo: () => stderr(`${user} is not in the sudoers file. This incident will be reported.`),
+      touch: readOnlyFs("touch"),
+      mkdir: readOnlyFs("mkdir"),
+      rm: readOnlyFs("rm"),
+      rmdir: readOnlyFs("rmdir"),
+      mv: readOnlyFs("mv"),
+      cp: readOnlyFs("cp"),
+      reboot: notPermitted("reboot"),
+      shutdown: notPermitted("shutdown"),
+      poweroff: notPermitted("poweroff"),
+      halt: notPermitted("halt"),
+      vim: editorJoke("vim"),
+      vi: editorJoke("vi"),
+      nano: editorJoke("nano"),
+      emacs: editorJoke("emacs"),
+      apt: pkgManager("apt"),
+      "apt-get": pkgManager("apt-get"),
+      pacman: pkgManager("pacman"),
+      yum: pkgManager("yum"),
     };
 
     const handler = outputCommands[commandName];
