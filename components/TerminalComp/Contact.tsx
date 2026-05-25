@@ -1,4 +1,10 @@
 import React, { useState, useEffect } from "react";
+import {
+  socialLinks as socialLinkData,
+  CONTACT_EMAIL,
+  CONTACT_LOCATION,
+  RESUME_URL,
+} from "@/lib/portfolio-data";
 
 // Type definitions
 interface SocialLink {
@@ -210,52 +216,28 @@ const Contact: React.FC = () => {
   ): Promise<void> => {
     e.preventDefault();
     try {
-      await navigator.clipboard.writeText("anuppradhan929@gmail.com");
+      await navigator.clipboard.writeText(CONTACT_EMAIL);
       setCopiedEmail(true);
       setTimeout(() => setCopiedEmail(false), 2000);
     } catch {
-      window.location.href = "mailto:anuppradhan929@gmail.com";
+      window.location.href = `mailto:${CONTACT_EMAIL}`;
     }
   };
 
-  const socialLinks: SocialLink[] = [
-    {
-      icon: YoutubeIcon,
-      name: "YouTube",
-      href: "https://www.youtube.com/@morscode7",
-      color: "red",
-    },
-    {
-      icon: TwitterIcon,
-      name: "Twitter / X",
-      href: "https://x.com/AnupPradhan0",
-      color: "blue",
-    },
-    {
-      icon: InstagramIcon,
-      name: "Instagram",
-      href: "https://www.instagram.com/anuppradhan.in",
-      color: "pink",
-    },
-    {
-      icon: LinkedinIcon,
-      name: "LinkedIn",
-      href: "https://www.linkedin.com/in/anuppradhan0",
-      color: "blue",
-    },
-    {
-      icon: GithubIcon,
-      name: "GitHub",
-      href: "https://github.com/anupPradhan0",
-      color: "purple",
-    },
-    {
-      icon: LeetcodeIcon,
-      name: "LeetCode",
-      href: "https://leetcode.com/u/Anuppradhan/",
-      color: "yellow",
-    },
-  ];
+  // Link metadata (name/href/color) is shared; icons stay local to this pane.
+  const socialIcons: Record<string, React.FC> = {
+    YouTube: YoutubeIcon,
+    "Twitter / X": TwitterIcon,
+    Instagram: InstagramIcon,
+    LinkedIn: LinkedinIcon,
+    GitHub: GithubIcon,
+    LeetCode: LeetcodeIcon,
+  };
+
+  const socialLinks: SocialLink[] = socialLinkData.map((link) => ({
+    ...link,
+    icon: socialIcons[link.name],
+  }));
 
   return (
     <div className="text-white max-w-5xl mx-auto p-3 sm:p-6 relative min-h-screen flex items-center">
@@ -341,7 +323,7 @@ const Contact: React.FC = () => {
                 }
               }}
               className="group relative p-3 sm:p-4 bg-white/5 border border-white/10 rounded-lg sm:rounded-xl hover:bg-white/10 hover:border-green-400/50 transition-all duration-300 cursor-pointer transform hover:scale-[1.02] hover:shadow-lg hover:shadow-green-400/20 active:scale-[0.98]"
-              aria-label="Click to copy email address: anuppradhan929@gmail.com"
+              aria-label={`Click to copy email address: ${CONTACT_EMAIL}`}
             >
               <div className="flex items-center">
                 <div className="p-2 bg-gradient-to-br from-green-400/20 to-cyan-400/20 rounded-lg mr-3 sm:mr-4 group-hover:from-green-400/30 group-hover:to-cyan-400/30 transition-all duration-300">
@@ -352,7 +334,7 @@ const Contact: React.FC = () => {
                     EMAIL
                   </p>
                   <p className="text-white font-mono text-sm sm:text-base group-hover:text-green-400 transition-colors duration-300 truncate">
-                    anuppradhan929@gmail.com
+                    {CONTACT_EMAIL}
                   </p>
                   {copiedEmail && (
                     <p
@@ -401,7 +383,7 @@ const Contact: React.FC = () => {
                     LOCATION
                   </p>
                   <p className="text-white font-mono text-sm sm:text-base group-hover:text-blue-400 transition-colors duration-300">
-                    Bhubaneswar, Odisha, India
+                    {CONTACT_LOCATION}
                   </p>
                 </div>
               </div>
@@ -409,7 +391,7 @@ const Contact: React.FC = () => {
 
             {/* Resume Button */}
             <a
-              href="https://docs.google.com/document/d/17j42jMRIdxD2HG9eWuUKHr0StgfkClw0/edit?usp=sharing&ouid=108009276343665861649&rtpof=true&sd=true"
+              href={RESUME_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="group relative p-3 sm:p-4 bg-white/5 border border-white/10 rounded-lg sm:rounded-xl hover:bg-white/10 hover:border-orange-400/50 transition-all duration-300 cursor-pointer transform hover:scale-[1.02] hover:shadow-lg hover:shadow-orange-400/20 active:scale-[0.98] block"

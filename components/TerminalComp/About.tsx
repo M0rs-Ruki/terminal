@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { TypewriterText, MatrixRain } from "@/components/TerminalComp/effects";
 
 // Enhanced SVG Icons with hover animations - Mobile responsive
 const CodeIcon: React.FC = () => (
@@ -37,72 +38,6 @@ const SystemIcon: React.FC = () => (
   </svg>
 );
 
-// Typewriter effect component
-interface TypewriterTextProps {
-  text: string;
-  delay?: number;
-}
-
-const TypewriterText: React.FC<TypewriterTextProps> = ({
-  text,
-  delay = 50,
-}) => {
-  const [displayText, setDisplayText] = useState<string>("");
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-
-  useEffect(() => {
-    if (currentIndex < text.length) {
-      const timeout = setTimeout(() => {
-        setDisplayText((prev) => prev + text[currentIndex]);
-        setCurrentIndex((prev) => prev + 1);
-      }, delay);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [currentIndex, text, delay]);
-
-  return (
-    <span>
-      {displayText}
-      {currentIndex < text.length && (
-        <span className="animate-pulse text-green-400">|</span>
-      )}
-    </span>
-  );
-};
-
-// Matrix rain effect (responsive)
-const MatrixRain: React.FC = () => {
-  const chars = "01";
-  const columns =
-    typeof window !== "undefined" && window.innerWidth < 768 ? 20 : 50;
-
-  // Generate random delays once on component initialization
-  const [columnDelays] = useState(() =>
-    Array.from({ length: columns }, () => Math.random() * 5)
-  );
-
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5">
-      {Array.from({ length: columns }).map((_, i) => (
-        <div
-          key={i}
-          className="absolute text-green-400 text-xs font-mono"
-          style={{
-            left: `${(i * 100) / columns}%`,
-            animation: `matrix-fall 10s linear infinite ${columnDelays[i]}s`,
-          }}
-        >
-          {Array.from({ length: 20 }).map((_, j) => (
-            <div key={j} className="opacity-20">
-              {chars[Math.floor(Math.random() * chars.length)]}
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-};
 
 const About: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);

@@ -245,7 +245,9 @@ const Neofetch: React.FC<{ user: string; host: string }> = ({ user, host }) => {
   );
 };
 
-const Prompt: React.FC<PromptProps & { cwd?: string }> = ({ user, host, cwd = "~" }) => (
+// Rendered once per history line, so memoized to skip re-rendering unchanged
+// lines whenever the terminal re-renders (e.g. on every keystroke).
+const Prompt: React.FC<PromptProps & { cwd?: string }> = React.memo(({ user, host, cwd = "~" }) => (
   <span
     className="terminal-prompt"
     aria-label={`Command prompt for ${user} at ${host}`}
@@ -257,11 +259,13 @@ const Prompt: React.FC<PromptProps & { cwd?: string }> = ({ user, host, cwd = "~
     <span className="prompt-directory">{cwd === "~" ? "~" : cwd}</span>
     <span className="prompt-symbol">$ </span>
   </span>
-);
+));
+Prompt.displayName = "Prompt";
 
-const OutputLine: React.FC<OutputLineProps> = ({ children }) => (
+const OutputLine: React.FC<OutputLineProps> = React.memo(({ children }) => (
   <div className="output-line">{children}</div>
-);
+));
+OutputLine.displayName = "OutputLine";
 
 // Static data moved outside components to avoid dependency issues
 const HELP_ITEMS: HelpItem[] = [
@@ -756,49 +760,7 @@ export default function Terminal({
     const commandName = parts[0]?.toLowerCase() ?? "";
     const args = parts.slice(1);
 
-    // pwd
-    if (commandName === "pwd") {
-      newHist.push({ type: "output", content: cwd === "~" ? PWD_DISPLAY : cwd });
-      setHistory(newHist);
-      return;
-    }
-
-    // ls [ -l | -a | -la ]
-    if (commandName === "ls") {
-      const long = args.includes("-l") || args.includes("-la");
-      const list = [...HOME_DIR];
-      const out = long ? formatLsLong(list) : list.join("  ");
-      newHist.push({ type: "output", content: <pre className="pre-output">{out}</pre> });
-      setHistory(newHist);
-      return;
-    }
-
-    // cat <file>
-    if (commandName === "cat") {
-      const name = args[0];
-      if (!name) {
-        newHist.push({ type: "output", content: "cat: missing operand" });
-        setHistory(newHist);
-        return;
-      }
-      const key = HOME_DIR.find((e) => e.toLowerCase() === name.toLowerCase());
-      if (key && FILE_CONTENTS[key]) {
-        newHist.push({ type: "output", content: FILE_CONTENTS[key] });
-      } else {
-        newHist.push({
-          type: "output",
-          content: (
-            <span className="terminal-stderr">
-              cat: {name}: No such file or directory
-            </span>
-          ),
-        });
-      }
-      setHistory(newHist);
-      return;
-    }
-
-    // cd [dir]
+    // cd [dir] — changes the working "directory" and may navigate (side effects)
     if (commandName === "cd") {
       if (args.length === 0) {
         setCwd("~");
@@ -837,123 +799,13 @@ export default function Terminal({
       return;
     }
 
-    // hostname, id, uname, cal, history, printf, man
-    if (commandName === "hostname") {
-      newHist.push({ type: "output", content: host });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "id") {
-      newHist.push({
-        type: "output",
-        content: `uid=1000(${user}) gid=1000(${user}) groups=1000(${user})`,
-      });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "uname") {
-      const all = args.includes("-a");
-      newHist.push({
-        type: "output",
-        content: all
-          ? `Linux ${host} 6.x portfolio-terminal #1 Next.js`
-          : "Linux",
-      });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "cal") {
-      newHist.push({ type: "output", content: <pre className="pre-output">{getCalOutput()}</pre> });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "history") {
-      const list = commandHistory
-        .map((c, i) => `  ${i + 1}  ${c}`)
-        .join("\n");
-      newHist.push({ type: "output", content: <pre className="pre-output">{list || " (empty)"}</pre> });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "printf") {
-      const format = args[0] ?? "";
-      const out = printfFormat(format, args.slice(1));
-      newHist.push({ type: "output", content: out });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "man") {
-      const topic = args[0]?.toLowerCase();
-      const page = topic ? MAN_PAGES[topic] : null;
-      if (page) {
-        newHist.push({ type: "output", content: page });
-      } else {
-        newHist.push({
-          type: "output",
-          content: (
-            <span className="terminal-stderr">
-              No manual entry for {topic ?? ""}
-            </span>
-          ),
-        });
-      }
-      setHistory(newHist);
-      return;
-    }
-
-    // neofetch, fortune, cowsay, banner, yes
-    if (commandName === "neofetch") {
-      newHist.push({ type: "output", content: <Neofetch user={user} host={host} /> });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "fortune") {
-      newHist.push({ type: "output", content: getFortune() });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "cowsay") {
-      const msg = args.length ? args.join(" ") : "moo";
-      newHist.push({ type: "output", content: <pre className="pre-output">{getCowsay(msg)}</pre> });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "banner") {
-      const text = args.length ? args.join(" ") : " ";
-      newHist.push({ type: "output", content: <pre className="pre-output">{getBanner(text)}</pre> });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "yes") {
-      const word = args.length ? args.join(" ") : "y";
-      const repeated = Array(8)
-        .fill(word)
-        .join("\n");
-      newHist.push({ type: "output", content: repeated });
-      setHistory(newHist);
-      return;
-    }
-
-    // help, whoami, date, clear, blog, exit
-    if (commandName === "help") {
-      newHist.push({ type: "output", content: <Help /> });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "whoami") {
-      newHist.push({ type: "output", content: user });
-      setHistory(newHist);
-      return;
-    }
-    if (commandName === "date") {
-      newHist.push({ type: "output", content: new Date().toString() });
-      setHistory(newHist);
-      return;
-    }
+    // clear — wipe the screen, no output line
     if (commandName === "clear") {
       setHistory([]);
       return;
     }
+
+    // blog — navigate to the blog index or render search results (side effects)
     if (commandName === "blog") {
       const query = args.join(" ").trim();
       if (!query) {
@@ -963,15 +815,72 @@ export default function Terminal({
       const matches = searchBlogPosts(blogPostsCache, query);
       newHist.push({
         type: "output",
-        content: (
-          <BlogSearchResults posts={matches} query={query} />
-        ),
+        content: <BlogSearchResults posts={matches} query={query} />,
       });
       setHistory(newHist);
       return;
     }
-    if (commandName === "exit") {
-      newHist.push({ type: "output", content: "Close this tab to exit." });
+
+    // Pure commands: each maps args to output content with no side effects.
+    const outputCommands: Record<string, (args: string[]) => React.ReactNode> = {
+      pwd: () => (cwd === "~" ? PWD_DISPLAY : cwd),
+      ls: (a) => {
+        const long = a.includes("-l") || a.includes("-la");
+        const list = [...HOME_DIR];
+        const out = long ? formatLsLong(list) : list.join("  ");
+        return <pre className="pre-output">{out}</pre>;
+      },
+      cat: (a) => {
+        const name = a[0];
+        if (!name) return "cat: missing operand";
+        const key = HOME_DIR.find((e) => e.toLowerCase() === name.toLowerCase());
+        if (key && FILE_CONTENTS[key]) return FILE_CONTENTS[key];
+        return (
+          <span className="terminal-stderr">
+            cat: {name}: No such file or directory
+          </span>
+        );
+      },
+      hostname: () => host,
+      id: () => `uid=1000(${user}) gid=1000(${user}) groups=1000(${user})`,
+      uname: (a) =>
+        a.includes("-a")
+          ? `Linux ${host} 6.x portfolio-terminal #1 Next.js`
+          : "Linux",
+      cal: () => <pre className="pre-output">{getCalOutput()}</pre>,
+      history: () => {
+        const list = commandHistory.map((c, i) => `  ${i + 1}  ${c}`).join("\n");
+        return <pre className="pre-output">{list || " (empty)"}</pre>;
+      },
+      printf: (a) => printfFormat(a[0] ?? "", a.slice(1)),
+      man: (a) => {
+        const topic = a[0]?.toLowerCase();
+        const page = topic ? MAN_PAGES[topic] : null;
+        if (page) return page;
+        return (
+          <span className="terminal-stderr">
+            No manual entry for {topic ?? ""}
+          </span>
+        );
+      },
+      neofetch: () => <Neofetch user={user} host={host} />,
+      fortune: () => getFortune(),
+      cowsay: (a) => (
+        <pre className="pre-output">{getCowsay(a.length ? a.join(" ") : "moo")}</pre>
+      ),
+      banner: (a) => (
+        <pre className="pre-output">{getBanner(a.length ? a.join(" ") : " ")}</pre>
+      ),
+      yes: (a) => Array(8).fill(a.length ? a.join(" ") : "y").join("\n"),
+      help: () => <Help />,
+      whoami: () => user,
+      date: () => new Date().toString(),
+      exit: () => "Close this tab to exit.",
+    };
+
+    const handler = outputCommands[commandName];
+    if (handler) {
+      newHist.push({ type: "output", content: handler(args) });
       setHistory(newHist);
       return;
     }

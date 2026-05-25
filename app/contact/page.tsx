@@ -1,4 +1,9 @@
 import { Metadata } from "next";
+import {
+  socialLinks as socialLinkData,
+  CONTACT_EMAIL,
+  RESUME_URL,
+} from "@/lib/portfolio-data";
 
 // Enhanced SEO Metadata
 export const metadata: Metadata = {
@@ -256,7 +261,7 @@ const structuredData = {
   name: "Anup Pradhan",
   url: "https://www.anuppradhan.in",
   image: "https://www.anuppradhan.in/images/logo.jpg",
-  email: "anuppradhan929@gmail.com",
+  email: CONTACT_EMAIL,
   address: {
     "@type": "PostalAddress",
     addressLocality: "Bhubaneswar",
@@ -286,7 +291,7 @@ const structuredData = {
   },
   contactPoint: {
     "@type": "ContactPoint",
-    email: "anuppradhan929@gmail.com",
+    email: CONTACT_EMAIL,
     contactType: "Professional",
     areaServed: "Worldwide",
     availableLanguage: ["English"],
@@ -315,44 +320,20 @@ const breadcrumbStructuredData = {
 
 // Main Server Component - Lightweight Version
 export default function Contact() {
-  const socialLinks: SocialLink[] = [
-    {
-      icon: YoutubeIcon,
-      name: "YouTube",
-      href: "https://www.youtube.com/@morscode7",
-      color: "red",
-    },
-    {
-      icon: TwitterIcon,
-      name: "Twitter / X",
-      href: "https://x.com/AnupPradhan0",
-      color: "blue",
-    },
-    {
-      icon: InstagramIcon,
-      name: "Instagram",
-      href: "https://www.instagram.com/anuppradhan.in",
-      color: "pink",
-    },
-    {
-      icon: LinkedinIcon,
-      name: "LinkedIn",
-      href: "https://www.linkedin.com/in/anuppradhan0",
-      color: "blue",
-    },
-    {
-      icon: GithubIcon,
-      name: "GitHub",
-      href: "https://github.com/anupPradhan0",
-      color: "purple",
-    },
-    {
-      icon: LeetcodeIcon,
-      name: "LeetCode",
-      href: "https://leetcode.com/u/Anuppradhan/",
-      color: "yellow",
-    },
-  ];
+  // Link metadata (name/href/color) is shared; icons stay local to this page.
+  const socialIcons: Record<string, () => React.ReactNode> = {
+    YouTube: YoutubeIcon,
+    "Twitter / X": TwitterIcon,
+    Instagram: InstagramIcon,
+    LinkedIn: LinkedinIcon,
+    GitHub: GithubIcon,
+    LeetCode: LeetcodeIcon,
+  };
+
+  const socialLinks: SocialLink[] = socialLinkData.map((link) => ({
+    ...link,
+    icon: socialIcons[link.name],
+  }));
 
   return (
     <>
@@ -409,10 +390,10 @@ export default function Contact() {
                     <div>
                       <p>EMAIL</p>
                       <a
-                        href="mailto:anuppradhan929@gmail.com"
+                        href={`mailto:${CONTACT_EMAIL}`}
                         itemProp="email"
                       >
-                        anuppradhan929@gmail.com
+                        {CONTACT_EMAIL}
                       </a>
                     </div>
                   </div>
@@ -437,7 +418,7 @@ export default function Contact() {
 
                 {/* Resume Button */}
                 <a
-                  href="https://docs.google.com/document/d/17j42jMRIdxD2HG9eWuUKHr0StgfkClw0/edit?usp=sharing&ouid=108009276343665861649&rtpof=true&sd=true"
+                  href={RESUME_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Download resume (opens in new tab)"

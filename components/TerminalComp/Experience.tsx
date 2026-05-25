@@ -3,82 +3,16 @@
 import Image from "next/image";
 import React, { useState, useEffect, useMemo } from "react";
 import { durationLabel, formatMonths, monthsBetween } from "@/lib/duration";
+import { TypewriterText, MatrixRain } from "@/components/TerminalComp/effects";
+import {
+  CHATI_INTERN_START,
+  CHATI_INTERN_END,
+  CHATI_JR_START,
+  PROMINDS_WP_START,
+  PROMINDS_FS_START,
+} from "@/lib/portfolio-data";
 
-// Role start/end dates — single source of truth. Durations recompute automatically
-// on every render, so the visible "X mos" / "Y yr Z mos" labels stay current
-// without manual edits each month.
-const CHATI_INTERN_START = new Date(2025, 10, 1); // Nov 2025
-const CHATI_INTERN_END = new Date(2026, 3, 1);    // Apr 2026 (promotion)
-const CHATI_JR_START = new Date(2026, 3, 1);      // Apr 2026
 
-const PROMINDS_WP_START = new Date(2025, 3, 1);   // Apr 2025
-const PROMINDS_FS_START = new Date(2025, 10, 1);  // Nov 2025
-
-// Typewriter effect component
-interface TypewriterTextProps {
-  text: string;
-  delay?: number;
-}
-
-const TypewriterText: React.FC<TypewriterTextProps> = ({
-  text,
-  delay = 50,
-}) => {
-  const [displayText, setDisplayText] = useState<string>("");
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-
-  useEffect(() => {
-    if (currentIndex < text.length) {
-      const timeout = setTimeout(() => {
-        setDisplayText((prev) => prev + text[currentIndex]);
-        setCurrentIndex((prev) => prev + 1);
-      }, delay);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [currentIndex, text, delay]);
-
-  return (
-    <span>
-      {displayText}
-      {currentIndex < text.length && (
-        <span className="animate-pulse text-green-400">|</span>
-      )}
-    </span>
-  );
-};
-
-// Matrix rain effect (responsive)
-const MatrixRain: React.FC = () => {
-  const chars = "01";
-  const columns =
-    typeof window !== "undefined" && window.innerWidth < 768 ? 20 : 50;
-
-  const [columnDelays] = useState(() =>
-    Array.from({ length: columns }, () => Math.random() * 5)
-  );
-
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5">
-      {Array.from({ length: columns }).map((_, i) => (
-        <div
-          key={i}
-          className="absolute text-green-400 text-xs font-mono"
-          style={{
-            left: `${(i * 100) / columns}%`,
-            animation: `matrix-fall 10s linear infinite ${columnDelays[i]}s`,
-          }}
-        >
-          {Array.from({ length: 20 }).map((_, j) => (
-            <div key={j} className="opacity-20">
-              {chars[Math.floor(Math.random() * chars.length)]}
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-};
 
 const Experience: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
