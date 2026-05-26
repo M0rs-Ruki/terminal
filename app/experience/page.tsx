@@ -4,8 +4,7 @@ import {
   CHATI_INTERN_START,
   CHATI_INTERN_END,
   CHATI_JR_START,
-  PROMINDS_WP_START,
-  PROMINDS_FS_START,
+  PROMINDS_START,
 } from "@/lib/portfolio-data";
 
 const SITE_URL = "https://www.anuppradhan.in";
@@ -18,35 +17,38 @@ export const revalidate = 86400;
 // SEO Metadata for Experience page
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.anuppradhan.in"),
-  title: "Experience | Junior Software Developer @ CHATI · WebRTC + SIP",
+  title: "Experience | Junior Software Developer (Lead AI Engineer) @ CHATI · FreeSWITCH + WebRTC",
   description:
-    "Experience of Anup Pradhan: Junior Software Developer at CHATI (promoted from intern, Apr 2026) building AI-powered calling software on WebRTC and SIP; part-time Full Stack / WordPress Developer at Prominds Digital — SaaS for automotive dealerships, large-scale data migration, and high-performance web apps.",
+    "Experience of Anup Pradhan: Junior Software Developer (Lead AI Engineer) at CHATI (Mar 2026–Present) architecting a B2B AI Voice Calling SaaS with FreeSWITCH, ESL, and WebRTC; part-time at Prominds Digital — shipped AutoPulse, a multi-tenant B2B CRM for automotive dealerships with RBAC, WhatsApp automation, and RabbitMQ.",
   keywords: [
     "Anup Pradhan Experience",
     "Junior Software Developer",
+    "Lead AI Engineer",
     "Junior Software Developer CHATI",
     "Software Developer Intern CHATI",
     "Software Developer Bhubaneswar",
-    "AI Calling Developer",
+    "AI Voice Calling SaaS",
+    "FreeSWITCH Developer",
     "WebRTC Developer",
-    "SIP Developer",
-    "Real-time Voice Engineer",
+    "ESL Developer",
+    "VoIP Engineer",
+    "STT TTS LLM Pipeline",
     "AI Meeting Assistant",
-    "Full Stack Developer Prominds Digital",
-    "WordPress Developer",
+    "AutoPulse CRM",
+    "Prominds Digital",
     "Backend Developer India",
-    "Promotion Junior Software Developer",
     "Data Pipeline Engineer",
     "Union-Find Deduplication",
+    "RabbitMQ",
     "Bhubaneswar Software Developer",
   ],
   authors: [{ name: "Anup Pradhan", url: "https://www.anuppradhan.in" }],
   creator: "Anup Pradhan",
   publisher: "Anup Pradhan",
   openGraph: {
-    title: "Experience | Junior Software Developer @ CHATI · WebRTC + SIP",
+    title: "Experience | Junior Software Developer (Lead AI Engineer) @ CHATI · FreeSWITCH + WebRTC",
     description:
-      "Junior Software Developer at CHATI (promoted from intern Apr 2026) — AI calling on WebRTC + SIP. Part-time Full Stack / WordPress Developer at Prominds Digital.",
+      "Junior Software Developer (Lead AI Engineer) at CHATI (Mar 2026–Present) — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
     type: "profile",
     url: "https://www.anuppradhan.in/experience",
     siteName: "Anup Pradhan - Developer Portfolio",
@@ -56,7 +58,7 @@ export const metadata: Metadata = {
         url: "https://www.anuppradhan.in/images/logo.jpg",
         width: 1200,
         height: 630,
-        alt: "Anup Pradhan — Junior Software Developer experience",
+        alt: "Anup Pradhan — Junior Software Developer (Lead AI Engineer) experience",
         type: "image/jpeg",
       },
     ],
@@ -65,9 +67,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@AnupPradhan0",
     creator: "@AnupPradhan0",
-    title: "Experience | Junior Software Developer @ CHATI · WebRTC + SIP",
+    title: "Experience | Junior Software Developer (Lead AI Engineer) @ CHATI · FreeSWITCH + WebRTC",
     description:
-      "Junior Software Developer at CHATI building AI calling software on WebRTC + SIP. Part-time Full Stack / WordPress Developer at Prominds Digital.",
+      "Junior Software Developer (Lead AI Engineer) at CHATI — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
     images: ["https://www.anuppradhan.in/images/logo.jpg"],
   },
   robots: {
@@ -105,11 +107,11 @@ function buildStructuredData() {
     url: SITE_URL,
     mainEntityOfPage: `${SITE_URL}/experience`,
     image: `${SITE_URL}/images/logo.jpg`,
-    jobTitle: "Junior Software Developer",
+    jobTitle: "Junior Software Developer (Lead AI Engineer)",
     hasOccupation: [
       {
         "@type": "EmployeeRole",
-        roleName: "Junior Software Developer",
+        roleName: "Junior Software Developer (Lead AI Engineer)",
         startDate: toIso(CHATI_JR_START),
         worksFor: {
           "@type": "Organization",
@@ -131,8 +133,8 @@ function buildStructuredData() {
       },
       {
         "@type": "EmployeeRole",
-        roleName: "Full Stack Developer",
-        startDate: toIso(PROMINDS_FS_START),
+        roleName: "Part-time Developer",
+        startDate: toIso(PROMINDS_START),
         worksFor: {
           "@type": "Organization",
           name: "Prominds Digital",
@@ -143,12 +145,6 @@ function buildStructuredData() {
             addressCountry: "IN",
           },
         },
-      },
-      {
-        "@type": "EmployeeRole",
-        roleName: "WordPress Developer",
-        startDate: toIso(PROMINDS_WP_START),
-        worksFor: { "@type": "Organization", name: "Prominds Digital" },
       },
     ],
   };
@@ -178,9 +174,7 @@ export default function Experience() {
   const chatiTotal = durationLabel(CHATI_INTERN_START, now);
   const chatiJr = durationLabel(CHATI_JR_START, now);
   const chatiIntern = formatMonths(monthsBetween(CHATI_INTERN_START, CHATI_INTERN_END));
-  const promindsTotal = durationLabel(PROMINDS_WP_START, now);
-  const promindsFs = durationLabel(PROMINDS_FS_START, now);
-  const promindsWp = durationLabel(PROMINDS_WP_START, now);
+  const promindsTotal = durationLabel(PROMINDS_START, now);
 
   return (
     <>
@@ -206,8 +200,9 @@ export default function Experience() {
             </h1>
             <p>
               Professional roles as a Software Developer at CHATI and Prominds
-              Digital — building AI calling platforms on WebRTC/SIP, scalable
-              SaaS for automotive dealerships, and large-scale data pipelines.
+              Digital — architecting B2B AI Voice Calling SaaS on FreeSWITCH/WebRTC,
+              scalable multi-tenant CRM for automotive dealerships, and large-scale
+              data pipelines.
             </p>
           </header>
 
@@ -228,21 +223,32 @@ export default function Experience() {
                 </p>
               </header>
 
-              {/* Junior Software Developer (current) */}
+              {/* Junior Software Developer — Lead AI Engineer (current) */}
               <section aria-labelledby="chati-jr-heading">
                 <h3 id="chati-jr-heading">
-                  Junior Software Developer · Full-time
+                  Junior Software Developer (Lead AI Engineer) · Full-time
                 </h3>
                 <p>
-                  <time dateTime={toIso(CHATI_JR_START)}>Apr 2026</time> —
+                  <time dateTime={toIso(CHATI_JR_START)}>Mar 2026</time> —
                   Present · {chatiJr}
                 </p>
-                <p>
-                  Promoted from the internship role. Continuing to build the AI
-                  calling platform on top of <strong>WebRTC</strong> and{" "}
-                  <strong>SIP</strong> — media negotiation, signaling, and
-                  integrating the AI agent into live calls.
-                </p>
+                <ul itemProp="description">
+                  <li>
+                    Product Leadership: Serving as lead developer architecting a
+                    B2B AI Voice Calling SaaS platform for automated inbound and
+                    outbound voice systems.
+                  </li>
+                  <li>
+                    Telephony Infrastructure: Engineering high-availability VoIP
+                    infrastructure using FreeSWITCH, ESL, and WebRTC to
+                    orchestrate real-time, low-latency audio streaming.
+                  </li>
+                  <li>
+                    Voice AI Pipeline: Integrating low-latency STT, LLM
+                    orchestration, and TTS pipelines to deliver human-like
+                    conversational responses during live calls.
+                  </li>
+                </ul>
               </section>
 
               {/* Software Developer Intern */}
@@ -251,30 +257,25 @@ export default function Experience() {
                   Software Developer Intern · Internship
                 </h3>
                 <p>
-                  <time dateTime={toIso(CHATI_INTERN_START)}>Nov 2025</time> —{" "}
-                  <time dateTime={toIso(CHATI_INTERN_END)}>Apr 2026</time> ·{" "}
+                  <time dateTime={toIso(CHATI_INTERN_START)}>Oct 2025</time> —{" "}
+                  <time dateTime={toIso(CHATI_INTERN_END)}>Mar 2026</time> ·{" "}
                   {chatiIntern}
                 </p>
                 <ul itemProp="description">
                   <li>
-                    AI Meeting Assistant — architected a multi-platform bot
-                    (Zoom, Microsoft Teams, Google Meet) for live transcription
-                    and summaries, scaling to 500+ active users.
+                    AI Meeting Assistant: Built an AI assistant for Zoom, Teams,
+                    and Google Meet that automates recording and transcript
+                    summaries for 500+ active users.
                   </li>
                   <li>
-                    Custom CMS — designed and deployed an end-to-end, scalable
-                    CMS from scratch to streamline internal content operations.
+                    High-Performance Pipeline: Engineered a batch-processing
+                    system that cleaned, validated, and migrated 1.2M+ records
+                    into production in under 10 minutes.
                   </li>
                   <li>
-                    Data Engineering — engineered a high-performance pipeline
-                    to migrate 1.2M records cross-referenced with 920K records,
-                    bringing total execution time under 10 minutes.
-                  </li>
-                  <li>
-                    Designed a Union–Find based deduplication system that
-                    groups related citizen records into clusters in near O(1)
-                    per link, keeping <code>/v1/citizen/all/unverified</code>{" "}
-                    fast and scalable.
+                    Algorithmic Deduplication: Designed a Union–Find based
+                    clustering system to deduplicate related records in near
+                    O(1) time per link.
                   </li>
                 </ul>
               </section>
@@ -292,44 +293,29 @@ export default function Experience() {
                 </h2>
                 <p>
                   <strong>Part-time · {promindsTotal}</strong> · Bhubaneswar,
-                  Odisha, India · Remote
+                  Odisha, India
                 </p>
               </header>
 
-              {/* Full Stack Developer (current) */}
-              <section aria-labelledby="prominds-fs-heading">
-                <h3 id="prominds-fs-heading">Full Stack Developer</h3>
-                <p>
-                  <time dateTime={toIso(PROMINDS_FS_START)}>Nov 2025</time> —
-                  Present · {promindsFs}
-                </p>
-                <ul itemProp="description">
-                  <li>
-                    Developed an automotive visitor-management SaaS used across
-                    5 dealerships (5k+ monthly entries), with WhatsApp
-                    automation and lead pipelines.
-                  </li>
-                  <li>
-                    Managing the architectural shift and migration of legacy
-                    infrastructure to a modern, streamlined CRM solution.
-                  </li>
-                </ul>
-              </section>
-
-              {/* WordPress Developer */}
-              <section aria-labelledby="prominds-wp-heading">
-                <h3 id="prominds-wp-heading">WordPress Developer</h3>
-                <p>
-                  <time dateTime={toIso(PROMINDS_WP_START)}>Apr 2025</time> —
-                  Present · {promindsWp}
-                </p>
-                <ul itemProp="description">
-                  <li>
-                    Launched 5 WordPress sites and improved performance scores
-                    by 50% — peak score 84.
-                  </li>
-                </ul>
-              </section>
+              <ul itemProp="description">
+                <li>
+                  Multi-Tenant SaaS Architecture: Architected and shipped
+                  AutoPulse, a scalable B2B CRM for automotive dealerships
+                  featuring granular Role-Based Access Control (RBAC) and
+                  organization-level feature toggles.
+                </li>
+                <li>
+                  Production Deployment: Successfully deployed the platform
+                  across 5+ active dealerships, processing 5,000+ monthly
+                  visitor entries with production-grade lead pipeline
+                  reliability.
+                </li>
+                <li>
+                  Automated Messaging &amp; Scaling: Built automated WhatsApp
+                  follow-up workflows and high-throughput CRM data migration
+                  tools using RabbitMQ for message queuing.
+                </li>
+              </ul>
             </article>
           </div>
         </div>

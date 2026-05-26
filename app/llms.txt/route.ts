@@ -51,7 +51,7 @@ export async function GET() {
     "",
     "# Core technical profile",
     "Skills: JavaScript, TypeScript, Python, React, Next.js, Node.js, Express, FastAPI, MongoDB, PostgreSQL, RabbitMQ, Redis, Docker, WebRTC, SIP, AI APIs.",
-    "Current role: Junior Software Developer at CHATI — AI calling software built on WebRTC and SIP.",
+    "Current role: Junior Software Developer (Lead AI Engineer) at CHATI — B2B AI Voice Calling SaaS built on FreeSWITCH, ESL, and WebRTC.",
     "",
     "# Blog posts",
     `Index: ${SITE_URL}/blog`,
