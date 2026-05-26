@@ -8,8 +8,7 @@ import {
   CHATI_INTERN_START,
   CHATI_INTERN_END,
   CHATI_JR_START,
-  PROMINDS_WP_START,
-  PROMINDS_FS_START,
+  PROMINDS_START,
 } from "@/lib/portfolio-data";
 
 
@@ -31,9 +30,7 @@ const Experience: React.FC = () => {
         monthsBetween(CHATI_INTERN_START, CHATI_INTERN_END)
       ),
       chatiJr: durationLabel(CHATI_JR_START, now),
-      promindsTotal: durationLabel(PROMINDS_WP_START, now),
-      promindsFs: durationLabel(PROMINDS_FS_START, now),
-      promindsWp: durationLabel(PROMINDS_WP_START, now),
+      promindsTotal: durationLabel(PROMINDS_START, now),
     };
   }, []);
 
@@ -98,25 +95,37 @@ const Experience: React.FC = () => {
 
                 {/* Nested roles with vertical timeline */}
                 <ol className="relative border-l-2 border-green-800/30 ml-5 sm:ml-7 space-y-6">
-                  {/* Junior Software Developer (current) */}
+                  {/* Junior Software Developer — Lead AI Engineer (current) */}
                   <li className="pl-4 sm:pl-5 relative">
                     <span
                       aria-hidden="true"
                       className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-green-400 ring-2 ring-black shadow-[0_0_0_2px_rgba(74,222,128,0.35)]"
                     />
                     <h4 className="text-green-400 font-semibold text-sm sm:text-base font-mono">
-                      Junior Software Developer
+                      Junior Software Developer (Lead AI Engineer)
                     </h4>
                     <p className="text-gray-400 text-xs sm:text-sm">Full-time</p>
                     <p className="text-gray-500 text-xs sm:text-sm">
-                      Apr 2026 — Present · {duration.chatiJr}
+                      Mar 2026 — Present · {duration.chatiJr}
                     </p>
-                    <p className="mt-2 text-gray-300 text-sm sm:text-base">
-                      Currently working as a Junior Software Developer at CHATI
-                      after being promoted from the internship role — continuing
-                      to build on the AI calling and meeting-assistant platform
-                      with WebRTC and SIP-protocol work.
-                    </p>
+
+                    <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-5">
+                      <li>
+                        Product Leadership: Serving as lead developer
+                        architecting a B2B AI Voice Calling SaaS platform for
+                        automated inbound and outbound voice systems.
+                      </li>
+                      <li>
+                        Telephony Infrastructure: Engineering high-availability
+                        VoIP infrastructure using FreeSWITCH, ESL, and WebRTC to
+                        orchestrate real-time, low-latency audio streaming.
+                      </li>
+                      <li>
+                        Voice AI Pipeline: Integrating low-latency STT, LLM
+                        orchestration, and TTS pipelines to deliver human-like
+                        conversational responses during live calls.
+                      </li>
+                    </ul>
                   </li>
 
                   {/* Software Developer Intern */}
@@ -130,32 +139,24 @@ const Experience: React.FC = () => {
                     </h4>
                     <p className="text-gray-400 text-xs sm:text-sm">Internship</p>
                     <p className="text-gray-500 text-xs sm:text-sm">
-                      Nov 2025 — Apr 2026 · {duration.chatiIntern}
+                      Oct 2025 — Mar 2026 · {duration.chatiIntern}
                     </p>
 
                     <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-5">
                       <li>
-                        AI Meeting Assistant: architected a multi-platform bot
-                        (Zoom, Teams, Meet) for live transcription and
-                        summaries, scaling to 500+ active users.
+                        AI Meeting Assistant: Built an AI assistant for Zoom,
+                        Teams, and Google Meet that automates recording and
+                        transcript summaries for 500+ active users.
                       </li>
                       <li>
-                        Custom CMS: designed and deployed an end-to-end,
-                        scalable CMS from scratch to streamline internal
-                        content operations.
+                        High-Performance Pipeline: Engineered a batch-processing
+                        system that cleaned, validated, and migrated 1.2M+
+                        records into production in under 10 minutes.
                       </li>
                       <li>
-                        Data Engineering: engineered a high-performance pipeline
-                        to migrate 1.2M records cross-referenced with 920K
-                        records, bringing total execution time under 10
-                        minutes.
-                      </li>
-                      <li>
-                        Designed a Union–Find based deduplication system that
-                        groups related citizen records into clusters in near
-                        O(1) per link, keeping
-                        <code className="mx-1">/v1/citizen/all/unverified</code>
-                        fast and scalable.
+                        Algorithmic Deduplication: Designed a Union–Find based
+                        clustering system to deduplicate related records in near
+                        O(1) time per link.
                       </li>
                     </ul>
                   </li>
@@ -184,61 +185,30 @@ const Experience: React.FC = () => {
                       Part-time · {duration.promindsTotal}
                     </p>
                     <p className="text-gray-500 text-xs sm:text-sm">
-                      Bhubaneswar, Odisha, India · Remote
+                      Bhubaneswar, Odisha, India
                     </p>
                   </div>
                 </div>
 
-                {/* Nested roles with vertical timeline */}
-                <ol className="relative border-l-2 border-green-800/30 ml-5 sm:ml-7 space-y-6">
-                  {/* Full Stack Developer (current) */}
-                  <li className="pl-4 sm:pl-5 relative">
-                    <span
-                      aria-hidden="true"
-                      className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-green-400 ring-2 ring-black shadow-[0_0_0_2px_rgba(74,222,128,0.35)]"
-                    />
-                    <h4 className="text-green-400 font-semibold text-sm sm:text-base font-mono">
-                      Full Stack Developer
-                    </h4>
-                    <p className="text-gray-500 text-xs sm:text-sm">
-                      Nov 2025 — Present · {duration.promindsFs}
-                    </p>
-
-                    <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-5">
-                      <li>
-                        Developed an automotive visitor-management SaaS used
-                        across 5 dealerships (5k+ monthly entries), with
-                        WhatsApp automation and lead pipelines built in.
-                      </li>
-                      <li>
-                        Managing the architectural shift and migration of
-                        legacy infrastructure to a modern, streamlined CRM
-                        solution.
-                      </li>
-                    </ul>
+                <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-9 sm:ml-12">
+                  <li>
+                    Multi-Tenant SaaS Architecture: Architected and shipped
+                    AutoPulse, a scalable B2B CRM for automotive dealerships
+                    featuring granular Role-Based Access Control (RBAC) and
+                    organization-level feature toggles.
                   </li>
-
-                  {/* WordPress Developer */}
-                  <li className="pl-4 sm:pl-5 relative">
-                    <span
-                      aria-hidden="true"
-                      className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-black border-2 border-green-700"
-                    />
-                    <h4 className="text-green-400 font-semibold text-sm sm:text-base font-mono">
-                      WordPress Developer
-                    </h4>
-                    <p className="text-gray-500 text-xs sm:text-sm">
-                      Apr 2025 — Present · {duration.promindsWp}
-                    </p>
-
-                    <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-5">
-                      <li>
-                        Launched 5 WordPress websites and improved performance
-                        scores by 50%, achieving a peak score of 84.
-                      </li>
-                    </ul>
+                  <li>
+                    Production Deployment: Successfully deployed the platform
+                    across 5+ active dealerships, processing 5,000+ monthly
+                    visitor entries with production-grade lead pipeline
+                    reliability.
                   </li>
-                </ol>
+                  <li>
+                    Automated Messaging &amp; Scaling: Built automated WhatsApp
+                    follow-up workflows and high-throughput CRM data migration
+                    tools using RabbitMQ for message queuing.
+                  </li>
+                </ul>
               </div>
             </div>
           </section>

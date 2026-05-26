@@ -234,8 +234,7 @@ export const socialLinks: SocialLinkData[] = [
 // the visible "X mos" labels stay current without manual edits each month.
 // ---------------------------------------------------------------------------
 
-export const CHATI_INTERN_START = new Date(2025, 10, 1); // Nov 2025
-export const CHATI_INTERN_END = new Date(2026, 3, 1); // Apr 2026 (promotion)
-export const CHATI_JR_START = new Date(2026, 3, 1); // Apr 2026
-export const PROMINDS_WP_START = new Date(2025, 3, 1); // Apr 2025
-export const PROMINDS_FS_START = new Date(2025, 10, 1); // Nov 2025
+export const CHATI_INTERN_START = new Date(2025, 9, 1); // Oct 2025
+export const CHATI_INTERN_END = new Date(2026, 2, 1); // Mar 2026 (promotion)
+export const CHATI_JR_START = new Date(2026, 2, 1); // Mar 2026
+export const PROMINDS_START = new Date(2025, 3, 1); // Apr 2025
