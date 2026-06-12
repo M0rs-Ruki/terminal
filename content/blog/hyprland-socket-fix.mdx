@@ -1,0 +1,88 @@
+---
+title: "Hyprland Socket Fix: Solving 30,000 Tracking Errors by Auto-Discovering XDG_RUNTIME_DIR Socket"
+publishedAt: "2024-06-12"
+summary: "Fix Hyprland window tracking that fails with 'window not detected' errors. Learn how to solve systemd service socket issues by auto-discovering socket files instead of caching Hyprland Instance Signature at startup."
+tags: ["hyprland", "debugging", "linux", "systemd", "go", "wayland", "window-manager", "socket-programming", "bug-fix"]
+---
+
+## The Eureka Moment: Finding the Hyprland Socket Bug
+
+I was working on a **Hyprland window tracking system** today when I noticed something was fundamentally broken. The tracking system was generating over **30,000 hidden errors in the background**, all while appearing to function normally. My Hyprland desktop felt blind. And I had to figure out why.
+
+This is the story of how a **dead socket connection** in a systemd service was silently failing thousands of times per day—and how a single-line fix changed everything.
+
+## The Problem: Active · Window Not Detected
+
+The first symptom was unmistakable: my tracking system kept labeling active work as **"Active · window not detected"**, totaling **7 hours and 43 minutes** of logged activity that should have been attributed to actual applications.
+
+Every scan came back empty. Every window was invisible. The system, unable to see any applications, panicked and marked every single second as idle desktop.
+
+The error logs showed a consistent pattern: **exit status 1** failures, repeated thousands of times per day. I knew something was fundamentally broken... and today I finally figured it out.
+
+## The Root Cause: The Dead Socket Connection
+
+Here's what was actually happening under the hood:
+
+### How Hyprland Communication Works
+
+Every time you log into your Linux desktop running **Hyprland**, the system creates a unique security identifier called the **Hyprland Instance Signature**. Think of it like a temporary telephone number—a unique address your applications use to communicate with the window manager.
+
+The tracking software runs in the background as a permanent **systemd service**, designed to outlive individual desktop sessions.
+
+### The Fatal Flaw
+
+Here's where things broke:
+
+1. When you log in → Hyprland generates a new Instance Signature (new phone number)
+2. The tracking agent starts up and caches this ID
+3. When you log out or restart your desktop → Hyprland changes its phone number
+4. But the tracking service was **still trying to dial the old, dead number**
+5. Every window scan failed because the connection was dead
+6. Unable to reach the socket, the agent couldn't see any windows
+7. Result: **30,000+ failures, massive error logs**
+
+The system was calling a disconnected line, over and over, thousands of times per day.
+
+## The Fix: Auto-Discovery
+
+Once I realized what was happening, the solution became clear: **stop memorizing the socket ID, and discover it every single time**.
+
+I updated the core tracking code in `hyprland.go`:
+
+**Before:** Cache the Hyprland Instance Signature at startup, use it forever.
+
+**After:** Every single time the tracking agent looks at your screen, it automatically scans your computer's runtime directory (`$XDG_RUNTIME_DIR/hypr/`) to find the active socket file (`.socket.sock`).
+
+This way, whether I've just logged in, restarted, or switched desktop sessions, the tracker always finds the **current, valid socket connection**.
+
+## Verification: The Proof in the Data
+
+I deployed the fix at **23:26 (11:26 PM)**.
+
+Since that exact minute:
+- Background error logs: **0 failures** ✓
+- Window detection: **100% successful** ✓
+- Chrome: visible ✓
+- Cursor: visible ✓
+- Ghostty: visible ✓
+
+The system can now see active applications perfectly. The problem I was tracking down all day was solved.
+
+## What I Learned
+
+This was a textbook example of **state management in long-running services**. When a service is designed to outlive its environment, it can't rely on cached environmental state. Instead, it must discover its configuration dynamically.
+
+The lesson: for systemd services that interact with desktop environments, query the current state on every operation rather than caching it at startup.
+
+One line change in socket discovery logic. Thirty thousand errors eliminated. That's what a day of debugging looks like when you finally crack the problem.
+
+## Key Takeaways: Hyprland Socket Management
+
+If you're working with **Hyprland window tracking**, **systemd services**, or **XDG_RUNTIME_DIR socket files**, remember these lessons:
+
+1. **Never cache environment state in long-running services** — Hyprland changes its socket identifier on every session
+2. **Discover socket connections dynamically** — Use `$XDG_RUNTIME_DIR/hypr/*.socket.sock` patterns instead of storing socket paths
+3. **Check exit status 1 errors from Wayland/Hyprland** — They often indicate dead socket connections
+4. **For Wayland compositors**, always query current state rather than assuming your cached Hyprland Instance Signature is still valid
+
+The fix works for any systemd service interacting with **Hyprland**, **Wayland**, or other desktop environments with dynamic socket management.
