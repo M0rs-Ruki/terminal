@@ -489,18 +489,20 @@ function ListPostContent({
 }) {
   return (
     <>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-3 mb-1">
-        <h3 className="text-sm sm:text-base text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors break-words">
-          {showBlogLabel ? formatBlogPostLabel(p.title) : p.title}
-        </h3>
-        {p.date && (
-          <time
-            dateTime={p.date}
-            className="shrink-0 text-xs text-gray-500 font-mono"
-          >
-            {formatPostDate(p.date)}
-          </time>
-        )}
+      <div className="flex flex-col gap-1 mb-1">
+        <div className="flex flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
+          <h3 className="text-sm sm:text-base text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors break-words flex-1">
+            {showBlogLabel ? formatBlogPostLabel(p.title) : p.title}
+          </h3>
+          {p.date && (
+            <time
+              dateTime={p.date}
+              className="shrink-0 text-xs text-gray-500 font-mono whitespace-nowrap"
+            >
+              {formatPostDate(p.date)}
+            </time>
+          )}
+        </div>
       </div>
       {p.excerpt && (
         <p className="text-gray-300 text-xs sm:text-sm leading-relaxed line-clamp-3">

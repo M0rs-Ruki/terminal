@@ -1,0 +1,175 @@
+---
+title: "How to Fix LUKS BTRFS Partition Size Mismatch: Emergency Shell Recovery Guide"
+description: "Step-by-step guide to fixing LUKS/BTRFS partition size mismatches caused by parted resizing. Learn how to diagnose and resolve 'Failed to mount /dev/mapper/root' errors without data loss."
+date: "2026-06-22"
+keywords: ["LUKS", "BTRFS", "partition", "cryptsetup", "emergency shell", "disk recovery", "parted", "Linux"]
+tags: ["linux", "luks", "btrfs", "encryption", "filesystem", "disk-recovery", "troubleshooting", "sysadmin", "cryptsetup"]
+---
+
+So. This is the story of how I managed to lock myself out of my own laptop with a single `parted` command.
+
+If you're reading this because you got an error like **"Failed to mount /dev/mapper/root on real root"** after resizing a LUKS-encrypted partition with BTRFS inside, you've come to the right place. This is exactly what happened to me — and it's fixable.
+
+## The Setup: LUKS + BTRFS on Linux
+
+I've got two drives in my machine: `sda` (a smaller drive with a separate OS I boot into sometimes) and `nvme0n1` (the main 512GB drive where my Omarchy setup lives). The 512GB drive is encrypted with LUKS and formatted with BTRFS underneath.
+
+Pretty standard setup for a Linux workstation, right?
+
+## The Oops Moment
+
+One day — and I honestly can't remember why I was doing this — I booted into a live environment and opened `parted` on `/dev/nvme0n1`. And then I did:
+
+```bash
+resizepart 2 412GB
+```
+
+And confirmed the warning that said "hey, this could cause data loss."
+
+It shrunk partition 2 from ~510GB down to ~410GB. Very decisive. Very permanent feeling.
+
+But here's the thing: I didn't realize what would happen next.
+
+## The Problem
+
+When you shrink a partition with `parted`, you're only moving the partition table's boundary. You're not actually resizing the filesystem *inside* that partition. So what I ended up with was:
+
+- A partition that was now only ~410GB
+- A LUKS container on top of it (~409.8GB usable)
+- A BTRFS filesystem inside that LUKS container that was **still expecting 510GB of space**
+
+That mismatch? That was the problem.
+
+Next time I tried to boot normally, the system got to the point where it needed to mount `/dev/mapper/root` (the decrypted LUKS volume), and BTRFS took one look at the underlying block device, saw it was smaller than what its own metadata said it should be, and just... refused to cooperate.
+
+I got dropped into an emergency rescue shell with:
+
+```
+Failed to mount /dev/mapper/root on real root
+```
+
+Not the message you want to see when you're trying to boot your laptop.
+
+## Diagnosing the LUKS/BTRFS Size Mismatch
+
+I spent a bit of time poking around in that emergency shell. At first I ran `fsck` on the BTRFS filesystem, but that didn't work — BTRFS doesn't use the standard fsck tools. So I switched to `btrfs check` instead.
+
+That's when the real error message appeared:
+
+```
+block device size is smaller than total_bytes in device item, 
+has 409834691072 expect >= 509943480320
+```
+
+This error told me everything: BTRFS was comparing the actual block device size against what its metadata said it should be, and they didn't match. The block device was ~400GB, but BTRFS expected ~510GB.
+
+To confirm the diagnosis, I ran:
+- `cat /proc/partitions` — confirmed `nvme0n1p2` was the smaller size
+- `cryptsetup status root` — confirmed the LUKS mapping agreed with the smaller partition size
+
+So the problem was clear: **LUKS and the partition were consistent with each other, but both were smaller than what BTRFS expected.**
+
+### The Cause of the LUKS/BTRFS Mismatch
+
+When you use `parted` to resize a partition, you're only moving the partition table's boundary. You're **not** resizing the filesystem inside. So:
+- The partition boundary moved to 412GB
+- The LUKS container on that partition became 409.8GB
+- The BTRFS filesystem inside still expected 510GB
+
+When the system tried to mount the encrypted volume at boot, BTRFS detected the size mismatch and refused to mount.
+
+(Note: There was a moment of confusion because my system has two disks, and the LUKS mapper name `root` was already in use by the other drive. I had to use a different mapper name, `nvme_root`, to avoid conflicts.)
+
+## How to Fix LUKS Partition Size Mismatch
+
+Once I booted back into a working session with all the necessary tools (`parted`, `cryptsetup`, `btrfs-progs`), the recovery process was actually pretty straightforward:
+
+### Step 1: Resize the Partition Back to Full Size
+
+Open `parted` and expand partition 2 back to the full disk size:
+
+```bash
+sudo parted /dev/nvme0n1
+resizepart 2 100%
+```
+
+This grows the partition boundary back to include all the physical space. Growing a partition is **safe** — your BTRFS data was still physically on the disk past the old boundary, we're just moving the partition table to include it.
+
+### Step 2: Expand the LUKS Container
+
+Now expand the LUKS encrypted volume to match the larger partition:
+
+```bash
+sudo cryptsetup luksOpen /dev/nvme0n1p2 nvme_root
+sudo cryptsetup resize nvme_root
+```
+
+This tells the LUKS layer to recognize the full partition size.
+
+### Step 3: Verify BTRFS Health
+
+Run `btrfs check` to verify the filesystem is healthy:
+
+```bash
+sudo btrfs check /dev/mapper/nvme_root
+```
+
+If the fix worked, you'll see:
+
+```
+found 280337264640 bytes used, no error found.
+```
+
+The size mismatch is gone, and all your data is intact.
+
+### Step 4: Close LUKS and Reboot
+
+```bash
+sudo cryptsetup luksClose nvme_root
+```
+
+Reboot your system normally:
+
+```bash
+sudo reboot
+```
+
+On the next boot, your LUKS partition should mount cleanly without errors.
+
+## Key Takeaway: No Data Loss Required
+
+The important thing to understand: **no data was actually lost during this process.** Your BTRFS filesystem and all your files were still there the whole time. We just had to realign the partition boundaries so that LUKS, the partition table, and BTRFS all agreed on the size of the underlying storage.
+
+## Prevention: Partition Resizing Best Practices
+
+If you need to resize a LUKS-encrypted BTRFS partition in the future:
+
+1. **Always resize the BTRFS filesystem first** if you're shrinking:
+   ```bash
+   sudo btrfs filesystem resize <size> /mount/point
+   ```
+2. **Then resize the LUKS container:**
+   ```bash
+   sudo cryptsetup resize <mapper-name>
+   ```
+3. **Finally resize the partition** using `parted`
+
+Doing it in this order prevents the size mismatch error entirely. For expanding (like we did), the order is reversed — grow the partition first, then LUKS, then optionally expand BTRFS.
+
+## Lessons Learned: LUKS + BTRFS Partition Management
+
+This experience taught me several important lessons about managing encrypted Linux filesystems:
+
+1. **Understand the stack:** LUKS, partitions, and filesystems are separate layers. When you resize one, you need to think about how it affects the others. They all need to agree on the size.
+
+2. **Filesystem-aware resizing:** BTRFS has its own size metadata. Simply shrinking the partition doesn't shrink what BTRFS thinks is its size. If the partition ends up smaller than the filesystem expects, BTRFS will refuse to mount.
+
+3. **btrfs check is your friend:** When something goes wrong with BTRFS, `btrfs check` gives you precise error messages. In my case, it told me the exact byte-level mismatch.
+
+4. **Growing is safer than shrinking:** If you accidentally shrink a partition too much (like I did), growing it back is straightforward and carries no data-loss risk — the data's still there, you're just expanding the boundary.
+
+5. **Read the warnings in parted:** That "this can cause data loss" confirmation exists for a reason. Take an extra second to double-check what you're actually changing before you hit enter.
+
+## Summary
+
+If you encounter a "Failed to mount /dev/mapper/root" error with LUKS and BTRFS, the first thing to check is whether your partition size matches what your filesystem expects. Use `btrfs check` to diagnose, and use the steps above to fix it. No data loss necessary — just resize the partition and LUKS container back to the right size, and you're back in business.
