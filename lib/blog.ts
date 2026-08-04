@@ -24,6 +24,11 @@ export interface BlogPostMeta extends BlogFrontmatter {
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
+function toIsoDate(value: unknown): string {
+  if (value instanceof Date) return value.toISOString().slice(0, 10);
+  return value ? String(value) : "";
+}
+
 function readPostFile(slug: string): BlogPost | null {
   const filePath = path.join(BLOG_DIR, `${slug}.mdx`);
   if (!fs.existsSync(filePath)) return null;
@@ -32,10 +37,10 @@ function readPostFile(slug: string): BlogPost | null {
   return {
     slug,
     title: String(data.title ?? slug),
-    date: String(data.date ?? ""),
+    date: toIsoDate(data.date),
     excerpt: data.excerpt ? String(data.excerpt) : undefined,
     tags: Array.isArray(data.tags) ? data.tags.map(String) : undefined,
-    updated: data.updated ? String(data.updated) : undefined,
+    updated: data.updated ? toIsoDate(data.updated) : undefined,
     keywords: Array.isArray(data.keywords)
       ? data.keywords.map(String)
       : undefined,

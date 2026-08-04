@@ -243,7 +243,7 @@ const Blog: React.FC<BlogProps> = ({
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: { posts: PostMeta[] } = await res.json();
         if (!cancelled) {
-          setPosts(data.posts);
+          setPosts([...data.posts].reverse());
           setListState("ready");
         }
       } catch (err) {

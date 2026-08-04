@@ -550,6 +550,7 @@
   .terminal-blog-content h3 { font-size: 0.95rem; }
   .terminal-blog-content pre { font-size: 0.75rem; padding: 0.75rem; }
   .terminal-blog-content code { font-size: 0.8em; }
+  .terminal-blog-content table { display: block; overflow-x: auto; font-size: 0.8rem; }
 }
 
 .terminal-blog-content a {
@@ -608,6 +609,27 @@
   padding: 0;
   border: 0;
   background: transparent;
+}
+
+.terminal-blog-content table {
+  width: 100%;
+  margin: 1rem 0;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.terminal-blog-content th,
+.terminal-blog-content td {
+  border: 1px solid rgba(22, 101, 52, 0.4);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.terminal-blog-content th {
+  background: rgba(20, 83, 45, 0.3);
+  color: #86efac;
+  font-weight: 600;
 }
 
 .terminal-blog-content blockquote {
