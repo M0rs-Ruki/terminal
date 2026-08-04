@@ -1,4 +1,3 @@
-import Script from "next/script";
 import { notFound } from "next/navigation";
 import BlogTerminalPage from "@/components/BlogTerminalPage";
 import BlogSeoArticle from "@/components/BlogSeoArticle";
@@ -42,10 +41,10 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   return (
     <>
-      <Script
-        id={`article-jsonld-${slug}`}
+      {/* Plain script, not next/script: beforeInteractive injects via JS at runtime,
+          which keeps the article schema out of the served HTML entirely. */}
+      <script
         type="application/ld+json"
-        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <nav className="sr-only" aria-label="Article navigation">

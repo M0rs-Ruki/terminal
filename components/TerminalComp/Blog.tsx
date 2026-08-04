@@ -30,6 +30,17 @@ function formatPostDate(date: string): string {
   });
 }
 
+const NEW_POST_DAYS = 30;
+
+/** Badge the list on recency, not on "is it the last item" — a post shouldn't
+ *  still say NEW two years from now just because nothing was written after it. */
+function isNewPost(date: string): boolean {
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return false;
+  const ageDays = (Date.now() - parsed.getTime()) / 86_400_000;
+  return ageDays >= 0 && ageDays <= NEW_POST_DAYS;
+}
+
 interface BlogProps {
   slug?: string | null;
   initialPost?: BlogInitialPost | null;
@@ -493,6 +504,11 @@ function ListPostContent({
         <div className="flex flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
           <h3 className="text-sm sm:text-base text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors break-words flex-1">
             {showBlogLabel ? formatBlogPostLabel(p.title) : p.title}
+            {isNewPost(p.date) && (
+              <span className="ml-2 align-middle px-1.5 py-0.5 bg-green-400/20 border border-green-400/60 rounded text-green-300 text-[10px] font-mono uppercase tracking-wider">
+                new
+              </span>
+            )}
           </h3>
           {p.date && (
             <time
