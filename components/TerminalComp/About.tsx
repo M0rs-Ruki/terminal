@@ -201,7 +201,7 @@ const About: React.FC = () => {
 
             {/* Responsive grid: 1 column on mobile, 2 on tablet+ */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              {/* Chati - Junior Software Developer card */}
+              {/* Crunchy Media - Junior Software Developer card */}
               <div className="group border border-green-800/40 bg-gradient-to-br from-green-900/20 to-black/80 backdrop-blur-sm p-3 sm:p-5 rounded-xl hover:border-green-400/60 transition-all duration-500 hover:scale-[1.02] sm:hover:scale-105 hover:shadow-2xl hover:shadow-green-900/30 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-green-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10">
@@ -209,7 +209,7 @@ const About: React.FC = () => {
                     <CodeIcon />
                   </div>
                   <h3 className="font-bold text-green-400 text-base sm:text-lg mb-2 font-mono">
-                    Junior Software Developer @ CHATI
+                    Junior Software Developer @ Crunchy Media Pvt Ltd
                   </h3>
                   <p className="text-gray-400 text-sm sm:text-base leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
                     Working on AI-powered calling software, building real-time

@@ -66,15 +66,15 @@ const Experience: React.FC = () => {
             </div>
 
             <div className="ml-3 sm:ml-6 border-l-2 border-green-800/30 pl-3 sm:pl-6 space-y-8">
-              {/* CHATI */}
+              {/* Crunchy Media Pvt Ltd */}
               <div className="border-b border-green-800/20 pb-6">
                 {/* Company header */}
                 <div className="flex items-start gap-3 mb-4">
                   <div className="shrink-0">
                     <Image
-                      src="/images/Chati.ico"
-                      alt="CHATI"
-                      title="CHATI"
+                      src="/images/Crunchy-Media-Pvt-Ltd.jpeg"
+                      alt="Crunchy Media Pvt Ltd"
+                      title="Crunchy Media Pvt Ltd"
                       width={64}
                       height={64}
                       className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg border border-green-800/50 bg-black/40 object-contain"
@@ -82,7 +82,7 @@ const Experience: React.FC = () => {
                   </div>
                   <div className="min-w-0">
                     <h3 className="text-green-400 font-semibold text-base sm:text-lg font-mono">
-                      CHATI
+                      Crunchy Media Pvt Ltd
                     </h3>
                     <p className="text-gray-400 text-xs sm:text-sm">
                       {duration.chatiTotal}

@@ -24,7 +24,7 @@ export const FILE_CONTENTS: Record<string, string> = {
   skills:
     "Tech: Frontend — React, Next.js, Remix, TanStack Query. Backend — Node.js, Express, FastAPI. DBs — MongoDB, RabbitMQ, Redis, PostgreSQL. Tools — Git, Docker, Kubernetes, Postman, Linux/CLI. Deployment — AWS S3, Azure, GCP, Vercel, Render, Dokploy. AI/ML — Pandas, PyTorch, TensorFlow. Type 'cd skills' to see all.",
   experience:
-    "CHATI (Junior Software Developer — Lead AI Engineer), Prominds Digital (Part-time). Type 'cd experience' for full timeline.",
+    "Crunchy Media Pvt Ltd (Junior Software Developer — Lead AI Engineer), Prominds Digital (Part-time). Type 'cd experience' for full timeline.",
   contact:
     "Get in touch: email, LinkedIn, GitHub. Type 'cd contact' for links and copy-paste.",
   blog:

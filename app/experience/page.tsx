@@ -17,15 +17,15 @@ export const revalidate = 86400;
 // SEO Metadata for Experience page
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.anuppradhan.in"),
-  title: "Experience | Junior Software Developer (Lead AI Engineer) @ CHATI · FreeSWITCH + WebRTC",
+  title: "Experience | Junior Software Developer (Lead AI Engineer) @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
   description:
-    "Experience of Anup Pradhan: Junior Software Developer (Lead AI Engineer) at CHATI (Mar 2026–Present) architecting a B2B AI Voice Calling SaaS with FreeSWITCH, ESL, and WebRTC; part-time at Prominds Digital — shipped AutoPulse, a multi-tenant B2B CRM for automotive dealerships with RBAC, WhatsApp automation, and RabbitMQ.",
+    "Experience of Anup Pradhan: Junior Software Developer (Lead AI Engineer) at Crunchy Media Pvt Ltd (Mar 2026–Present) architecting a B2B AI Voice Calling SaaS with FreeSWITCH, ESL, and WebRTC; part-time at Prominds Digital — shipped AutoPulse, a multi-tenant B2B CRM for automotive dealerships with RBAC, WhatsApp automation, and RabbitMQ.",
   keywords: [
     "Anup Pradhan Experience",
     "Junior Software Developer",
     "Lead AI Engineer",
-    "Junior Software Developer CHATI",
-    "Software Developer Intern CHATI",
+    "Junior Software Developer Crunchy Media Pvt Ltd",
+    "Software Developer Intern Crunchy Media Pvt Ltd",
     "Software Developer Bhubaneswar",
     "AI Voice Calling SaaS",
     "FreeSWITCH Developer",
@@ -46,9 +46,9 @@ export const metadata: Metadata = {
   creator: "Anup Pradhan",
   publisher: "Anup Pradhan",
   openGraph: {
-    title: "Experience | Junior Software Developer (Lead AI Engineer) @ CHATI · FreeSWITCH + WebRTC",
+    title: "Experience | Junior Software Developer (Lead AI Engineer) @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
     description:
-      "Junior Software Developer (Lead AI Engineer) at CHATI (Mar 2026–Present) — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
+      "Junior Software Developer (Lead AI Engineer) at Crunchy Media Pvt Ltd (Mar 2026–Present) — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
     type: "profile",
     url: "https://www.anuppradhan.in/experience",
     siteName: "Anup Pradhan - Developer Portfolio",
@@ -67,9 +67,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@AnupPradhan0",
     creator: "@AnupPradhan0",
-    title: "Experience | Junior Software Developer (Lead AI Engineer) @ CHATI · FreeSWITCH + WebRTC",
+    title: "Experience | Junior Software Developer (Lead AI Engineer) @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
     description:
-      "Junior Software Developer (Lead AI Engineer) at CHATI — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
+      "Junior Software Developer (Lead AI Engineer) at Crunchy Media Pvt Ltd — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
     images: ["https://www.anuppradhan.in/images/logo.jpg"],
   },
   robots: {
@@ -115,7 +115,7 @@ function buildStructuredData() {
         startDate: toIso(CHATI_JR_START),
         worksFor: {
           "@type": "Organization",
-          name: "CHATI",
+          name: "Crunchy Media Pvt Ltd",
           address: {
             "@type": "PostalAddress",
             addressLocality: "Bhubaneswar",
@@ -129,7 +129,7 @@ function buildStructuredData() {
         roleName: "Software Developer Intern",
         startDate: toIso(CHATI_INTERN_START),
         endDate: toIso(CHATI_INTERN_END),
-        worksFor: { "@type": "Organization", name: "CHATI" },
+        worksFor: { "@type": "Organization", name: "Crunchy Media Pvt Ltd" },
       },
       {
         "@type": "EmployeeRole",
@@ -199,7 +199,7 @@ export default function Experience() {
               Experience
             </h1>
             <p>
-              Professional roles as a Software Developer at CHATI and Prominds
+              Professional roles as a Software Developer at Crunchy Media Pvt Ltd and Prominds
               Digital — architecting B2B AI Voice Calling SaaS on FreeSWITCH/WebRTC,
               scalable multi-tenant CRM for automotive dealerships, and large-scale
               data pipelines.
@@ -207,7 +207,7 @@ export default function Experience() {
           </header>
 
           <div>
-            {/* CHATI */}
+            {/* Crunchy Media Pvt Ltd */}
             <article
               aria-labelledby="chati-heading"
               itemScope
@@ -215,7 +215,7 @@ export default function Experience() {
             >
               <header>
                 <h2 id="chati-heading" itemProp="name">
-                  CHATI
+                  Crunchy Media Pvt Ltd
                 </h2>
                 <p>
                   <strong>{chatiTotal}</strong> · Bhubaneswar, Odisha, India ·

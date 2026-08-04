@@ -135,9 +135,9 @@ const structuredData = {
   email: "mailto:anuppradhan929@gmail.com",
   jobTitle: "Junior Software Developer",
   description:
-    "Junior Software Developer at CHATI working on AI-powered calling software with WebRTC and SIP. Backend-focused full-stack engineer from Bhubaneswar, India; also a part-time Full Stack / WordPress developer at Prominds Digital. Currently pursuing BCA at Amity University.",
+    "Junior Software Developer at Crunchy Media Pvt Ltd working on AI-powered calling software with WebRTC and SIP. Backend-focused full-stack engineer from Bhubaneswar, India; also a part-time Full Stack / WordPress developer at Prominds Digital. Currently pursuing BCA at Amity University.",
   worksFor: [
-    { "@type": "Organization", name: "CHATI" },
+    { "@type": "Organization", name: "Crunchy Media Pvt Ltd" },
     { "@type": "Organization", name: "Prominds Digital" },
   ],
   address: {
@@ -219,7 +219,7 @@ const aboutPageStructuredData = {
   url: "https://www.anuppradhan.in/about",
   name: "About Anup Pradhan",
   description:
-    "About Anup Pradhan — Junior Software Developer at CHATI working on AI calling (WebRTC + SIP), part-time at Prominds Digital, and currently learning system design and automation.",
+    "About Anup Pradhan — Junior Software Developer at Crunchy Media Pvt Ltd working on AI calling (WebRTC + SIP), part-time at Prominds Digital, and currently learning system design and automation.",
   inLanguage: "en-IN",
   mainEntity: { "@id": "https://www.anuppradhan.in/#person" },
   author: { "@id": "https://www.anuppradhan.in/#person" },
@@ -295,7 +295,7 @@ export default function About() {
               </a>
               {" · "}
               <span itemProp="jobTitle">Junior Software Developer</span> @{" "}
-              <span itemProp="worksFor">CHATI</span>
+              <span itemProp="worksFor">Crunchy Media Pvt Ltd</span>
               {" · "}
               <a href="mailto:anuppradhan929@gmail.com" rel="me">
                 anuppradhan929@gmail.com
@@ -314,7 +314,7 @@ export default function About() {
               <div>
                 <p>
                   I&apos;m a <strong>Junior Software Developer</strong> at
-                  CHATI, working on AI-powered calling software built on{" "}
+                  Crunchy Media Pvt Ltd, working on AI-powered calling software built on{" "}
                   <strong>WebRTC</strong> and the <strong>SIP</strong> protocol
                   — real-time voice flows, media negotiation, signaling, and
                   integrating the AI agent into live calls. Backend-focused
@@ -432,12 +432,12 @@ export default function About() {
               </div>
 
               <div>
-                {/* Junior SWE @ CHATI */}
+                {/* Junior SWE @ Crunchy Media Pvt Ltd */}
                 <article>
                   <div>
                     <CodeIcon />
                   </div>
-                  <h3>Junior Software Developer @ CHATI</h3>
+                  <h3>Junior Software Developer @ Crunchy Media Pvt Ltd</h3>
                   <p>
                     Working on AI-powered calling software, building real-time
                     voice flows on top of <strong>WebRTC</strong> and the{" "}
