@@ -4,12 +4,7 @@ import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
 import { Canvas, extend, useThree, useFrame } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
-import {
-  useGLTF,
-  useTexture,
-  Environment,
-  Lightformer,
-} from "@react-three/drei";
+import { useGLTF, useTexture } from "@react-three/drei";
 import {
   BallCollider,
   CuboidCollider,
@@ -42,6 +37,7 @@ export default function Tag() {
       <Canvas
         camera={{ position: [0, 0, 13], fov: 25 }}
         style={{ touchAction: "none", background: "#000" }}
+        dpr={[1, 1.5]}
         gl={{ alpha: false }}
         onCreated={({ gl, scene }) => {
           gl.setClearColor(0x000000, 1);
@@ -53,36 +49,6 @@ export default function Tag() {
         <Physics interpolate gravity={[0, -40, 0]} timeStep={1 / 60}>
           <Band />
         </Physics>
-      <Environment environmentIntensity={0} background={false}>
-        <Lightformer
-          intensity={4}
-          color="white"
-          position={[0, -1, 5]}
-          rotation={[0, 0, Math.PI / 3]}
-          scale={[100, 0.1, 1]}
-        />
-        <Lightformer
-          intensity={6}
-          color="white"
-          position={[-1, -1, 1]}
-          rotation={[0, 0, Math.PI / 3]}
-          scale={[100, 0.1, 1]}
-        />
-        <Lightformer
-          intensity={6}
-          color="white"
-          position={[1, 1, 1]}
-          rotation={[0, 0, Math.PI / 3]}
-          scale={[100, 0.1, 1]}
-        />
-        <Lightformer
-          intensity={18}
-          color="white"
-          position={[-10, 0, 14]}
-          rotation={[0, Math.PI / 2, Math.PI / 3]}
-          scale={[100, 10, 1]}
-        />
-      </Environment>
       </Canvas>
       <div
         className="interaction-label"
@@ -158,6 +124,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
   }, [curve]);
 
   useFrame((state, delta) => {
+    if (!dragged && card.current?.isSleeping() && j1.current?.isSleeping()) return;
     if (dragged) {
       vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
       dir.copy(vec).sub(state.camera.position).normalize();
