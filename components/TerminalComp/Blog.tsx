@@ -469,7 +469,7 @@ const Blog: React.FC<BlogProps> = ({
                 {syncUrls ? (
                   <Link
                     href={`/blog/${p.slug}`}
-                    className="block h-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 sm:p-4 cursor-pointer group"
+                    className="flex h-full flex-col text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 sm:p-4 cursor-pointer group"
                   >
                     <ListPostContent post={p} />
                   </Link>
@@ -477,7 +477,7 @@ const Blog: React.FC<BlogProps> = ({
                   <button
                     type="button"
                     onClick={() => goToSlug(p.slug)}
-                    className="w-full h-full text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 sm:p-4 cursor-pointer group"
+                    className="flex h-full w-full flex-col text-left border border-green-800/40 bg-gradient-to-br from-green-900/10 to-black/40 hover:border-green-400/60 transition-colors rounded-lg p-3 sm:p-4 cursor-pointer group"
                   >
                     <ListPostContent post={p} />
                   </button>
@@ -499,10 +499,10 @@ function ListPostContent({
   showBlogLabel?: boolean;
 }) {
   return (
-    <>
+    <div className="flex h-full flex-col">
       <div className="flex flex-col gap-1 mb-1">
         <div className="flex flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
-          <h3 className="text-sm sm:text-base text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors break-words flex-1">
+          <h3 className="text-sm sm:text-base text-green-400 font-semibold font-mono group-hover:text-green-300 transition-colors break-words flex-1 leading-snug">
             {showBlogLabel ? formatBlogPostLabel(p.title) : p.title}
             {isNewPost(p.date) && (
               <span className="ml-2 align-middle px-1.5 py-0.5 bg-green-400/20 border border-green-400/60 rounded text-green-300 text-[10px] font-mono uppercase tracking-wider">
@@ -537,10 +537,10 @@ function ListPostContent({
           ))}
         </div>
       )}
-      <p className="mt-3 text-green-400/80 font-mono text-xs group-hover:text-green-300">
+      <p className="mt-auto pt-3 text-green-400/80 font-mono text-xs group-hover:text-green-300">
         → read post
       </p>
-    </>
+    </div>
   );
 }
 
