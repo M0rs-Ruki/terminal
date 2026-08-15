@@ -1158,7 +1158,18 @@ export default function Terminal({
     await processCommand(commandToRun);
   };
 
-  const focusInput = (): void => {
+  const focusInput = (e?: React.SyntheticEvent): void => {
+    // Don't steal focus from real form controls (e.g. the comment textarea) —
+    // only the bare terminal chrome should snap focus back to the prompt.
+    const target = e?.target as HTMLElement | undefined;
+    if (
+      target &&
+      !target.closest("#terminal-input") &&
+      target.closest("input, textarea, select, button, a, [contenteditable]")
+    ) {
+      return;
+    }
+
     const isTouchDevice =
       "ontouchstart" in window || navigator.maxTouchPoints > 0;
 

@@ -7,7 +7,9 @@ export interface StickerMeta {
 }
 
 const STICKERS_DIR = path.join(process.cwd(), "public", "stickers");
-const IMAGE_EXT_RE = /\.(png|jpe?g|gif|webp|svg)$/i;
+// No SVG: next/image blocks SVGs by default (they can carry scripts) and
+// stickers are raster art anyway (PNG/GIF/WebP cover transparent + animated).
+const IMAGE_EXT_RE = /\.(png|jpe?g|gif|webp)$/i;
 
 export function listStickers(): StickerMeta[] {
   if (!fs.existsSync(STICKERS_DIR)) return [];

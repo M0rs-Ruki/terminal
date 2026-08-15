@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test lib",
     "postinstall": "prisma generate"
   },
   "dependencies": {
