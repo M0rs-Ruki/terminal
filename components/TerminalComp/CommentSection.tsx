@@ -25,8 +25,10 @@ interface CommentSectionProps {
   slug: string;
 }
 
+const PAGE_SIZE = 4;
+
 async function fetchPage(slug: string, cursor?: number): Promise<CommentsPage> {
-  const params = new URLSearchParams({ limit: "20" });
+  const params = new URLSearchParams({ limit: String(PAGE_SIZE) });
   if (cursor) params.set("cursor", String(cursor));
   const res = await fetch(`/api/blog/${slug}/comments?${params}`);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -218,7 +220,7 @@ export default function CommentSection({ slug }: CommentSectionProps) {
           disabled={loadingMore}
           className="mt-4 text-green-400/80 font-mono text-xs hover:text-green-300 transition-colors disabled:opacity-50"
         >
-          {loadingMore ? "Loading…" : "→ load more comments"}
+          {loadingMore ? "Loading…" : "→ read more comments"}
         </button>
       )}
     </section>

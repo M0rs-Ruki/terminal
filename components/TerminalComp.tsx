@@ -12,6 +12,7 @@ import Contact from "./TerminalComp/Contact";
 import Experience from "./TerminalComp/Experience";
 import Blog from "./TerminalComp/Blog";
 import BlogSearchResults from "./TerminalComp/BlogSearchResults";
+import CommentSection from "./TerminalComp/CommentSection";
 import {
   searchBlogPosts,
   type BlogSearchPost,
@@ -295,6 +296,7 @@ const HELP_ITEMS: HelpItem[] = [
   { type: "command", command: "cd contact", description: "Get my contact information." },
   { type: "command", command: "cd blog", description: "Open the blog (/blog)." },
   { type: "command", command: "blog [keyword]", description: "Open blog or search posts (e.g. blog Malware)." },
+  { type: "command", command: "comment <post>", description: "Read only that post's comments (e.g. comment malware-nowadays)." },
   { type: "command", command: "cat <file>", description: "Print file contents (e.g. cat README, cat blog)." },
   { type: "command", command: "whoami", description: "Print current user." },
   { type: "command", command: "hostname", description: "Print system hostname." },
@@ -379,6 +381,7 @@ const TAB_COMPLETIONS: string[] = [
   "yes",
   "clear",
   "blog",
+  "comment",
   "exit",
   "uptime",
   "free",
@@ -424,6 +427,7 @@ const COMMAND_NAMES = [
   "man",
   "clear",
   "blog",
+  "comment",
   "exit",
   "ai",
   "neofetch",
@@ -489,6 +493,14 @@ const CD_SECTIONS = [
   "contact",
 ];
 
+/** Accepts a raw slug or a full/partial blog URL and returns the slug candidate. */
+function extractBlogSlug(arg: string): string {
+  const trimmed = arg.trim();
+  const match = trimmed.match(/\/blog\/([^/?#]+)/i);
+  if (match) return decodeURIComponent(match[1]);
+  return trimmed.replace(/^\/+|\/+$/g, "");
+}
+
 function getCommonPrefix(strings: string[]): string {
   if (strings.length === 0) return "";
   let i = 0;
@@ -516,7 +528,11 @@ function getTabCompletion(
   const argPrefix = prefix.toLowerCase();
   const baseForArg = endsWithSpace ? raw + " " : parts.slice(0, -1).join(" ") + (parts.length > 1 ? " " : "");
 
-  if (isCompletingArg && command === "blog" && blogPosts.length > 0) {
+  if (
+    isCompletingArg &&
+    (command === "blog" || command === "comment" || command === "comments") &&
+    blogPosts.length > 0
+  ) {
     const matches = blogPosts
       .filter(
         (p) =>
@@ -916,6 +932,50 @@ export default function Terminal({
       newHist.push({
         type: "output",
         content: <BlogSearchResults posts={matches} query={query} />,
+      });
+      setHistory(newHist);
+      return;
+    }
+
+    // comment <post-slug-or-url> — show just that post's comments, read-only
+    if (commandName === "comment" || commandName === "comments") {
+      const query = args.join(" ").trim();
+      if (!query) {
+        newHist.push({
+          type: "output",
+          content: (
+            <span className="terminal-stderr">
+              Usage: comment &lt;post-slug-or-url&gt; (e.g. comment
+              malware-nowadays)
+            </span>
+          ),
+        });
+        setHistory(newHist);
+        return;
+      }
+      const candidate = extractBlogSlug(query).toLowerCase();
+      const exact = blogPostsCache.find(
+        (p) => p.slug.toLowerCase() === candidate
+      );
+      const resolvedSlug =
+        exact?.slug ?? searchBlogPosts(blogPostsCache, query, 1)[0]?.slug;
+
+      if (!resolvedSlug) {
+        newHist.push({
+          type: "output",
+          content: (
+            <span className="terminal-stderr">
+              comment: no blog post found for &quot;{query}&quot;
+            </span>
+          ),
+        });
+        setHistory(newHist);
+        return;
+      }
+
+      newHist.push({
+        type: "output",
+        content: <CommentSection slug={resolvedSlug} />,
       });
       setHistory(newHist);
       return;

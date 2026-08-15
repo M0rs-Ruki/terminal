@@ -12,6 +12,21 @@ const MAX_LIST_LIMIT = 50;
 const RATE_LIMIT_MAX_PER_HOUR = 5;
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 
+// Given to commenters who don't type a name — friendlier than a flat "Anonymous".
+const FALLBACK_NAMES = [
+  "Mystery Guest",
+  "Silent Ninja",
+  "Curious Fox",
+  "Secret Agent",
+  "Wandering Owl",
+  "Nameless Wanderer",
+  "Undercover Panda",
+];
+
+function randomFallbackName(): string {
+  return FALLBACK_NAMES[Math.floor(Math.random() * FALLBACK_NAMES.length)];
+}
+
 export class CommentValidationError extends Error {}
 export class CommentRateLimitError extends Error {}
 
@@ -54,7 +69,7 @@ export async function createComment(
 
   const authorName =
     (input.authorName ?? "").trim().slice(0, MAX_AUTHOR_NAME_LEN) ||
-    "Anonymous";
+    randomFallbackName();
   const body = (input.body ?? "").trim().slice(0, MAX_BODY_LEN) || null;
   const stickerId = input.stickerId?.trim() || null;
 
