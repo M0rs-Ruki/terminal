@@ -2,20 +2,9 @@
 
 import Image from "next/image";
 import React, { useState, useEffect, useMemo } from "react";
-import { durationLabel, formatMonths, monthsBetween } from "@/lib/duration";
+import { durationLabel } from "@/lib/duration";
 import { TypewriterText, MatrixRain } from "@/components/TerminalComp/effects";
-import {
-  CHATI_INTERN_START,
-  CHATI_INTERN_END,
-  CHATI_JR_START,
-  CHATI_JR_END,
-  PROMINDS_START,
-  PROMINDS_END,
-  PROMINDS_FULLSTACK_START,
-  PROMINDS_FULLSTACK_END,
-  PROMINDS_WORDPRESS_START,
-  PROMINDS_WORDPRESS_END,
-} from "@/lib/portfolio-data";
+import { experienceCompanies } from "@/lib/portfolio-data";
 
 
 
@@ -27,25 +16,30 @@ const Experience: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Computed once per mount — accurate to the day the user opens the page.
-  const duration = useMemo(() => {
-    return {
-      chatiTotal: durationLabel(CHATI_INTERN_START, CHATI_JR_END),
-      chatiIntern: formatMonths(
-        monthsBetween(CHATI_INTERN_START, CHATI_INTERN_END)
-      ),
-      chatiJr: durationLabel(CHATI_JR_START, CHATI_JR_END),
-      promindsTotal: durationLabel(PROMINDS_START, PROMINDS_END),
-      promindsFullstack: durationLabel(
-        PROMINDS_FULLSTACK_START,
-        PROMINDS_FULLSTACK_END
-      ),
-      promindsWordpress: durationLabel(
-        PROMINDS_WORDPRESS_START,
-        PROMINDS_WORDPRESS_END
-      ),
-    };
-  }, []);
+  const experienceData = useMemo(
+    () =>
+      experienceCompanies.map((company) => ({
+        ...company,
+        totalDuration: durationLabel(
+          company.roles[company.roles.length - 1].start,
+          company.roles[0].end
+        ),
+        roles: company.roles.map((role) => ({
+          ...role,
+          durationText: durationLabel(role.start, role.end),
+          startLabel: role.start.toLocaleString("en-US", {
+            month: "short",
+            year: "numeric",
+          }),
+          endLabel: role.end.toLocaleString("en-US", {
+            month: "short",
+            year: "numeric",
+          }),
+          metaLabel: [...new Set([role.employmentType, role.mode].filter(Boolean))].join(" · "),
+        })),
+      })),
+    []
+  );
 
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden">
@@ -79,175 +73,68 @@ const Experience: React.FC = () => {
             </div>
 
             <div className="ml-3 sm:ml-6 border-l-2 border-green-800/30 pl-3 sm:pl-6 space-y-8">
-              {/* Crunchy Media Pvt Ltd */}
-              <div className="border-b border-green-800/20 pb-6">
-                {/* Company header */}
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="shrink-0">
-                    <Image
-                      src="/images/Crunchy-Media-Pvt-Ltd.jpeg"
-                      alt="Crunchy Media Pvt Ltd"
-                      title="Crunchy Media Pvt Ltd"
-                      width={64}
-                      height={64}
-                      className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg border border-green-800/50 bg-black/40 object-contain"
-                    />
+              {experienceData.map((company) => (
+                <div key={company.name} className="border-b border-green-800/20 pb-6">
+                  <div className="flex items-start gap-3 mb-4">
+                    <div className="shrink-0">
+                      <Image
+                        src={company.logo}
+                        alt={company.name}
+                        title={company.name}
+                        width={64}
+                        height={64}
+                        className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg border border-green-800/50 bg-black/40 object-contain"
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="text-green-400 font-semibold text-base sm:text-lg font-mono">
+                        {company.name}
+                      </h3>
+                      <p className="text-gray-400 text-xs sm:text-sm">
+                        {company.totalDuration}
+                      </p>
+                      <p className="text-gray-500 text-xs sm:text-sm">
+                        {company.location}
+                        {company.workMode ? ` · ${company.workMode}` : ""}
+                      </p>
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <h3 className="text-green-400 font-semibold text-base sm:text-lg font-mono">
-                      Crunchy Media Pvt Ltd
-                    </h3>
-                    <p className="text-gray-400 text-xs sm:text-sm">
-                      {duration.chatiTotal}
-                    </p>
-                    <p className="text-gray-500 text-xs sm:text-sm">
-                      Bhubaneswar, Odisha, India · On-site
-                    </p>
-                  </div>
+
+                  <ol className="relative border-l-2 border-green-800/30 ml-5 sm:ml-7 space-y-6">
+                    {company.roles.map((role, roleIndex) => (
+                      <li key={`${company.name}-${role.title}`} className="pl-4 sm:pl-5 relative">
+                        <span
+                          aria-hidden="true"
+                          className={`absolute -left-[7px] top-1.5 w-3 h-3 rounded-full ${
+                            roleIndex === 0
+                              ? "bg-green-400 ring-2 ring-black shadow-[0_0_0_2px_rgba(74,222,128,0.35)]"
+                              : "bg-black border-2 border-green-700"
+                          }`}
+                        />
+                        <h4 className="text-green-400 font-semibold text-sm sm:text-base font-mono">
+                          {role.title}
+                        </h4>
+                        <div className="mt-1">
+                          {role.metaLabel ? (
+                            <p className="text-gray-400 text-xs sm:text-sm">{role.metaLabel}</p>
+                          ) : null}
+                          <p className="text-gray-500 text-xs sm:text-sm">
+                            {role.startLabel} — {role.endLabel} · {role.durationText}
+                          </p>
+                        </div>
+
+                        <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-5">
+                          {role.bullets.map((bullet) => (
+                            <li key={`${role.title}-${bullet.slice(0, 12)}`}>
+                              {bullet}
+                            </li>
+                          ))}
+                        </ul>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
-
-                {/* Nested roles with vertical timeline */}
-                <ol className="relative border-l-2 border-green-800/30 ml-5 sm:ml-7 space-y-6">
-                  {/* Junior Software Developer */}
-                  <li className="pl-4 sm:pl-5 relative">
-                    <span
-                      aria-hidden="true"
-                      className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-green-400 ring-2 ring-black shadow-[0_0_0_2px_rgba(74,222,128,0.35)]"
-                    />
-                    <h4 className="text-green-400 font-semibold text-sm sm:text-base font-mono">
-                      Junior Software Developer
-                    </h4>
-                    <p className="text-gray-400 text-xs sm:text-sm">Full-time</p>
-                    <p className="text-gray-500 text-xs sm:text-sm">
-                      Apr 2026 — Aug 2026 · {duration.chatiJr}
-                    </p>
-
-                    <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-5">
-                      <li>
-                        Product Leadership: Serving as lead developer
-                        architecting a B2B AI Voice Calling SaaS platform for
-                        automated inbound and outbound voice systems.
-                      </li>
-                      <li>
-                        Telephony Infrastructure: Engineering high-availability
-                        VoIP infrastructure using FreeSWITCH, ESL, and WebRTC to
-                        orchestrate real-time, low-latency audio streaming.
-                      </li>
-                      <li>
-                        Voice AI Pipeline: Integrating low-latency STT, LLM
-                        orchestration, and TTS pipelines to deliver human-like
-                        conversational responses during live calls.
-                      </li>
-                    </ul>
-                  </li>
-
-                  {/* Software Developer Intern */}
-                  <li className="pl-4 sm:pl-5 relative">
-                    <span
-                      aria-hidden="true"
-                      className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-black border-2 border-green-700"
-                    />
-                    <h4 className="text-green-400 font-semibold text-sm sm:text-base font-mono">
-                      Software Developer Intern
-                    </h4>
-                    <p className="text-gray-400 text-xs sm:text-sm">Internship</p>
-                    <p className="text-gray-500 text-xs sm:text-sm">
-                      Oct 2025 — Mar 2026 · {duration.chatiIntern}
-                    </p>
-
-                    <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-5">
-                      <li>
-                        AI Meeting Assistant: Built an AI assistant for Zoom,
-                        Teams, and Google Meet that automates recording and
-                        transcript summaries for 500+ active users.
-                      </li>
-                      <li>
-                        High-Performance Pipeline: Engineered a batch-processing
-                        system that cleaned, validated, and migrated 1.2M+
-                        records into production in under 10 minutes.
-                      </li>
-                      <li>
-                        Algorithmic Deduplication: Designed a Union–Find based
-                        clustering system to deduplicate related records in near
-                        O(1) time per link.
-                      </li>
-                    </ul>
-                  </li>
-                </ol>
-              </div>
-
-              {/* Prominds Digital */}
-              <div className="border-b border-green-800/20 pb-6">
-                {/* Company header */}
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="shrink-0">
-                    <Image
-                      src="/images/PromindsD.png"
-                      alt="Prominds Digital"
-                      title="Prominds Digital"
-                      width={64}
-                      height={64}
-                      className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg border border-green-800/50 bg-black/40 object-contain"
-                    />
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="text-green-400 font-semibold text-base sm:text-lg font-mono">
-                      Prominds Digital
-                    </h3>
-                    <p className="text-gray-400 text-xs sm:text-sm">
-                      {duration.promindsTotal}
-                    </p>
-                    <p className="text-gray-500 text-xs sm:text-sm">
-                      Bhubaneswar, Odisha, India
-                    </p>
-                  </div>
-                </div>
-
-                <ol className="relative border-l-2 border-green-800/30 ml-5 sm:ml-7 space-y-6">
-                  <li className="pl-4 sm:pl-5 relative">
-                    <span
-                      aria-hidden="true"
-                      className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-green-400 ring-2 ring-black shadow-[0_0_0_2px_rgba(74,222,128,0.35)]"
-                    />
-                    <h4 className="text-green-400 font-semibold text-sm sm:text-base font-mono">
-                      Full Stack Developer
-                    </h4>
-                    <p className="text-gray-500 text-xs sm:text-sm">
-                      Nov 2025 — Apr 2026 · {duration.promindsFullstack} Hybrid
-                    </p>
-                    <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-5">
-                      <li>
-                        Developed an automotive visitor management SaaS used by 5
-                        dealerships (5k+ monthly entries) featuring WhatsApp
-                        automation and lead pipelines.
-                      </li>
-                      <li>
-                        Managing the architectural shift and migration of legacy
-                        infrastructure to a modern, streamlined CRM solution.
-                      </li>
-                    </ul>
-                  </li>
-
-                  <li className="pl-4 sm:pl-5 relative">
-                    <span
-                      aria-hidden="true"
-                      className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-black border-2 border-green-700"
-                    />
-                    <h4 className="text-green-400 font-semibold text-sm sm:text-base font-mono">
-                      WordPress Developer
-                    </h4>
-                    <p className="text-gray-500 text-xs sm:text-sm">
-                      Apr 2025 — Nov 2025 · {duration.promindsWordpress} Remote
-                    </p>
-                    <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-5">
-                      <li>
-                        Launched 5 WordPress websites and optimized performance
-                        scores by 50% (achieving a peak score of 84).
-                      </li>
-                    </ul>
-                  </li>
-                </ol>
-              </div>
+              ))}
             </div>
           </section>
 

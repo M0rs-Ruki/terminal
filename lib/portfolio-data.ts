@@ -245,3 +245,79 @@ export const PROMINDS_FULLSTACK_START = new Date(2025, 10, 1); // Nov 2025
 export const PROMINDS_FULLSTACK_END = new Date(2026, 3, 30); // Apr 2026
 export const PROMINDS_WORDPRESS_START = new Date(2025, 3, 1); // Apr 2025
 export const PROMINDS_WORDPRESS_END = new Date(2025, 10, 30); // Nov 2025
+
+export type ExperienceRole = {
+  title: string;
+  employmentType: string;
+  start: Date;
+  end: Date;
+  mode?: string;
+  bullets: string[];
+};
+
+export type ExperienceCompany = {
+  name: string;
+  logo: string;
+  location: string;
+  workMode?: string;
+  roles: ExperienceRole[];
+};
+
+export const experienceCompanies: ExperienceCompany[] = [
+  {
+    name: "Crunchy Media Pvt Ltd",
+    logo: "/images/Crunchy-Media-Pvt-Ltd.jpeg",
+    location: "Bhubaneswar, Odisha, India",
+    workMode: "On-site",
+    roles: [
+      {
+        title: "Junior Software Developer",
+        employmentType: "Full-time",
+        start: CHATI_JR_START,
+        end: CHATI_JR_END,
+        bullets: [
+          "Product Leadership: Serving as lead developer architecting a B2B AI Voice Calling SaaS platform for automated inbound and outbound voice systems.",
+          "Telephony Infrastructure: Engineering high-availability VoIP infrastructure using FreeSWITCH, ESL, and WebRTC to orchestrate real-time, low-latency audio streaming.",
+          "Voice AI Pipeline: Integrating low-latency STT, LLM orchestration, and TTS pipelines to deliver human-like conversational responses during live calls.",
+        ],
+      },
+      {
+        title: "Software Developer Intern",
+        employmentType: "Internship",
+        start: CHATI_INTERN_START,
+        end: CHATI_INTERN_END,
+        bullets: [
+          "AI Meeting Assistant: Built an AI assistant for Zoom, Teams, and Google Meet that automates recording and transcript summaries for 500+ active users.",
+          "High-Performance Pipeline: Engineered a batch-processing system that cleaned, validated, and migrated 1.2M+ records into production in under 10 minutes.",
+          "Algorithmic Deduplication: Designed a Union–Find based clustering system to deduplicate related records in near O(1) time per link.",
+        ],
+      },
+    ],
+  },
+  {
+    name: "Prominds Digital",
+    logo: "/images/PromindsD.png",
+    location: "Bhubaneswar, Odisha, India",
+    roles: [
+      {
+        title: "Full Stack Developer",
+        employmentType: "Hybrid",
+        start: PROMINDS_FULLSTACK_START,
+        end: PROMINDS_FULLSTACK_END,
+        bullets: [
+          "Developed an automotive visitor management SaaS used by 5 dealerships (5k+ monthly entries) featuring WhatsApp automation and lead pipelines.",
+          "Managing the architectural shift and migration of legacy infrastructure to a modern, streamlined CRM solution.",
+        ],
+      },
+      {
+        title: "WordPress Developer",
+        employmentType: "Remote",
+        start: PROMINDS_WORDPRESS_START,
+        end: PROMINDS_WORDPRESS_END,
+        bullets: [
+          "Launched 5 WordPress websites and optimized performance scores by 50% (achieving a peak score of 84).",
+        ],
+      },
+    ],
+  },
+];
