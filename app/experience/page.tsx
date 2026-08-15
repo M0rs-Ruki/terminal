@@ -6,6 +6,11 @@ import {
   CHATI_JR_START,
   CHATI_JR_END,
   PROMINDS_START,
+  PROMINDS_END,
+  PROMINDS_FULLSTACK_START,
+  PROMINDS_FULLSTACK_END,
+  PROMINDS_WORDPRESS_START,
+  PROMINDS_WORDPRESS_END,
 } from "@/lib/portfolio-data";
 
 const SITE_URL = "https://www.anuppradhan.in";
@@ -170,12 +175,19 @@ function buildStructuredData() {
 
 export default function Experience() {
   const { personSchema, breadcrumbSchema } = buildStructuredData();
-  const now = new Date();
 
   const chatiTotal = durationLabel(CHATI_INTERN_START, CHATI_JR_END);
   const chatiJr = durationLabel(CHATI_JR_START, CHATI_JR_END);
   const chatiIntern = formatMonths(monthsBetween(CHATI_INTERN_START, CHATI_INTERN_END));
-  const promindsTotal = durationLabel(PROMINDS_START, now);
+  const promindsTotal = durationLabel(PROMINDS_START, PROMINDS_END);
+  const promindsFullstack = durationLabel(
+    PROMINDS_FULLSTACK_START,
+    PROMINDS_FULLSTACK_END
+  );
+  const promindsWordpress = durationLabel(
+    PROMINDS_WORDPRESS_START,
+    PROMINDS_WORDPRESS_END
+  );
 
   return (
     <>
@@ -293,30 +305,44 @@ export default function Experience() {
                   Prominds Digital
                 </h2>
                 <p>
-                  <strong>Part-time · {promindsTotal}</strong> · Bhubaneswar,
-                  Odisha, India
+                  <strong>{promindsTotal}</strong> · Bhubaneswar, Odisha, India
                 </p>
               </header>
 
-              <ul itemProp="description">
-                <li>
-                  Multi-Tenant SaaS Architecture: Architected and shipped
-                  AutoPulse, a scalable B2B CRM for automotive dealerships
-                  featuring granular Role-Based Access Control (RBAC) and
-                  organization-level feature toggles.
-                </li>
-                <li>
-                  Production Deployment: Successfully deployed the platform
-                  across 5+ active dealerships, processing 5,000+ monthly
-                  visitor entries with production-grade lead pipeline
-                  reliability.
-                </li>
-                <li>
-                  Automated Messaging &amp; Scaling: Built automated WhatsApp
-                  follow-up workflows and high-throughput CRM data migration
-                  tools using RabbitMQ for message queuing.
-                </li>
-              </ul>
+              <section aria-labelledby="prominds-fullstack-heading">
+                <h3 id="prominds-fullstack-heading">Full Stack Developer</h3>
+                <p>
+                  <time dateTime={toIso(PROMINDS_FULLSTACK_START)}>Nov 2025</time> —{" "}
+                  <time dateTime={toIso(PROMINDS_FULLSTACK_END)}>Apr 2026</time> · {promindsFullstack}{" "}
+                  Hybrid
+                </p>
+                <ul itemProp="description">
+                  <li>
+                    Developed an automotive visitor management SaaS used by 5
+                    dealerships (5k+ monthly entries) featuring WhatsApp
+                    automation and lead pipelines.
+                  </li>
+                  <li>
+                    Managing the architectural shift and migration of legacy
+                    infrastructure to a modern, streamlined CRM solution.
+                  </li>
+                </ul>
+              </section>
+
+              <section aria-labelledby="prominds-wordpress-heading">
+                <h3 id="prominds-wordpress-heading">WordPress Developer</h3>
+                <p>
+                  <time dateTime={toIso(PROMINDS_WORDPRESS_START)}>Apr 2025</time> —{" "}
+                  <time dateTime={toIso(PROMINDS_WORDPRESS_END)}>Nov 2025</time> · {promindsWordpress}{" "}
+                  Remote
+                </p>
+                <ul itemProp="description">
+                  <li>
+                    Launched 5 WordPress websites and optimized performance
+                    scores by 50% (achieving a peak score of 84).
+                  </li>
+                </ul>
+              </section>
             </article>
           </div>
         </div>

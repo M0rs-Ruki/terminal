@@ -238,4 +238,10 @@ export const CHATI_INTERN_START = new Date(2025, 9, 1); // Oct 2025
 export const CHATI_INTERN_END = new Date(2026, 2, 31); // Mar 2026
 export const CHATI_JR_START = new Date(2026, 3, 1); // Apr 2026
 export const CHATI_JR_END = new Date(2026, 7, 31); // Aug 2026
+
 export const PROMINDS_START = new Date(2025, 3, 1); // Apr 2025
+export const PROMINDS_END = new Date(2026, 3, 30); // Apr 2026
+export const PROMINDS_FULLSTACK_START = new Date(2025, 10, 1); // Nov 2025
+export const PROMINDS_FULLSTACK_END = new Date(2026, 3, 30); // Apr 2026
+export const PROMINDS_WORDPRESS_START = new Date(2025, 3, 1); // Apr 2025
+export const PROMINDS_WORDPRESS_END = new Date(2025, 10, 30); // Nov 2025

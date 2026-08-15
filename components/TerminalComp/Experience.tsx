@@ -10,6 +10,11 @@ import {
   CHATI_JR_START,
   CHATI_JR_END,
   PROMINDS_START,
+  PROMINDS_END,
+  PROMINDS_FULLSTACK_START,
+  PROMINDS_FULLSTACK_END,
+  PROMINDS_WORDPRESS_START,
+  PROMINDS_WORDPRESS_END,
 } from "@/lib/portfolio-data";
 
 
@@ -24,14 +29,21 @@ const Experience: React.FC = () => {
 
   // Computed once per mount — accurate to the day the user opens the page.
   const duration = useMemo(() => {
-    const now = new Date();
     return {
       chatiTotal: durationLabel(CHATI_INTERN_START, CHATI_JR_END),
       chatiIntern: formatMonths(
         monthsBetween(CHATI_INTERN_START, CHATI_INTERN_END)
       ),
       chatiJr: durationLabel(CHATI_JR_START, CHATI_JR_END),
-      promindsTotal: durationLabel(PROMINDS_START, now),
+      promindsTotal: durationLabel(PROMINDS_START, PROMINDS_END),
+      promindsFullstack: durationLabel(
+        PROMINDS_FULLSTACK_START,
+        PROMINDS_FULLSTACK_END
+      ),
+      promindsWordpress: durationLabel(
+        PROMINDS_WORDPRESS_START,
+        PROMINDS_WORDPRESS_END
+      ),
     };
   }, []);
 
@@ -165,7 +177,7 @@ const Experience: React.FC = () => {
               </div>
 
               {/* Prominds Digital */}
-              <div>
+              <div className="border-b border-green-800/20 pb-6">
                 {/* Company header */}
                 <div className="flex items-start gap-3 mb-4">
                   <div className="shrink-0">
@@ -183,7 +195,7 @@ const Experience: React.FC = () => {
                       Prominds Digital
                     </h3>
                     <p className="text-gray-400 text-xs sm:text-sm">
-                      Part-time · {duration.promindsTotal}
+                      {duration.promindsTotal}
                     </p>
                     <p className="text-gray-500 text-xs sm:text-sm">
                       Bhubaneswar, Odisha, India
@@ -191,25 +203,50 @@ const Experience: React.FC = () => {
                   </div>
                 </div>
 
-                <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-9 sm:ml-12">
-                  <li>
-                    Multi-Tenant SaaS Architecture: Architected and shipped
-                    AutoPulse, a scalable B2B CRM for automotive dealerships
-                    featuring granular Role-Based Access Control (RBAC) and
-                    organization-level feature toggles.
+                <ol className="relative border-l-2 border-green-800/30 ml-5 sm:ml-7 space-y-6">
+                  <li className="pl-4 sm:pl-5 relative">
+                    <span
+                      aria-hidden="true"
+                      className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-green-400 ring-2 ring-black shadow-[0_0_0_2px_rgba(74,222,128,0.35)]"
+                    />
+                    <h4 className="text-green-400 font-semibold text-sm sm:text-base font-mono">
+                      Full Stack Developer
+                    </h4>
+                    <p className="text-gray-500 text-xs sm:text-sm">
+                      Nov 2025 — Apr 2026 · {duration.promindsFullstack} Hybrid
+                    </p>
+                    <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-5">
+                      <li>
+                        Developed an automotive visitor management SaaS used by 5
+                        dealerships (5k+ monthly entries) featuring WhatsApp
+                        automation and lead pipelines.
+                      </li>
+                      <li>
+                        Managing the architectural shift and migration of legacy
+                        infrastructure to a modern, streamlined CRM solution.
+                      </li>
+                    </ul>
                   </li>
-                  <li>
-                    Production Deployment: Successfully deployed the platform
-                    across 5+ active dealerships, processing 5,000+ monthly
-                    visitor entries with production-grade lead pipeline
-                    reliability.
+
+                  <li className="pl-4 sm:pl-5 relative">
+                    <span
+                      aria-hidden="true"
+                      className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-black border-2 border-green-700"
+                    />
+                    <h4 className="text-green-400 font-semibold text-sm sm:text-base font-mono">
+                      WordPress Developer
+                    </h4>
+                    <p className="text-gray-500 text-xs sm:text-sm">
+                      Apr 2025 — Nov 2025 · {duration.promindsWordpress} Remote
+                    </p>
+                    <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-5">
+                      <li>
+                        Launched 5 WordPress websites and optimized performance
+                        scores by 50% (achieving a peak score of 84).
+                      </li>
+                    </ul>
                   </li>
-                  <li>
-                    Automated Messaging &amp; Scaling: Built automated WhatsApp
-                    follow-up workflows and high-throughput CRM data migration
-                    tools using RabbitMQ for message queuing.
-                  </li>
-                </ul>
+                </ol>
               </div>
             </div>
           </section>
