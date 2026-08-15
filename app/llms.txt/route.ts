@@ -51,7 +51,7 @@ export async function GET() {
     "",
     "# Core technical profile",
     "Skills: JavaScript, TypeScript, Python, React, Next.js, Node.js, Express, FastAPI, MongoDB, PostgreSQL, RabbitMQ, Redis, Docker, WebRTC, SIP, AI APIs.",
-    "Current role: Junior Software Developer (Lead AI Engineer) at Crunchy Media Pvt Ltd — B2B AI Voice Calling SaaS built on FreeSWITCH, ESL, and WebRTC.",
+    "Previous role: Junior Software Developer at Crunchy Media Pvt Ltd (Apr 2026–Aug 2026) — B2B AI Voice Calling SaaS built on FreeSWITCH, ESL, and WebRTC.",
     "",
     "# Blog posts",
     `Index: ${SITE_URL}/blog`,

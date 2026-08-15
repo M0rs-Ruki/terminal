@@ -230,11 +230,12 @@ export const socialLinks: SocialLinkData[] = [
 // ---------------------------------------------------------------------------
 // Experience — role start/end dates
 //
-// Durations are recomputed from these on every render (see lib/duration), so
-// the visible "X mos" labels stay current without manual edits each month.
+// Fixed end dates are used for the Crunchy Media record so the timeline stops
+// after the last verified work date instead of continuing to "Present".
 // ---------------------------------------------------------------------------
 
 export const CHATI_INTERN_START = new Date(2025, 9, 1); // Oct 2025
-export const CHATI_INTERN_END = new Date(2026, 2, 1); // Mar 2026 (promotion)
-export const CHATI_JR_START = new Date(2026, 2, 1); // Mar 2026
+export const CHATI_INTERN_END = new Date(2026, 2, 31); // Mar 2026
+export const CHATI_JR_START = new Date(2026, 3, 1); // Apr 2026
+export const CHATI_JR_END = new Date(2026, 7, 31); // Aug 2026
 export const PROMINDS_START = new Date(2025, 3, 1); // Apr 2025

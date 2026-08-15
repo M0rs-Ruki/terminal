@@ -4,6 +4,7 @@ import {
   CHATI_INTERN_START,
   CHATI_INTERN_END,
   CHATI_JR_START,
+  CHATI_JR_END,
   PROMINDS_START,
 } from "@/lib/portfolio-data";
 
@@ -17,13 +18,12 @@ export const revalidate = 86400;
 // SEO Metadata for Experience page
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.anuppradhan.in"),
-  title: "Experience | Junior Software Developer (Lead AI Engineer) @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
+  title: "Experience | Junior Software Developer @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
   description:
-    "Experience of Anup Pradhan: Junior Software Developer (Lead AI Engineer) at Crunchy Media Pvt Ltd (Mar 2026–Present) architecting a B2B AI Voice Calling SaaS with FreeSWITCH, ESL, and WebRTC; part-time at Prominds Digital — shipped AutoPulse, a multi-tenant B2B CRM for automotive dealerships with RBAC, WhatsApp automation, and RabbitMQ.",
+    "Experience of Anup Pradhan: Junior Software Developer at Crunchy Media Pvt Ltd (Apr 2026–Aug 2026) architecting a B2B AI Voice Calling SaaS with FreeSWITCH, ESL, and WebRTC; part-time at Prominds Digital — shipped AutoPulse, a multi-tenant B2B CRM for automotive dealerships with RBAC, WhatsApp automation, and RabbitMQ.",
   keywords: [
     "Anup Pradhan Experience",
     "Junior Software Developer",
-    "Lead AI Engineer",
     "Junior Software Developer Crunchy Media Pvt Ltd",
     "Software Developer Intern Crunchy Media Pvt Ltd",
     "Software Developer Bhubaneswar",
@@ -46,9 +46,9 @@ export const metadata: Metadata = {
   creator: "Anup Pradhan",
   publisher: "Anup Pradhan",
   openGraph: {
-    title: "Experience | Junior Software Developer (Lead AI Engineer) @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
+    title: "Experience | Junior Software Developer @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
     description:
-      "Junior Software Developer (Lead AI Engineer) at Crunchy Media Pvt Ltd (Mar 2026–Present) — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
+      "Junior Software Developer at Crunchy Media Pvt Ltd (Apr 2026–Aug 2026) — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
     type: "profile",
     url: "https://www.anuppradhan.in/experience",
     siteName: "Anup Pradhan - Developer Portfolio",
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
         url: "https://www.anuppradhan.in/images/logo.jpg",
         width: 1200,
         height: 630,
-        alt: "Anup Pradhan — Junior Software Developer (Lead AI Engineer) experience",
+        alt: "Anup Pradhan — Junior Software Developer experience",
         type: "image/jpeg",
       },
     ],
@@ -67,9 +67,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@AnupPradhan0",
     creator: "@AnupPradhan0",
-    title: "Experience | Junior Software Developer (Lead AI Engineer) @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
+    title: "Experience | Junior Software Developer @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
     description:
-      "Junior Software Developer (Lead AI Engineer) at Crunchy Media Pvt Ltd — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
+      "Junior Software Developer at Crunchy Media Pvt Ltd — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
     images: ["https://www.anuppradhan.in/images/logo.jpg"],
   },
   robots: {
@@ -107,12 +107,13 @@ function buildStructuredData() {
     url: SITE_URL,
     mainEntityOfPage: `${SITE_URL}/experience`,
     image: `${SITE_URL}/images/logo.jpg`,
-    jobTitle: "Junior Software Developer (Lead AI Engineer)",
+    jobTitle: "Junior Software Developer",
     hasOccupation: [
       {
         "@type": "EmployeeRole",
-        roleName: "Junior Software Developer (Lead AI Engineer)",
+        roleName: "Junior Software Developer",
         startDate: toIso(CHATI_JR_START),
+        endDate: toIso(CHATI_JR_END),
         worksFor: {
           "@type": "Organization",
           name: "Crunchy Media Pvt Ltd",
@@ -171,8 +172,8 @@ export default function Experience() {
   const { personSchema, breadcrumbSchema } = buildStructuredData();
   const now = new Date();
 
-  const chatiTotal = durationLabel(CHATI_INTERN_START, now);
-  const chatiJr = durationLabel(CHATI_JR_START, now);
+  const chatiTotal = durationLabel(CHATI_INTERN_START, CHATI_JR_END);
+  const chatiJr = durationLabel(CHATI_JR_START, CHATI_JR_END);
   const chatiIntern = formatMonths(monthsBetween(CHATI_INTERN_START, CHATI_INTERN_END));
   const promindsTotal = durationLabel(PROMINDS_START, now);
 
@@ -223,14 +224,14 @@ export default function Experience() {
                 </p>
               </header>
 
-              {/* Junior Software Developer — Lead AI Engineer (current) */}
+              {/* Junior Software Developer */}
               <section aria-labelledby="chati-jr-heading">
                 <h3 id="chati-jr-heading">
-                  Junior Software Developer (Lead AI Engineer) · Full-time
+                  Junior Software Developer · Full-time
                 </h3>
                 <p>
-                  <time dateTime={toIso(CHATI_JR_START)}>Mar 2026</time> —
-                  Present · {chatiJr}
+                  <time dateTime={toIso(CHATI_JR_START)}>Apr 2026</time> —{" "}
+                  <time dateTime={toIso(CHATI_JR_END)}>Aug 2026</time> · {chatiJr}
                 </p>
                 <ul itemProp="description">
                   <li>

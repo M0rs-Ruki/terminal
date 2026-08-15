@@ -8,6 +8,7 @@ import {
   CHATI_INTERN_START,
   CHATI_INTERN_END,
   CHATI_JR_START,
+  CHATI_JR_END,
   PROMINDS_START,
 } from "@/lib/portfolio-data";
 
@@ -25,11 +26,11 @@ const Experience: React.FC = () => {
   const duration = useMemo(() => {
     const now = new Date();
     return {
-      chatiTotal: durationLabel(CHATI_INTERN_START, now),
+      chatiTotal: durationLabel(CHATI_INTERN_START, CHATI_JR_END),
       chatiIntern: formatMonths(
         monthsBetween(CHATI_INTERN_START, CHATI_INTERN_END)
       ),
-      chatiJr: durationLabel(CHATI_JR_START, now),
+      chatiJr: durationLabel(CHATI_JR_START, CHATI_JR_END),
       promindsTotal: durationLabel(PROMINDS_START, now),
     };
   }, []);
@@ -95,18 +96,18 @@ const Experience: React.FC = () => {
 
                 {/* Nested roles with vertical timeline */}
                 <ol className="relative border-l-2 border-green-800/30 ml-5 sm:ml-7 space-y-6">
-                  {/* Junior Software Developer — Lead AI Engineer (current) */}
+                  {/* Junior Software Developer */}
                   <li className="pl-4 sm:pl-5 relative">
                     <span
                       aria-hidden="true"
                       className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-green-400 ring-2 ring-black shadow-[0_0_0_2px_rgba(74,222,128,0.35)]"
                     />
                     <h4 className="text-green-400 font-semibold text-sm sm:text-base font-mono">
-                      Junior Software Developer (Lead AI Engineer)
+                      Junior Software Developer
                     </h4>
                     <p className="text-gray-400 text-xs sm:text-sm">Full-time</p>
                     <p className="text-gray-500 text-xs sm:text-sm">
-                      Mar 2026 — Present · {duration.chatiJr}
+                      Apr 2026 — Aug 2026 · {duration.chatiJr}
                     </p>
 
                     <ul className="mt-3 list-disc list-outside space-y-1 text-gray-300 text-sm sm:text-base ml-4 sm:ml-5">
