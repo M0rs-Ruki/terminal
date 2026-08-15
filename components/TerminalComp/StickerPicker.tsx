@@ -46,13 +46,13 @@ export default function StickerPicker({
       <button
         type="button"
         onClick={toggleOpen}
-        className={`px-2.5 py-1.5 rounded border font-mono text-xs transition-colors ${
+        className={`rounded border font-mono text-xs transition-colors ${
           selectedId
-            ? "border-green-400/60 text-green-300 bg-green-900/30"
-            : "border-green-800/40 text-green-400/80 hover:border-green-400/60"
+            ? "p-1 border-green-400/60 bg-green-900/30"
+            : "px-2.5 py-1.5 border-green-800/40 text-green-400/80 hover:border-green-400/60"
         }`}
       >
-        {selectedId ? <Sticker id={selectedId} size={20} /> : "sticker"}
+        {selectedId ? <Sticker id={selectedId} size={48} /> : "sticker"}
       </button>
 
       {/* Inline panel (not absolutely positioned) — an overlay popover gets
