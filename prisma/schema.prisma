@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  postSlug   String
+  authorName String
+  body       String?
+  stickerId  String?
+  visitorId  String
+  createdAt  DateTime @default(now())
+
+  @@index([postSlug, id])
+  @@index([visitorId, postSlug, createdAt])
+}
+
+model BlogView {
+  id        Int      @id @default(autoincrement())
+  postSlug  String
+  visitorId String
+  viewedAt  DateTime @default(now())
+
+  @@index([postSlug])
+  @@index([visitorId, postSlug, viewedAt])
+}

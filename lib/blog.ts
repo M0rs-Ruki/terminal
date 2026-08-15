@@ -78,3 +78,12 @@ export function getAllPosts(): BlogPostMeta[] {
 export function getPostBySlug(slug: string): BlogPost | null {
   return readPostFile(slug);
 }
+
+export class UnknownPostError extends Error {}
+
+/** Shared trust-boundary check: reject engagement (comments/views) writes for slugs with no matching .mdx file. */
+export function assertKnownSlug(slug: string): void {
+  if (!getAllPostSlugs().includes(slug)) {
+    throw new UnknownPostError(`Unknown post: ${slug}`);
+  }
+}

@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import BlogCard, { formatPostDate } from "@/components/TerminalComp/BlogCard";
+import ViewStats from "@/components/TerminalComp/ViewStats";
+import CommentSection from "@/components/TerminalComp/CommentSection";
 import type { BlogInitialPost } from "@/components/BlogTerminalPage.types";
 
 interface PostMeta {
@@ -342,6 +344,8 @@ const Blog: React.FC<BlogProps> = ({
                     ))}
                   </div>
                 )}
+                <span>·</span>
+                <ViewStats slug={post.slug} />
               </div>
             </header>
 
@@ -356,6 +360,8 @@ const Blog: React.FC<BlogProps> = ({
               syncUrls={syncUrls}
               onSelect={(s) => goToSlug(s)}
             />
+
+            <CommentSection slug={post.slug} />
           </article>
         )}
       </div>
