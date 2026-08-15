@@ -150,8 +150,8 @@ export default function CommentSection({ slug }: CommentSectionProps) {
           rows={3}
           className="w-full bg-black/40 border border-green-800/40 focus:border-green-400/60 outline-none rounded-lg px-3 py-2 text-sm text-gray-200 font-mono placeholder:text-gray-600 resize-none"
         />
-        <div className="flex items-center justify-between gap-2">
-          <StickerPicker selectedId={stickerId} onSelect={setStickerId} />
+        <StickerPicker selectedId={stickerId} onSelect={setStickerId} />
+        <div className="flex justify-end">
           <button
             type="submit"
             disabled={!canSubmit}

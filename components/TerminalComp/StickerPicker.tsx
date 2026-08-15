@@ -42,7 +42,7 @@ export default function StickerPicker({
   };
 
   return (
-    <div className="relative">
+    <div className="w-full">
       <button
         type="button"
         onClick={toggleOpen}
@@ -55,8 +55,10 @@ export default function StickerPicker({
         {selectedId ? <Sticker id={selectedId} size={20} /> : "sticker"}
       </button>
 
+      {/* Inline panel (not absolutely positioned) — an overlay popover gets
+          clipped by the scrolling terminal body on narrow mobile viewports. */}
       {open && (
-        <div className="absolute bottom-full left-0 mb-2 z-10 w-56 max-h-48 overflow-y-auto border border-green-800/40 bg-black/95 rounded-lg p-2">
+        <div className="mt-2 max-h-48 overflow-y-auto border border-green-800/40 bg-black/60 rounded-lg p-2">
           {loadState === "loading" && (
             <p className="text-gray-500 font-mono text-xs px-1 py-2">
               Loading stickers…
@@ -73,7 +75,7 @@ export default function StickerPicker({
             </p>
           )}
           {loadState === "ready" && stickers.length > 0 && (
-            <div className="grid grid-cols-4 gap-1.5">
+            <div className="grid grid-cols-5 sm:grid-cols-6 gap-1.5">
               {stickers.map((s) => (
                 <button
                   key={s.id}
