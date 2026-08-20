@@ -28,15 +28,15 @@ export const metadata: Metadata = {
   },
   title: {
     default:
-      "Anup Pradhan | Software Developer & Machine Learning Enthusiast",
+      "Anup Pradhan | Software Engineer & Machine Learning Enthusiast",
     template: "%s | Anup Pradhan",
   },
   description:
-    "Software Developer from Bhubaneswar, India specializing in backend development, RESTful APIs, and full-stack applications using MongoDB, Express.js, React, Next.js, Node.js, and TypeScript. Currently learning Machine Learning with TensorFlow and scikit-learn.",
+    "Software Engineer from Bhubaneswar, India specializing in backend development, RESTful APIs, and full-stack applications using MongoDB, Express.js, React, Next.js, Node.js, and TypeScript. Currently learning Machine Learning with TensorFlow and scikit-learn.",
   keywords: [
-    "Software Developer",
-    "Software Developer Bhubaneswar",
-    "Software Developer India",
+    "Software Engineer",
+    "Software Engineer Bhubaneswar",
+    "Software Engineer India",
     "TypeScript Developer",
     "Node.js Developer",
     "React Developer",
@@ -64,15 +64,15 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: "https://www.anuppradhan.in",
     siteName: "Anup Pradhan",
-    title: "Anup Pradhan | Software Developer",
+    title: "Anup Pradhan | Software Engineer",
     description:
-      "Software Developer specializing in backend development, RESTful APIs, and Machine Learning. Based in Bhubaneswar, Odisha, India.",
+      "Software Engineer specializing in backend development, RESTful APIs, and Machine Learning. Based in Bhubaneswar, Odisha, India.",
     images: [
       {
         url: "/images/logo.jpg",
         width: 1200,
         height: 630,
-        alt: "Anup Pradhan - Software Developer",
+        alt: "Anup Pradhan - Software Engineer",
         type: "image/jpeg",
       },
     ],
@@ -81,9 +81,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@AnupPradhan0",
     creator: "@AnupPradhan0",
-    title: "Anup Pradhan | Software Developer",
+    title: "Anup Pradhan | Software Engineer",
     description:
-      "Software Developer with backend focus, building RESTful APIs and full-stack applications. Learning Machine Learning.",
+      "Software Engineer with backend focus, building RESTful APIs and full-stack applications. Learning Machine Learning.",
     images: ["/images/logo.jpg"],
   },
   robots: {

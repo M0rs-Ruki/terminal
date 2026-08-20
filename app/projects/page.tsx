@@ -5,11 +5,11 @@ import { projects as projectsData } from "@/lib/portfolio-data";
 // Enhanced SEO Metadata
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.anuppradhan.in"),
-  title: "Projects | Software Developer Portfolio",
+  title: "Projects | Software Engineer Portfolio",
   description:
     "Explore Anup Pradhan's portfolio of web applications including WhatsApp Campaign Management, AI-powered finance tracker, neural networks, and more. Built with TypeScript, Python, and modern web technologies. All projects are open-source and available on GitHub.",
   keywords: [
-    "Software Developer Projects",
+    "Software Engineer Projects",
     "Developer Portfolio",
     "WhatsApp Campaign Management",
     "AI Finance Tracker",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     "Web Development Portfolio",
     "Node.js Projects",
     "REST API Projects",
-    "Software Developer Portfolio India",
+    "Software Engineer Portfolio India",
     "Next.js Projects",
     "Open Source Projects",
     "GitHub Portfolio",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   creator: "Anup Pradhan",
   publisher: "Anup Pradhan",
   openGraph: {
-    title: "Projects | Software Developer Portfolio",
+    title: "Projects | Software Engineer Portfolio",
     description:
       "Portfolio showcasing web applications, AI projects, and machine learning implementations by Anup Pradhan. Built with TypeScript, Python, and modern web technologies. All projects open-source on GitHub.",
     type: "website",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
         url: "https://www.anuppradhan.in/images/logo.jpg",
         width: 1200,
         height: 630,
-        alt: "Anup Pradhan - Software Developer Projects Portfolio",
+        alt: "Anup Pradhan - Software Engineer Projects Portfolio",
         type: "image/jpeg",
       },
     ],
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@AnupPradhan0",
     creator: "@AnupPradhan0",
-    title: "Projects | Software Developer Portfolio",
+    title: "Projects | Software Engineer Portfolio",
     description:
       "Full-stack MERN projects, AI applications, and machine learning implementations. All projects open-source on GitHub.",
     images: ["https://www.anuppradhan.in/images/logo.jpg"],

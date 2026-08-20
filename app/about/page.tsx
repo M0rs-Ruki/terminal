@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.anuppradhan.in"),
   title: "About Me | Software Engineer & Machine Learning Enthusiast",
   description:
-    "Experienced Software Developer from Bhubaneswar, India specializing in backend development, RESTful APIs, MongoDB, Express.js, React, Node.js, and TypeScript. Currently expanding skills in Machine Learning with TensorFlow and scikit-learn. Building production-ready applications with JWT authentication and cloud deployment. Pursuing BCA at Amity University with CGPA 8.93.",
+    "Experienced Software Engineer from Bhubaneswar, India specializing in backend development, RESTful APIs, MongoDB, Express.js, React, Node.js, and TypeScript. Currently expanding skills in Machine Learning with TensorFlow and scikit-learn. Building production-ready applications with JWT authentication and cloud deployment. Pursuing BCA at Amity University with CGPA 8.93.",
   keywords: [
     "Software Engineer",
     "Software Engineer Bhubaneswar",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
         url: "https://www.anuppradhan.in/images/logo.jpg",
         width: 1200,
         height: 630,
-        alt: "Anup Pradhan - Software Developer & Machine Learning Enthusiast",
+        alt: "Anup Pradhan - Software Engineer & Machine Learning Enthusiast",
         type: "image/jpeg",
       },
     ],
@@ -219,7 +219,7 @@ const aboutPageStructuredData = {
   url: "https://www.anuppradhan.in/about",
   name: "About Anup Pradhan",
   description:
-    "About Anup Pradhan — Junior Software Developer at Crunchy Media Pvt Ltd working on AI calling (WebRTC + SIP), part-time at Prominds Digital, and currently learning system design and automation.",
+    "About Anup Pradhan — SDE-1 at Crunchy Media Pvt Ltd working on AI calling (WebRTC + SIP), part-time at Prominds Digital, and currently learning system design and automation.",
   inLanguage: "en-IN",
   mainEntity: { "@id": "https://www.anuppradhan.in/#person" },
   author: { "@id": "https://www.anuppradhan.in/#person" },
@@ -294,7 +294,7 @@ export default function About() {
                 <span itemProp="name">Anup Pradhan</span>
               </a>
               {" · "}
-              <span itemProp="jobTitle">Junior Software Developer</span> @{" "}
+              <span itemProp="jobTitle">SDE-1</span> @{" "}
               <span itemProp="worksFor">Crunchy Media Pvt Ltd</span>
               {" · "}
               <a href="mailto:anuppradhan929@gmail.com" rel="me">
@@ -313,7 +313,7 @@ export default function About() {
 
               <div>
                 <p>
-                  I&apos;m a <strong>Junior Software Developer</strong> at
+                  I&apos;m a <strong>Software Engineer</strong> at
                   Crunchy Media Pvt Ltd, working on AI-powered calling software built on{" "}
                   <strong>WebRTC</strong> and the <strong>SIP</strong> protocol
                   — real-time voice flows, media negotiation, signaling, and
@@ -432,12 +432,12 @@ export default function About() {
               </div>
 
               <div>
-                {/* Junior SWE @ Crunchy Media Pvt Ltd */}
+                {/* SDE-1 @ Crunchy Media Pvt Ltd */}
                 <article>
                   <div>
                     <CodeIcon />
                   </div>
-                  <h3>Junior Software Developer @ Crunchy Media Pvt Ltd</h3>
+                  <h3>SDE-1 @ Crunchy Media Pvt Ltd</h3>
                   <p>
                     Working on AI-powered calling software, building real-time
                     voice flows on top of <strong>WebRTC</strong> and the{" "}

@@ -8,16 +8,16 @@ import {
 // Enhanced SEO Metadata
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.anuppradhan.in"),
-  title: "Contact | Get in Touch with Software Developer",
+  title: "Contact | Get in Touch with Software Engineer",
   description:
-    "Connect with Anup Pradhan for collaboration opportunities, project inquiries, and technical discussions. Software developer based in Bhubaneswar, Odisha, India. Available for development projects, API development, and machine learning collaborations. Response time less than 24 hours.",
+    "Connect with Anup Pradhan for collaboration opportunities, project inquiries, and technical discussions. Software Engineer based in Bhubaneswar, Odisha, India. Available for development projects, API development, and machine learning collaborations. Response time less than 24 hours.",
   keywords: [
-    "Contact Software Developer",
-    "Hire Software Developer",
-    "Software Developer Contact",
+    "Contact Software Engineer",
+    "Hire Software Engineer",
+    "Software Engineer Contact",
     "Web Development Services",
-    "Software Developer Bhubaneswar",
-    "Software Developer India",
+    "Software Engineer Bhubaneswar",
+    "Software Engineer India",
     "TypeScript Developer Contact",
     "MongoDB Expert Contact",
     "React Developer Hire",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   creator: "Anup Pradhan",
   publisher: "Anup Pradhan",
   openGraph: {
-    title: "Contact | Get in Touch with Software Developer",
+    title: "Contact | Get in Touch with Software Engineer",
     description:
       "Connect with Anup Pradhan for collaboration opportunities. Available for full-stack development, API development, and machine learning projects. Based in Bhubaneswar, Odisha, India.",
     type: "website",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
         url: "https://www.anuppradhan.in/images/logo.jpg",
         width: 1200,
         height: 630,
-        alt: "Anup Pradhan - Contact Software Developer",
+        alt: "Anup Pradhan - Contact Software Engineer",
         type: "image/jpeg",
       },
     ],
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@AnupPradhan0",
     creator: "@AnupPradhan0",
-    title: "Contact | Get in Touch with Software Developer",
+    title: "Contact | Get in Touch with Software Engineer",
     description:
       "Connect with Anup Pradhan for project collaborations and development opportunities. Available for hire.",
     images: ["https://www.anuppradhan.in/images/logo.jpg"],
@@ -276,9 +276,9 @@ const structuredData = {
     "https://github.com/anupPradhan0",
     "https://leetcode.com/u/Anuppradhan/",
   ],
-  jobTitle: "Software Developer",
+  jobTitle: "Software Engineer",
   description:
-    "Software Developer from Bhubaneswar, India specializing in web applications, RESTful APIs, and machine learning. Available for collaboration and hire.",
+    "Software Engineer from Bhubaneswar, India specializing in web applications, RESTful APIs, and machine learning. Available for collaboration and hire.",
   availability: "Available for hire",
   workLocation: {
     "@type": "Place",

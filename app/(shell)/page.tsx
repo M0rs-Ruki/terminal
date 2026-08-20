@@ -30,9 +30,9 @@ export default function Home() {
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Anup Pradhan",
-    jobTitle: "Software Developer",
+    jobTitle: "Software Engineer",
     description:
-      "Software developer specializing in full-stack development and Next.js with backend focus and machine learning exploration",
+      "Software Engineer specializing in full-stack development and Next.js with backend focus and machine learning exploration",
     image: "https://www.anuppradhan.in/images/logo.jpg",
     email: "anuppradhan929@gmail.com",
     address: {
@@ -103,7 +103,7 @@ export default function Home() {
     alternateName: "Anup Pradhan Portfolio",
     url: "https://www.anuppradhan.in",
     description:
-      "Software Developer portfolio showcasing projects, skills, experience, and a developer blog.",
+      "Software Engineer portfolio showcasing projects, skills, experience, and a developer blog.",
     inLanguage: "en-IN",
     creator: {
       "@type": "Person",
@@ -158,7 +158,7 @@ export default function Home() {
               if (!metaDescription) {
                 const meta = document.createElement('meta');
                 meta.name = 'description';
-                meta.content = 'Software Developer from Bhubaneswar, India. Specializing in backend development, RESTful APIs, React, Node.js, MongoDB, TypeScript, and exploring Machine Learning with TensorFlow.';
+                meta.content = 'Software Engineer from Bhubaneswar, India. Specializing in backend development, RESTful APIs, React, Node.js, MongoDB, TypeScript, and exploring Machine Learning with TensorFlow.';
                 document.head.appendChild(meta);
               }
             }

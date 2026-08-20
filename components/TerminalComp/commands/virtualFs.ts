@@ -263,7 +263,7 @@ export function getEnvOutput(user: string): string {
     "LANG=en_IN.UTF-8",
     "EDITOR=vim",
     "PATH=/usr/local/bin:/usr/bin:/bin",
-    "PORTFOLIO=Anup Pradhan — Software Developer",
+    "PORTFOLIO=Anup Pradhan — Software Engineer",
   ].join("\n");
 }
 

@@ -25,13 +25,13 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.anuppradhan.in"),
   title: "Experience | SDE-1 @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
   description:
-    "Experience of Anup Pradhan: Junior Software Developer at Crunchy Media Pvt Ltd (Apr 2026–Aug 2026) architecting a B2B AI Voice Calling SaaS with FreeSWITCH, ESL, and WebRTC; part-time at Prominds Digital — shipped AutoPulse, a multi-tenant B2B CRM for automotive dealerships with RBAC, WhatsApp automation, and RabbitMQ.",
+    "Experience of Anup Pradhan: SDE-1 at Crunchy Media Pvt Ltd (Apr 2026–Aug 2026) architecting a B2B AI Voice Calling SaaS with FreeSWITCH, ESL, and WebRTC; part-time at Prominds Digital — shipped AutoPulse, a multi-tenant B2B CRM for automotive dealerships with RBAC, WhatsApp automation, and RabbitMQ.",
   keywords: [
     "Anup Pradhan Experience",
     "SDE-1",
-    "Junior Software Developer Crunchy Media Pvt Ltd",
-    "Software Developer Intern Crunchy Media Pvt Ltd",
-    "Software Developer Bhubaneswar",
+    "SDE-1 Crunchy Media Pvt Ltd",
+    "SDE Intern Crunchy Media Pvt Ltd",
+    "Software Engineer Bhubaneswar",
     "AI Voice Calling SaaS",
     "FreeSWITCH Developer",
     "WebRTC Developer",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     "Data Pipeline Engineer",
     "Union-Find Deduplication",
     "RabbitMQ",
-    "Bhubaneswar Software Developer",
+    "Bhubaneswar Software Engineer",
   ],
   authors: [{ name: "Anup Pradhan", url: "https://www.anuppradhan.in" }],
   creator: "Anup Pradhan",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Experience | SDE-1 @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
     description:
-      "Junior Software Developer at Crunchy Media Pvt Ltd (Apr 2026–Aug 2026) — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
+      "SDE-1 at Crunchy Media Pvt Ltd (Apr 2026–Aug 2026) — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
     type: "profile",
     url: "https://www.anuppradhan.in/experience",
     siteName: "Anup Pradhan - Developer Portfolio",
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
         url: "https://www.anuppradhan.in/images/logo.jpg",
         width: 1200,
         height: 630,
-        alt: "Anup Pradhan — Junior Software Developer experience",
+        alt: "Anup Pradhan — SDE-1 experience",
         type: "image/jpeg",
       },
     ],
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     creator: "@AnupPradhan0",
     title: "Experience | SDE-1 @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
     description:
-      "Junior Software Developer at Crunchy Media Pvt Ltd — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
+      "SDE-1 at Crunchy Media Pvt Ltd — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
     images: ["https://www.anuppradhan.in/images/logo.jpg"],
   },
   robots: {
@@ -212,7 +212,7 @@ export default function Experience() {
               Experience
             </h1>
             <p>
-              Professional roles as a Software Developer at Crunchy Media Pvt Ltd and Prominds
+              Professional roles as a Software Engineer at Crunchy Media Pvt Ltd and Prominds
               Digital — architecting B2B AI Voice Calling SaaS on FreeSWITCH/WebRTC,
               scalable multi-tenant CRM for automotive dealerships, and large-scale
               data pipelines.
@@ -236,10 +236,10 @@ export default function Experience() {
                 </p>
               </header>
 
-              {/* Junior Software Developer */}
+              {/* SDE-1 */}
               <section aria-labelledby="chati-jr-heading">
                 <h3 id="chati-jr-heading">
-                  Junior Software Developer · Full-time
+                  SDE-1 · Full-time
                 </h3>
                 <p>
                   <time dateTime={toIso(CHATI_JR_START)}>Apr 2026</time> —{" "}
@@ -264,10 +264,10 @@ export default function Experience() {
                 </ul>
               </section>
 
-              {/* Software Developer Intern */}
+              {/* SDE Intern */}
               <section aria-labelledby="chati-intern-heading">
                 <h3 id="chati-intern-heading">
-                  Software Developer Intern · Internship
+                  SDE Intern · Internship
                 </h3>
                 <p>
                   <time dateTime={toIso(CHATI_INTERN_START)}>Oct 2025</time> —{" "}
