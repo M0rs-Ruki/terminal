@@ -209,16 +209,14 @@ const About: React.FC = () => {
                     <CodeIcon />
                   </div>
                   <h3 className="font-bold text-green-400 text-base sm:text-lg mb-2 font-mono">
-                    Junior Software Developer @ Crunchy Media Pvt Ltd
+                    Open-source contributor — PipesHub, Dograh, personal projects
                   </h3>
                   <p className="text-gray-400 text-sm sm:text-base leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
-                    Working on AI-powered calling software, building real-time
-                    voice flows on top of{" "}
-                    <span className="text-green-400 font-semibold">WebRTC</span>{" "}
-                    and{" "}
-                    <span className="text-green-400 font-semibold">SIP</span>{" "}
-                    protocols. Hands-on with media negotiation, signaling, and
-                    integrating the AI agent into the live call pipeline.
+                    Focusing on open-source contributions: building integrations
+                    and backend tooling for <a href="https://pipeshub.com/" className="text-green-300 underline">PipesHub</a>,
+                    authoring automation libraries for <a href="https://dograh.com/" className="text-green-300 underline">Dograh</a>,
+                    and maintaining several personal repositories aimed at
+                    developer ergonomics and infra automation.
                   </p>
                 </div>
               </div>
@@ -231,16 +229,14 @@ const About: React.FC = () => {
                     <SystemIcon />
                   </div>
                   <h3 className="font-bold text-green-400 text-base sm:text-lg mb-2 font-mono">
-                    System Design & Automation
+                    System Design, DSA & Automation
                   </h3>
                   <p className="text-gray-400 text-sm sm:text-base leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
-                    Studying{" "}
-                    <span className="text-green-400 font-semibold">
-                      system design
-                    </span>{" "}
-                    and architecture patterns, refactoring old projects to apply
-                    what I learn, and building small automation tools to remove
-                    repetitive work from my day-to-day flow.
+                    Focused on system design, data structures & algorithms (DSA),
+                    and core fundamentals. Practicing problem solving, studying
+                    architecture patterns, and applying learnings by refactoring
+                    projects and building automation tooling. Also pursuing MCA
+                    level topics to strengthen theoretical foundations.
                   </p>
                 </div>
               </div>
