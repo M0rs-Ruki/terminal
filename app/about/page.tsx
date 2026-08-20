@@ -3,13 +3,13 @@ import { Metadata } from "next";
 // Enhanced SEO Metadata
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.anuppradhan.in"),
-  title: "About Me | Software Developer & Machine Learning Enthusiast",
+  title: "About Me | Software Engineer & Machine Learning Enthusiast",
   description:
     "Experienced Software Developer from Bhubaneswar, India specializing in backend development, RESTful APIs, MongoDB, Express.js, React, Node.js, and TypeScript. Currently expanding skills in Machine Learning with TensorFlow and scikit-learn. Building production-ready applications with JWT authentication and cloud deployment. Pursuing BCA at Amity University with CGPA 8.93.",
   keywords: [
-    "Software Developer",
-    "Software Developer Bhubaneswar",
-    "Software Developer India",
+    "Software Engineer",
+    "Software Engineer Bhubaneswar",
+    "Software Engineer India",
     "Backend Developer",
     "MongoDB Developer",
     "Express.js Developer",
@@ -36,9 +36,9 @@ export const metadata: Metadata = {
   creator: "Anup Pradhan",
   publisher: "Anup Pradhan",
   openGraph: {
-    title: "About Me | Software Developer & Machine Learning Enthusiast",
+    title: "About Me | Software Engineer & Machine Learning Enthusiast",
     description:
-      "Software Developer from Bhubaneswar, India specializing in backend development, RESTful APIs, and full-stack applications. Learning Machine Learning and sharing my journey through content creation. Pursuing BCA at Amity University.",
+      "Software Engineer from Bhubaneswar, India specializing in backend development, RESTful APIs, and full-stack applications. Learning Machine Learning and sharing my journey through content creation. Pursuing BCA at Amity University.",
     type: "profile",
     url: "https://www.anuppradhan.in/about",
     siteName: "Anup Pradhan - Developer Portfolio",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@AnupPradhan0",
     creator: "@AnupPradhan0",
-    title: "About Me | Software Developer & Machine Learning Enthusiast",
+    title: "About Me | Software Engineer & Machine Learning Enthusiast",
     description:
       "Full-stack MERN developer from Bhubaneswar, India focused on backend development and machine learning. Pursuing BCA at Amity University.",
     images: ["https://www.anuppradhan.in/images/logo.jpg"],
@@ -133,9 +133,9 @@ const structuredData = {
   mainEntityOfPage: "https://www.anuppradhan.in/about",
   image: "https://www.anuppradhan.in/images/logo.jpg",
   email: "mailto:anuppradhan929@gmail.com",
-  jobTitle: "Junior Software Developer",
+  jobTitle: "SDE-1",
   description:
-    "Junior Software Developer at Crunchy Media Pvt Ltd working on AI-powered calling software with WebRTC and SIP. Backend-focused full-stack engineer from Bhubaneswar, India; also a part-time Full Stack / WordPress developer at Prominds Digital. Currently pursuing BCA at Amity University.",
+    "SDE-1 at Crunchy Media Pvt Ltd working on AI-powered calling software with WebRTC and SIP. Backend-focused full-stack engineer from Bhubaneswar, India; also a part-time Full Stack / WordPress developer at Prominds Digital. Currently pursuing BCA at Amity University.",
   worksFor: [
     { "@type": "Organization", name: "Crunchy Media Pvt Ltd" },
     { "@type": "Organization", name: "Prominds Digital" },

@@ -23,12 +23,12 @@ export const revalidate = 86400;
 // SEO Metadata for Experience page
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.anuppradhan.in"),
-  title: "Experience | Junior Software Developer @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
+  title: "Experience | SDE-1 @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
   description:
     "Experience of Anup Pradhan: Junior Software Developer at Crunchy Media Pvt Ltd (Apr 2026–Aug 2026) architecting a B2B AI Voice Calling SaaS with FreeSWITCH, ESL, and WebRTC; part-time at Prominds Digital — shipped AutoPulse, a multi-tenant B2B CRM for automotive dealerships with RBAC, WhatsApp automation, and RabbitMQ.",
   keywords: [
     "Anup Pradhan Experience",
-    "Junior Software Developer",
+    "SDE-1",
     "Junior Software Developer Crunchy Media Pvt Ltd",
     "Software Developer Intern Crunchy Media Pvt Ltd",
     "Software Developer Bhubaneswar",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   creator: "Anup Pradhan",
   publisher: "Anup Pradhan",
   openGraph: {
-    title: "Experience | Junior Software Developer @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
+    title: "Experience | SDE-1 @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
     description:
       "Junior Software Developer at Crunchy Media Pvt Ltd (Apr 2026–Aug 2026) — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
     type: "profile",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@AnupPradhan0",
     creator: "@AnupPradhan0",
-    title: "Experience | Junior Software Developer @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
+    title: "Experience | SDE-1 @ Crunchy Media Pvt Ltd · FreeSWITCH + WebRTC",
     description:
       "Junior Software Developer at Crunchy Media Pvt Ltd — B2B AI Voice Calling SaaS on FreeSWITCH + WebRTC. Part-time at Prominds Digital — AutoPulse B2B CRM.",
     images: ["https://www.anuppradhan.in/images/logo.jpg"],
@@ -112,11 +112,11 @@ function buildStructuredData() {
     url: SITE_URL,
     mainEntityOfPage: `${SITE_URL}/experience`,
     image: `${SITE_URL}/images/logo.jpg`,
-    jobTitle: "Junior Software Developer",
+    jobTitle: "SDE-1",
     hasOccupation: [
       {
         "@type": "EmployeeRole",
-        roleName: "Junior Software Developer",
+        roleName: "SDE-1",
         startDate: toIso(CHATI_JR_START),
         endDate: toIso(CHATI_JR_END),
         worksFor: {
@@ -132,7 +132,7 @@ function buildStructuredData() {
       },
       {
         "@type": "EmployeeRole",
-        roleName: "Software Developer Intern",
+        roleName: "SDE Intern",
         startDate: toIso(CHATI_INTERN_START),
         endDate: toIso(CHATI_INTERN_END),
         worksFor: { "@type": "Organization", name: "Crunchy Media Pvt Ltd" },

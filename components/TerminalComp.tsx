@@ -340,7 +340,7 @@ const HELP_ITEMS: HelpItem[] = [
 ];
 
 const WELCOME_LINES: string[] = [
-  "Hi, I'm Anup Pradhan, a Software Developer.",
+  "Hi, I'm Anup Pradhan, a Software Engineer.",
   "Welcome to my interactive portfolio terminal!",
   "Type 'help' or 'ls' for commands. Use 'cd <name>' to open sections (e.g. cd about, cd blog, cd projects).",
   "✨ NEW: Try 'ai <your question>' to chat with AI assistant!",

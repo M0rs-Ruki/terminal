@@ -271,7 +271,7 @@ export const experienceCompanies: ExperienceCompany[] = [
     workMode: "On-site",
     roles: [
       {
-        title: "Junior Software Developer",
+        title: "SDE-1",
         employmentType: "Full-time",
         start: CHATI_JR_START,
         end: CHATI_JR_END,

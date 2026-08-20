@@ -83,10 +83,10 @@ const About: React.FC = () => {
             </div>
 
             <div className="ml-3 sm:ml-6 border-l-2 border-green-800/30 pl-3 sm:pl-6">
-              <p className="text-gray-300 leading-relaxed text-sm sm:text-base font-light">
+                <p className="text-gray-300 leading-relaxed text-sm sm:text-base font-light">
                 I&apos;m a{" "}
                 <span className="text-green-400 font-semibold">
-                  Software Developer
+                  Software Engineer
                 </span>{" "}
                 with a backend focus, building reliable RESTful APIs and
                 full‑stack applications using MongoDB, Express.js, React,
